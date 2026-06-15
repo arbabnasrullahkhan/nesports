@@ -1,0 +1,228 @@
+<!-- [NE SPORTS SHARED COMPONENT: GLOBAL LOADER VERSION 7.7] -->
+<style>
+    :root {
+        --loader-bg: rgba(5, 5, 5, 0.95);
+        --accent-crimson: #D32F2F;
+        --glass-glow: rgba(211, 47, 47, 0.15);
+        --text-dim: rgba(255, 255, 255, 0.4);
+        --z-loader: 9999;
+    }
+
+    /* Full Screen Overlay */
+    #global-system-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--loader-bg);
+        backdrop-filter: blur(30px) saturate(150%);
+        -webkit-backdrop-filter: blur(30px) saturate(150%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: var(--z-loader);
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* When hidden */
+    #global-system-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    /* Logo Animation Container */
+    .loader-brand-box {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .loader-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        z-index: 10;
+        animation: logoBreath 2s ease-in-out infinite;
+        filter: drop-shadow(0 0 15px rgba(0,0,0,0.8));
+    }
+
+    /* Liquid Glass Glow behind Logo */
+    .loader-glow-ring {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, var(--glass-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 5;
+        animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    /* Precision Scanning Line */
+    .loader-scan-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent-crimson), transparent);
+        box-shadow: 0 0 10px var(--accent-crimson);
+        z-index: 15;
+        animation: scanning 2s linear infinite;
+    }
+
+    /* Progress & Text System */
+    .loader-info {
+        text-align: center;
+        width: 240px;
+    }
+
+    .loader-msg {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 10px;
+        color: var(--text-dim);
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        height: 14px;
+        overflow: hidden;
+    }
+
+    .loader-bar-track {
+        width: 100%;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .loader-bar-fill {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--accent-crimson);
+        animation: fillSlide 1.5s infinite cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    /* Keyframes */
+    @keyframes logoBreath {
+        0%, 100% { transform: scale(0.95); opacity: 0.8; }
+        50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    @keyframes glowPulse {
+        0%, 100% { width: 140px; opacity: 0.4; }
+        50% { width: 180px; opacity: 0.7; }
+    }
+
+    @keyframes scanning {
+        0% { top: 0%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+    }
+
+    @keyframes fillSlide {
+        0% { left: -100%; }
+        50% { left: 0%; }
+        100% { left: 100%; }
+    }
+
+    /* Layout Lock */
+    body.loading-locked {
+        overflow: hidden !important;
+        touch-action: none;
+    }
+</style>
+
+<div id="global-system-loader">
+    <div class="loader-brand-box">
+        <div class="loader-glow-ring"></div>
+        <div class="loader-scan-line"></div>
+        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="loader-logo" alt="NE Logo">
+    </div>
+
+    <div class="loader-info">
+        <div class="loader-msg" id="loader-status-text">INITIALIZING ENGINE...</div>
+        <div class="loader-bar-track">
+            <div class="loader-bar-fill"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /**
+     * NE SPORTS GLOBAL LOADER CONTROLLER
+     * Manages system visibility and cinematic messaging
+     */
+    const NE_Loader = {
+        element: document.getElementById('global-system-loader'),
+        textElement: document.getElementById('loader-status-text'),
+        
+        messages: [
+            "SYNCING SECURE DATA...",
+            "AUTHENTICATING PROTOCOLS...",
+            "LOADING ARENA MODULES...",
+            "VERIFYING WALLET VAULT...",
+            "ESTABLISHING COMMAND LINK...",
+            "PREPARING OPERATIVE PROFILE...",
+            "DEPLOYING MATCH ENGINE..."
+        ],
+
+        msgInterval: null,
+
+        show: function(customMsg = null) {
+            document.body.classList.add('loading-locked');
+            this.element.classList.remove('hidden');
+            
+            if (customMsg) {
+                this.textElement.innerText = customMsg;
+            } else {
+                this.startCyclingMessages();
+            }
+        },
+
+        hide: function() {
+            setTimeout(() => {
+                this.element.classList.add('hidden');
+                document.body.classList.remove('loading-locked');
+                this.stopCyclingMessages();
+            }, 600); // Slight delay for visual satisfaction
+        },
+
+        startCyclingMessages: function() {
+            let i = 0;
+            this.textElement.innerText = this.messages[0];
+            this.msgInterval = setInterval(() => {
+                i = (i + 1) % this.messages.length;
+                this.textElement.innerText = this.messages[i];
+            }, 1800);
+        },
+
+        stopCyclingMessages: function() {
+            if (this.msgInterval) {
+                clearInterval(this.msgInterval);
+            }
+        }
+    };
+
+    // Auto-hide example on page load
+    window.addEventListener('load', () => {
+        // We keep it visible for at least 1.5 seconds to ensure brand visibility
+        setTimeout(() => NE_Loader.hide(), 1500);
+    });
+</script>

@@ -3,380 +3,402 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NE SPORTS | The Vault</title>
+    <title>The Vault | NE SPORTS Enterprise</title>
     <meta name="theme-color" content="#050505">
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
-        /* Enterprise Design System */
         :root {
             --bg-base: #050505;
-            --surface: #121212;
-            --surface-elevated: #1E1E1E;
+            --surface-matte: #0A0A0A;
+            --surface-elevated: #151515;
+            --accent-crimson: #D32F2F;
+            --accent-success: #2E7D32;
+            --accent-gold: #D4AF37;
+            --border-glass: rgba(255, 255, 255, 0.08);
             --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.5);
-            --accent-red: #D32F2F;
-            --accent-red-hover: #B71C1C;
-            --success: #2E7D32;
-            --warning: #F57C00;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --glass-bg: rgba(18, 18, 18, 0.85);
+            --text-dim: rgba(255, 255, 255, 0.4);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        body {
-            background-color: var(--bg-base); color: var(--text-main);
-            padding-bottom: 90px; overflow-x: hidden;
-        }
+        /* Shared Component Mounts */
+        #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
+        #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
 
-        /* Vault Header & Balance */
-        .vault-header {
-            padding: 40px 20px 20px;
-            background: linear-gradient(180deg, rgba(211, 47, 47, 0.05) 0%, var(--bg-base) 100%);
-            border-bottom: 1px solid var(--border-subtle);
+        /* [1. MAIN VAULT CARD] */
+        .vault-hero {
+            padding: 110px 20px 30px;
+            background: linear-gradient(180deg, rgba(211, 47, 47, 0.08) 0%, var(--bg-base) 100%);
             text-align: center;
         }
-        .vault-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
-        .balance-display { font-size: 42px; font-weight: 900; letter-spacing: -1px; display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .balance-currency { font-size: 16px; color: var(--accent-red); font-weight: 700; transform: translateY(-8px); }
 
-        /* Action Tabs */
-        .action-tabs {
-            display: flex; gap: 10px; padding: 20px;
-            border-bottom: 1px solid var(--border-subtle);
+        .balance-card {
+            background: var(--surface-matte);
+            border: 1px solid var(--border-glass);
+            border-radius: 28px;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .tab-btn {
-            flex: 1; padding: 14px; background: var(--surface); border: 1px solid var(--border-subtle);
-            border-radius: 12px; color: var(--text-muted); font-size: 12px; font-weight: 800;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
+
+        .balance-card::before {
+            content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(211, 47, 47, 0.05) 0%, transparent 70%);
+            pointer-events: none;
         }
-        .tab-btn svg { width: 16px; height: 16px; fill: var(--text-muted); transition: 0.3s; }
-        .tab-btn.active { background: var(--text-main); color: var(--bg-base); }
-        .tab-btn.active svg { fill: var(--bg-base); }
 
-        /* Form Sections */
-        .form-section { padding: 20px; display: none; animation: fadeIn 0.4s ease forwards; }
-        .form-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .bal-label { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
+        .bal-amount { font-size: 38px; font-weight: 900; letter-spacing: -1px; }
+        .bal-currency { font-size: 14px; color: var(--accent-crimson); margin-left: 5px; }
 
-        .input-group { margin-bottom: 16px; }
-        .input-group label { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-field {
-            width: 100%; padding: 14px; background: var(--surface);
-            border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-main); font-size: 14px; outline: none; transition: 0.3s;
+        /* [2. QUICK ACTIONS] */
+        .vault-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 0 20px 30px;
         }
-        .input-field:focus { border-color: var(--accent-red); box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1); }
-        select.input-field { appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="%23fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 14px center; }
 
-        .btn-submit {
-            width: 100%; padding: 16px; background: var(--accent-red); color: white;
-            border: none; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer;
-            text-transform: uppercase; margin-top: 10px; transition: 0.3s;
+        .action-btn {
+            background: var(--surface-matte);
+            border: 1px solid var(--border-glass);
+            padding: 18px;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: 0.3s;
         }
-        .btn-submit:active { transform: scale(0.98); }
 
-        /* History Section */
-        .history-header { padding: 30px 20px 10px; font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .history-list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+        .action-btn:active { transform: scale(0.95); background: var(--surface-elevated); }
+        .action-btn svg { width: 24px; height: 24px; fill: var(--accent-crimson); }
+        .action-btn span { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* [3. FORM CONTAINERS] */
+        .form-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-base); z-index: 6000; display: none;
+            flex-direction: column; overflow-y: auto; padding-bottom: 100px;
+        }
+
+        .form-head { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); }
+        .form-body { padding: 25px 20px; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; }
+        .input-ctrl { width: 100%; padding: 16px; background: var(--surface-matte); border: 1px solid var(--border-glass); border-radius: 14px; color: #fff; outline: none; font-size: 14px; }
+        .input-ctrl:focus { border-color: var(--accent-crimson); }
+
+        .admin-pay-box {
+            background: rgba(211, 47, 47, 0.05);
+            border: 1px dashed var(--accent-crimson);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .copy-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .copy-val { font-family: monospace; font-size: 16px; font-weight: 800; color: var(--accent-crimson); }
+        .btn-copy { background: var(--text-main); color: #000; border: none; padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; }
+
+        /* [4. TRANSACTION LEDGER] */
+        .ledger-section { padding: 0 20px 120px; }
+        .ledger-head { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .ledger-head::after { content: ""; flex: 1; height: 1px; background: var(--border-glass); }
+
         .txn-card {
-            background: var(--surface); border: 1px solid var(--border-subtle);
-            padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+            background: var(--surface-matte);
+            border: 1px solid var(--border-glass);
+            padding: 15px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
         }
-        .txn-info { display: flex; flex-direction: column; gap: 4px; }
-        .txn-title { font-size: 13px; font-weight: 700; color: var(--text-main); text-transform: uppercase; }
-        .txn-date { font-size: 10px; color: var(--text-muted); }
-        .txn-amount-box { text-align: right; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
-        .txn-amount { font-size: 14px; font-weight: 800; }
-        .amount-pos { color: var(--success); }
-        .amount-neg { color: var(--text-main); }
-        .txn-status { font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
-        .status-pending { background: rgba(245, 124, 0, 0.1); color: var(--warning); border: 1px solid rgba(245, 124, 0, 0.3); }
-        .status-approved { background: rgba(46, 125, 50, 0.1); color: var(--success); border: 1px solid rgba(46, 125, 50, 0.3); }
-        .status-rejected { background: rgba(211, 47, 47, 0.1); color: var(--accent-red); border: 1px solid rgba(211, 47, 47, 0.3); }
 
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
-            background: var(--glass-bg); backdrop-filter: blur(25px); border-top: 1px solid var(--border-subtle);
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        .txn-info { display: flex; flex-direction: column; gap: 4px; }
+        .txn-title { font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .txn-time { font-size: 9px; color: var(--text-dim); }
+        .txn-status { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 4px; width: max-content; }
+        
+        .st-pending { background: rgba(212, 175, 55, 0.1); color: var(--accent-gold); }
+        .st-verified { background: rgba(46, 125, 50, 0.1); color: var(--accent-success); }
+        .st-failed { background: rgba(211, 47, 47, 0.1); color: var(--accent-crimson); }
+
+        .txn-amount { text-align: right; }
+        .amt-val { font-size: 15px; font-weight: 900; }
+        .amt-plus { color: var(--accent-success); }
+        .amt-minus { color: #fff; }
+
+        .btn-primary {
+            width: 100%; padding: 18px; background: var(--accent-crimson); color: #fff;
+            border: none; border-radius: 14px; font-size: 13px; font-weight: 900; text-transform: uppercase; cursor: pointer;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--text-muted); }
-        .nav-item svg { width: 22px; height: 22px; fill: var(--text-muted); }
-        .nav-item span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
-        .nav-item.active { color: var(--accent-red); }
-        .nav-item.active svg { fill: var(--accent-red); }
+
     </style>
 </head>
 <body>
 
-    <div class="vault-header">
-        <div class="vault-title">Available Balance</div>
-        <div class="balance-display">
-            <span id="display-balance">0.00</span>
-            <span class="balance-currency">PKR</span>
-        </div>
-    </div>
+    <div id="loader-mount"></div>
+    <div id="header-mount"></div>
 
-    <div class="action-tabs">
-        <button class="tab-btn active" onclick="switchTab('deposit', this)">
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> ADD FUNDS
-        </button>
-        <button class="tab-btn" onclick="switchTab('withdraw', this)">
-            <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg> CASH OUT
-        </button>
-    </div>
-
-    <!-- DEPOSIT SECTION -->
-    <div id="deposit-section" class="form-section active">
-        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5;">To add funds, send PKR to the official Admin account (provided in Arena) and submit your 11-digit Transaction ID (TID) below.</p>
+    <main id="main-vault" style="opacity: 0; transition: 0.5s;">
         
-        <div class="input-group">
-            <label>Amount Sent (PKR)</label>
-            <input type="number" id="dep-amount" class="input-field" placeholder="e.g. 500">
+        <!-- VAULT DISPLAY -->
+        <section class="vault-hero">
+            <div class="balance-card">
+                <span class="bal-label">Secure Credits Available</span>
+                <div class="bal-amount"><span id="user-bal-pkr">0</span><span class="bal-currency">PKR</span></div>
+            </div>
+        </section>
+
+        <!-- VAULT ACTIONS -->
+        <section class="vault-actions">
+            <div class="action-btn" onclick="openForm('deposit')">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                <span>Add Funds</span>
+            </div>
+            <div class="action-btn" onclick="openForm('withdraw')">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Cash Out</span>
+            </div>
+        </section>
+
+        <!-- TRANSACTION LEDGER -->
+        <section class="ledger-section">
+            <h3 class="ledger-head">System Ledger</h3>
+            <div id="ledger-container">
+                <p style="text-align: center; color: var(--text-dim); font-size: 11px; padding: 40px;">SYNCING SECURE VAULT DATA...</p>
+            </div>
+        </section>
+
+        <div id="footer-mount"></div>
+    </main>
+
+    <!-- [DEPOSIT FORM OVERLAY] -->
+    <div class="form-overlay" id="deposit-overlay">
+        <div class="form-head">
+            <h2 style="font-size: 14px; font-weight: 900; text-transform: uppercase;">Credit Deposit</h2>
+            <button onclick="closeForms()" style="background:none; border:none; color:#fff; font-size:24px;">&times;</button>
         </div>
-        <div class="input-group">
-            <label>Payment Method Used</label>
-            <select id="dep-method" class="input-field">
-                <option value="EasyPaisa">EasyPaisa</option>
-                <option value="JazzCash">JazzCash</option>
-                <option value="Bank">Bank Transfer</option>
-            </select>
+        <div class="form-body">
+            <div class="admin-pay-box">
+                <span class="bal-label" style="color: var(--accent-crimson);">Transfer to Admin</span>
+                <div class="copy-row">
+                    <span class="copy-val" id="admin-ep-num">0345-XXXXXXX</span>
+                    <button class="btn-copy" onclick="copyText('admin-ep-num')">COPY</button>
+                </div>
+                <div style="font-size: 10px; color: var(--text-dim); margin-top: 5px;">Method: EasyPaisa / JazzCash</div>
+            </div>
+
+            <div class="input-group">
+                <label>Amount Transferred (PKR)</label>
+                <input type="number" id="dep-amt" class="input-ctrl" placeholder="Min: 100 PKR">
+            </div>
+            <div class="input-group">
+                <label>Transaction ID (TID)</label>
+                <input type="text" id="dep-tid" class="input-ctrl" placeholder="11 Digit ID">
+            </div>
+            <div class="input-group">
+                <label>Payment Proof (Screenshot)</label>
+                <input type="file" id="dep-proof" class="input-ctrl" accept="image/*">
+            </div>
+            
+            <button class="btn-primary" onclick="submitDeposit()">Submit Deposit Request</button>
         </div>
-        <div class="input-group">
-            <label>11-Digit Transaction ID (TID)</label>
-            <input type="text" id="dep-tid" class="input-field" placeholder="Enter TID">
-        </div>
-        <button class="btn-submit" onclick="submitDeposit()" id="btn-dep">SUBMIT DEPOSIT REQUEST</button>
     </div>
 
-    <!-- WITHDRAWAL (CASH OUT) SECTION -->
-    <div id="withdraw-section" class="form-section">
-        <p style="font-size: 11px; color: var(--warning); margin-bottom: 15px; line-height: 1.5; border-left: 2px solid var(--warning); padding-left: 10px;">Verification Required: You must provide the valid Match ID where you won the prize.</p>
+    <!-- [WITHDRAW FORM OVERLAY] -->
+    <div class="form-overlay" id="withdraw-overlay">
+        <div class="form-head">
+            <h2 style="font-size: 14px; font-weight: 900; text-transform: uppercase;">Secure Payout</h2>
+            <button onclick="closeForms()" style="background:none; border:none; color:#fff; font-size:24px;">&times;</button>
+        </div>
+        <div class="form-body">
+            <div class="admin-pay-box" style="border-style: solid; border-color: var(--border-glass);">
+                <p style="font-size: 11px; color: var(--text-dim); line-height: 1.6;">
+                    Payouts are processed after verification of **Match Victory**. Ensure your Match ID and Ticket Data are accurate. 
+                </p>
+            </div>
 
-        <div class="input-group">
-            <label>Winning Match ID (Proof)</label>
-            <input type="text" id="wit-match-id" class="input-field" placeholder="e.g. MATCH-1029">
+            <div class="input-group">
+                <label>Winning Match ID</label>
+                <input type="text" id="wit-match-id" class="input-ctrl" placeholder="e.g. PUBG-SOLO-102">
+            </div>
+            <div class="input-group">
+                <label>Payout Method</label>
+                <select id="wit-method" class="input-ctrl">
+                    <option value="EasyPaisa">EasyPaisa</option>
+                    <option value="JazzCash">JazzCash</option>
+                    <option value="Binance">Binance (USDT)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Account Number / Wallet Address</label>
+                <input type="text" id="wit-acc" class="input-ctrl" placeholder="03xx-xxxxxxx">
+            </div>
+            <div class="input-group">
+                <label>Account Title / Name</label>
+                <input type="text" id="wit-name" class="input-ctrl" placeholder="As per account">
+            </div>
+            <div class="input-group">
+                <label>Amount to Withdraw</label>
+                <input type="number" id="wit-amt" class="input-ctrl" placeholder="Min: 500 PKR">
+            </div>
+            
+            <button class="btn-primary" onclick="submitWithdraw()">Request Verification & Payout</button>
         </div>
-        <div class="input-group">
-            <label>Player ID / Registered Card No.</label>
-            <input type="text" id="wit-card-id" class="input-field" placeholder="Your Player UID or ID Card">
-        </div>
-        <div class="input-group">
-            <label>Withdrawal Amount (PKR)</label>
-            <input type="number" id="wit-amount" class="input-field" placeholder="Minimum: 500 PKR">
-        </div>
-        <div class="input-group">
-            <label>Receiving Platform</label>
-            <select id="wit-method" class="input-field">
-                <option value="EasyPaisa">EasyPaisa</option>
-                <option value="JazzCash">JazzCash</option>
-                <option value="Bank">Bank Transfer</option>
-                <option value="Binance">Binance (Crypto)</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>Account Title (Name)</label>
-            <input type="text" id="wit-title" class="input-field" placeholder="Name on Account">
-        </div>
-        <div class="input-group">
-            <label>Account Number / IBAN</label>
-            <input type="text" id="wit-account" class="input-field" placeholder="e.g. 03001234567">
-        </div>
-
-        <button class="btn-submit" onclick="submitWithdraw()" id="btn-wit">SUBMIT CASH OUT REQUEST</button>
     </div>
 
-    <!-- TRANSACTION HISTORY -->
-    <div class="history-header">Recent Ledgers</div>
-    <div class="history-list" id="history-container">
-        <!-- Skeleton Loader -->
-        <p style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 20px;">SYNCING SECURE LEDGER...</p>
-    </div>
+    <div id="navigation-mount"></div>
 
-    <!-- Bottom App Navigation -->
-    <nav class="bottom-nav">
-        <a href="/home" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span>
-        </a>
-        <a href="/tournaments" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg><span>Arena</span>
-        </a>
-        <a href="/wallet" class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>Vault</span>
-        </a>
-        <a href="/profile" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profile</span>
-        </a>
-    </nav>
-
-    <!-- Firebase System Logic -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, doc, getDoc, updateDoc, increment, collection, addDoc, query, where, orderBy, getDocs } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, doc, getDoc, collection, addDoc, onSnapshot, query, where, orderBy } from './firebase-config.js';
 
         let currentUser = null;
-        let userWalletBalance = 0;
 
-        // Initialize Vault
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                await fetchWallet();
-                await fetchHistory();
-            } else {
-                window.location.replace("/auth");
-            }
+        // 1. Component Mounting
+        async function mount(id, file) {
+            const res = await fetch(file);
+            document.getElementById(id).innerHTML = await res.text();
+            const scripts = document.getElementById(id).querySelectorAll('script');
+            scripts.forEach(s => {
+                const ns = document.createElement('script');
+                ns.type = 'module'; ns.textContent = s.textContent;
+                document.body.appendChild(ns);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            await mount('loader-mount', '/loader.html');
+            await mount('header-mount', '/header.html');
+            await mount('navigation-mount', '/navigation.html');
+            await mount('footer-mount', '/footer.html');
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('main-vault').style.opacity = '1';
+                    initVaultSync();
+                    loadAdminConfigs();
+                } else { window.location.replace('/auth'); }
+            });
         });
 
-        // UI Tab Switcher
-        window.switchTab = (tab, btn) => {
-            document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(`${tab}-section`).classList.add('active');
-            btn.classList.add('active');
+        // 2. Real-time Vault Sync
+        function initVaultSync() {
+            // Balance Sync
+            onSnapshot(doc(db, "users", currentUser.uid), (docSnap) => {
+                if(docSnap.exists()) {
+                    document.getElementById('user-bal-pkr').innerText = (docSnap.data().wallet || 0).toLocaleString();
+                }
+            });
+
+            // Ledger Sync
+            const q = query(collection(db, "transactions"), where("uid", "==", currentUser.uid), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const container = document.getElementById('ledger-container');
+                container.innerHTML = "";
+                if(snapshot.empty) {
+                    container.innerHTML = `<p style="text-align:center; color:var(--text-dim); font-size:11px; padding:40px;">NO TRANSACTIONS RECORDED.</p>`;
+                    return;
+                }
+
+                snapshot.forEach(docSnap => {
+                    const t = docSnap.data();
+                    const isCredit = t.type === 'DEPOSIT' || t.type === 'WINNING';
+                    const date = new Date(t.timestamp).toLocaleDateString([], {day:'numeric', month:'short'});
+                    
+                    container.innerHTML += `
+                        <div class="txn-card">
+                            <div class="txn-info">
+                                <span class="txn-title">${t.type}</span>
+                                <span class="txn-time">${date} • ${t.method || 'System'}</span>
+                                <span class="txn-status st-${t.status.toLowerCase()}">${t.status}</span>
+                            </div>
+                            <div class="txn-amount">
+                                <span class="amt-val ${isCredit ? 'amt-plus' : 'amt-minus'}">${isCredit ? '+' : '-'}${t.amount}</span>
+                                <span style="font-size:8px; display:block; color:var(--text-dim);">PKR</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // 3. Form Management
+        window.openForm = (type) => {
+            document.getElementById(`${type}-overlay`).style.display = 'flex';
         };
 
-        // Fetch Current Balance
-        async function fetchWallet() {
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            if (userDoc.exists()) {
-                userWalletBalance = userDoc.data().wallet || 0;
-                // Add commas for thousands
-                document.getElementById('display-balance').innerText = userWalletBalance.toLocaleString();
+        window.closeForms = () => {
+            document.querySelectorAll('.form-overlay').forEach(f => f.style.display = 'none');
+        };
+
+        async function loadAdminConfigs() {
+            const snap = await getDoc(doc(db, "system_config", "payout_methods"));
+            if(snap.exists()) {
+                document.getElementById('admin-ep-num').innerText = snap.data().easypaisa_number || "0345-0000000";
             }
         }
 
-        // DEPOSIT LOGIC
+        // 4. Action Submissions
         window.submitDeposit = async () => {
-            const amount = parseInt(document.getElementById('dep-amount').value);
-            const method = document.getElementById('dep-method').value;
-            const tid = document.getElementById('dep-tid').value.trim();
+            const amt = document.getElementById('dep-amt').value;
+            const tid = document.getElementById('dep-tid').value;
+            if(!amt || !tid) return alert("Please fill all deployment fields.");
 
-            if (!amount || amount < 100) return alert("System Error: Minimum deposit is 100 PKR.");
-            if (!tid || tid.length < 10) return alert("System Error: Invalid Transaction ID (TID).");
-
-            document.getElementById('btn-dep').disabled = true;
-            document.getElementById('btn-dep').innerText = "PROCESSING...";
-
+            NE_Loader.show("Verifying CID...");
             try {
-                // Add request to global transactions
                 await addDoc(collection(db, "transactions"), {
                     uid: currentUser.uid,
                     type: "DEPOSIT",
-                    amount: amount,
-                    method: method,
+                    amount: parseInt(amt),
                     tid: tid,
-                    status: "pending",
+                    status: "PENDING",
                     timestamp: new Date().toISOString()
                 });
-                
-                alert("Deposit Request Submitted! Awaiting Admin Verification.");
-                document.getElementById('dep-amount').value = '';
-                document.getElementById('dep-tid').value = '';
-                fetchHistory(); // Refresh ledger
-            } catch (error) {
-                alert("Transaction Failed: " + error.message);
-            } finally {
-                document.getElementById('btn-dep').disabled = false;
-                document.getElementById('btn-dep').innerText = "SUBMIT DEPOSIT REQUEST";
-            }
+                alert("Deposit Request Queued for Admin Approval.");
+                closeForms();
+            } catch(e) { alert("Vault Connection Error."); }
+            finally { NE_Loader.hide(); }
         };
 
-        // WITHDRAWAL LOGIC (Advanced Data Collection)
         window.submitWithdraw = async () => {
-            const matchId = document.getElementById('wit-match-id').value.trim();
-            const cardId = document.getElementById('wit-card-id').value.trim();
-            const amount = parseInt(document.getElementById('wit-amount').value);
-            const method = document.getElementById('wit-method').value;
-            const title = document.getElementById('wit-title').value.trim();
-            const account = document.getElementById('wit-account').value.trim();
+            const match = document.getElementById('wit-match-id').value;
+            const amt = document.getElementById('wit-amt').value;
+            const acc = document.getElementById('wit-acc').value;
+            if(!match || !amt || !acc) return alert("Verification Data Missing.");
 
-            if (!matchId || !cardId || !title || !account) return alert("System Error: All verification fields are required.");
-            if (!amount || amount < 500) return alert("System Error: Minimum withdrawal is 500 PKR.");
-            
-            // Core Security Check
-            if (amount > userWalletBalance) return alert(`System Error: Insufficient funds. Your balance is ${userWalletBalance} PKR.`);
-
-            document.getElementById('btn-wit').disabled = true;
-            document.getElementById('btn-wit').innerText = "SECURELY PROCESSING...";
-
+            NE_Loader.show("Securing Payout Line...");
             try {
-                // 1. Deduct balance from user wallet immediately to prevent double spending
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    wallet: increment(-amount)
-                });
-
-                // 2. Submit detailed withdrawal request to Admin
                 await addDoc(collection(db, "transactions"), {
                     uid: currentUser.uid,
-                    type: "WITHDRAW",
-                    amount: amount,
-                    verification: { matchId: matchId, playerCardId: cardId },
-                    payoutDetails: { method: method, accountTitle: title, accountNumber: account },
-                    status: "pending",
+                    type: "WITHDRAWAL",
+                    amount: parseInt(amt),
+                    matchId: match,
+                    payout_account: acc,
+                    status: "PENDING",
                     timestamp: new Date().toISOString()
                 });
-
-                alert("Cash Out Request Submitted! Funds will be transferred after Admin verification.");
-                
-                // Clear Form
-                document.getElementById('wit-match-id').value = '';
-                document.getElementById('wit-card-id').value = '';
-                document.getElementById('wit-amount').value = '';
-                document.getElementById('wit-title').value = '';
-                document.getElementById('wit-account').value = '';
-                
-                // Refresh Data
-                await fetchWallet();
-                await fetchHistory();
-                switchTab('deposit', document.querySelectorAll('.tab-btn')[0]); // return to default view
-
-            } catch (error) {
-                alert("Withdrawal Failed: " + error.message);
-            } finally {
-                document.getElementById('btn-wit').disabled = false;
-                document.getElementById('btn-wit').innerText = "SUBMIT CASH OUT REQUEST";
-            }
+                alert("Withdrawal Request Submitted. Subject to Match Verification.");
+                closeForms();
+            } catch(e) { alert("Vault Verification Error."); }
+            finally { NE_Loader.hide(); }
         };
 
-        // FETCH SECURE LEDGER (Transaction History)
-        async function fetchHistory() {
-            const historyContainer = document.getElementById('history-container');
-            const q = query(collection(db, "transactions"), where("uid", "==", currentUser.uid), orderBy("timestamp", "desc"));
-            const snap = await getDocs(q);
+        window.copyText = (id) => {
+            const val = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(val);
+            alert("Copied to Clipboard.");
+        };
 
-            historyContainer.innerHTML = "";
-
-            if (snap.empty) {
-                historyContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 20px;">NO TRANSACTIONS FOUND</p>`;
-                return;
-            }
-
-            snap.forEach(doc => {
-                const txn = doc.data();
-                const isDeposit = txn.type === "DEPOSIT";
-                const amountClass = isDeposit ? "amount-pos" : "amount-neg";
-                const sign = isDeposit ? "+" : "-";
-                
-                // Format Date
-                const dateObj = new Date(txn.timestamp);
-                const dateStr = dateObj.toLocaleDateString() + " • " + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-                historyContainer.innerHTML += `
-                    <div class="txn-card">
-                        <div class="txn-info">
-                            <span class="txn-title">${txn.type} via ${txn.method || txn.payoutDetails.method}</span>
-                            <span class="txn-date">${dateStr}</span>
-                        </div>
-                        <div class="txn-amount-box">
-                            <span class="txn-amount ${amountClass}">${sign} PKR ${txn.amount.toLocaleString()}</span>
-                            <span class="txn-status status-${txn.status.toLowerCase()}">${txn.status}</span>
-                        </div>
-                    </div>
-                `;
-            });
-        }
     </script>
 </body>
 </html>

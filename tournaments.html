@@ -2,263 +2,385 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NE SPORTS | Arena Matches</title>
-    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NE SPORTS | Arena Deployments</title>
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
     <style>
+        /* Enterprise Design System */
         :root {
-            --bg: #0A0A0A;
-            --cyan: #00D4FF;
-            --purple: #7B61FF;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-base: #050505;
+            --surface: #121212;
+            --surface-elevated: #1E1E1E;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --accent-red: #D32F2F;
+            --accent-red-hover: #B71C1C;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(18, 18, 18, 0.85);
+            --success: #2E7D32;
+            --crypto: #F57C00;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg);
-            color: white;
-            padding-bottom: 100px;
-            background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent);
+            background-color: var(--bg-base); color: var(--text-main);
+            padding-bottom: 90px; overflow-x: hidden;
         }
 
-        /* Category Tabs */
-        .category-scroll {
-            display: flex;
-            gap: 12px;
-            padding: 20px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-            position: sticky;
-            top: 0;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(15px);
-            z-index: 100;
-        }
-        .cat-btn {
-            padding: 10px 20px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            color: rgba(255,255,255,0.6);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .cat-btn.active {
-            background: var(--cyan);
-            color: black;
-            border-color: var(--cyan);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        /* Top Filter Header */
+        .arena-header {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 20px 20px 10px;
         }
 
-        /* Tournament Cards */
-        .arena-container { padding: 10px 20px; }
+        .header-title { font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+
+        .filter-scroll {
+            display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px;
+        }
+        .filter-scroll::-webkit-scrollbar { display: none; }
         
-        .match-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            position: relative;
-            animation: fadeIn 0.5s ease;
+        .filter-btn {
+            padding: 8px 16px; background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 20px; color: var(--text-muted); font-size: 11px; font-weight: 700;
+            text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: 0.3s;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .filter-btn.active { background: var(--accent-red); color: var(--text-main); border-color: var(--accent-red); }
+
+        /* Matches Grid */
+        .match-grid { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+        .match-card {
+            background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 16px; overflow: hidden; position: relative;
+        }
 
         .match-banner {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            filter: brightness(0.7);
+            width: 100%; height: 120px; background: var(--surface-elevated);
+            position: relative; overflow: hidden;
         }
-        .match-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 12px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--cyan);
-            text-transform: uppercase;
+        .match-banner img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .match-time-badge {
+            position: absolute; top: 10px; left: 10px;
+            background: rgba(0,0,0,0.8); border: 1px solid var(--border-subtle);
+            padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; color: var(--accent-red);
         }
 
-        .match-info { padding: 20px; }
-        .match-title { font-size: 18px; font-weight: 800; margin-bottom: 5px; }
-        .match-tags { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tag { font-size: 11px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 4px; }
-
-        .match-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            background: rgba(255,255,255,0.03);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 15px;
+        .match-details { padding: 20px; }
+        .match-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+        
+        /* Dynamic Prize Pool UI */
+        .dynamic-pool {
+            background: rgba(211, 47, 47, 0.05); border: 1px solid rgba(211, 47, 47, 0.2);
+            padding: 10px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .stat-box { text-align: center; }
-        .stat-box span { display: block; font-size: 10px; opacity: 0.5; text-transform: uppercase; }
-        .stat-box b { font-size: 14px; color: var(--cyan); }
+        .pool-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .pool-value { font-size: 16px; font-weight: 800; color: var(--accent-red); }
+        .pool-live { font-size: 9px; background: var(--accent-red); padding: 2px 6px; border-radius: 4px; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         /* Slots Bar */
-        .slot-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; }
-        .slot-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
-        .slot-bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transition: 1s; }
+        .slot-info { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 5px; }
+        .slot-track { width: 100%; height: 4px; background: var(--surface-elevated); border-radius: 2px; overflow: hidden; margin-bottom: 15px; }
+        .slot-fill { height: 100%; background: var(--accent-red); width: 0%; transition: 1s ease-out; }
 
-        .join-area {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
+        .join-row { display: flex; justify-content: space-between; align-items: center; }
+        .entry-fee { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .entry-fee span { font-size: 10px; color: var(--text-muted); }
+        .btn-join {
+            background: var(--text-main); color: var(--bg-base); border: none;
+            padding: 10px 24px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase;
         }
-        .entry-fee { font-size: 18px; font-weight: 800; }
-        .entry-fee span { font-size: 12px; opacity: 0.5; font-weight: 400; }
+
+        /* Full Screen Registration Engine (Modal) */
+        .reg-engine {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: var(--bg-base); z-index: 2000;
+            display: none; flex-direction: column;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .reg-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px; border-bottom: 1px solid var(--border-subtle);
+        }
+        .close-btn { background: none; border: none; cursor: pointer; }
+        .close-btn svg { width: 24px; height: 24px; fill: var(--text-main); }
+
+        .reg-content { padding: 20px; overflow-y: auto; flex: 1; }
         
-        .join-match-btn {
-            padding: 12px 30px;
-            background: white;
-            color: black;
-            border: none;
-            border-radius: 15px;
-            font-weight: 800;
-            font-size: 14px;
-            cursor: pointer;
+        .step-container { display: none; animation: fadeIn 0.3s; }
+        .step-container.active { display: block; }
+
+        /* Step 1: Rules */
+        .rule-box { background: var(--surface); padding: 15px; border-radius: 12px; border: 1px solid var(--border-subtle); margin-bottom: 20px; }
+        .rule-box h4 { color: var(--accent-red); margin-bottom: 10px; font-size: 14px; text-transform: uppercase; }
+        .rule-box ul { list-style: none; font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+        .rule-box ul li::before { content: "›"; color: var(--accent-red); margin-right: 8px; font-weight: bold; }
+
+        /* Input Elements */
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+        .input-field {
+            width: 100%; padding: 14px; background: var(--surface);
+            border: 1px solid var(--border-subtle); border-radius: 10px; color: var(--text-main); font-size: 14px; outline: none;
         }
-        .join-match-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .input-field:focus { border-color: var(--accent-red); }
+
+        /* Payment Accounts */
+        .payment-card {
+            background: var(--surface-elevated); padding: 15px; border-radius: 10px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-subtle);
+        }
+        .pay-details h5 { font-size: 14px; color: var(--text-main); }
+        .pay-details p { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+        
+        .copy-btn { background: rgba(255,255,255,0.1); border: none; padding: 6px 12px; border-radius: 6px; color: white; font-size: 10px; cursor: pointer; }
+
+        .btn-primary {
+            width: 100%; padding: 16px; background: var(--accent-red); color: white;
+            border: none; border-radius: 10px; font-size: 13px; font-weight: 800; cursor: pointer;
+            text-transform: uppercase; margin-top: 10px;
+        }
 
         /* Bottom Nav */
-        .nav-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; height: 70px; background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(25px); border-radius: 25px; border: 1px solid var(--glass-border);
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            background: var(--glass-bg); backdrop-filter: blur(25px); border-top: 1px solid var(--border-subtle);
             display: flex; justify-content: space-around; align-items: center; z-index: 1000;
         }
-        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; }
-        .nav-item.active { color: var(--cyan); }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--text-muted); }
+        .nav-item svg { width: 22px; height: 22px; fill: var(--text-muted); }
+        .nav-item span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+        .nav-item.active { color: var(--accent-red); }
+        .nav-item.active svg { fill: var(--accent-red); }
     </style>
 </head>
 <body>
 
-    <!-- Game Filter -->
-    <div class="category-scroll">
-        <div class="cat-btn active" onclick="filterMatches('All', this)">All Games</div>
-        <div class="cat-btn" onclick="filterMatches('PUBG', this)">PUBG Mobile</div>
-        <div class="cat-btn" onclick="filterMatches('FreeFire', this)">Free Fire</div>
-        <div class="cat-btn" onclick="filterMatches('Ludo', this)">Ludo Star</div>
+    <header class="arena-header">
+        <h1 class="header-title">Deployments</h1>
+        <div class="filter-scroll">
+            <button class="filter-btn active" onclick="filterMatches('All', this)">All Deployments</button>
+            <button class="filter-btn" onclick="filterMatches('Solo', this)">1v1 Solo</button>
+            <button class="filter-btn" onclick="filterMatches('Squad', this)">4v4 Squad</button>
+            <button class="filter-btn" onclick="filterMatches('PUBG', this)">PUBG Mobile</button>
+            <button class="filter-btn" onclick="filterMatches('FreeFire', this)">Free Fire</button>
+        </div>
+    </header>
+
+    <div class="match-grid" id="matches-container">
+        <!-- Matches dynamically injected here -->
+        <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 40px;">SCANNING ARENA...</p>
     </div>
 
-    <!-- Arena -->
-    <div class="arena-container" id="arena-list">
-        <!-- Skeleton Loading -->
-        <p style="text-align: center; opacity: 0.5; margin-top: 50px;">Scanning for active matches...</p>
+    <!-- Registration Engine Modal -->
+    <div class="reg-engine" id="reg-engine">
+        <div class="reg-header">
+            <h3 style="font-size: 16px; font-weight: 800; text-transform: uppercase;">Secure Registration</h3>
+            <button class="close-btn" onclick="closeEngine()">
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+
+        <div class="reg-content">
+            <!-- STEP 1: Briefing & Rules -->
+            <div id="step-1" class="step-container active">
+                <div class="rule-box">
+                    <h4>Dynamic Prize Policy</h4>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">The prize pool updates live based on active entries. Winner takes exactly 40% of the total collected entry fees.</p>
+                    <div class="dynamic-pool" style="background: rgba(255,255,255,0.05); border-color: var(--border-subtle);">
+                        <span class="pool-label">Est. Winner Prize</span>
+                        <span class="pool-value" id="modal-prize-calc">0 PKR</span>
+                    </div>
+                </div>
+
+                <div class="rule-box">
+                    <h4>Arena Protocols (A-Z)</h4>
+                    <ul>
+                        <li>No emulators allowed. Mobile only.</li>
+                        <li>Teaming up in Solo matches results in an instant ban.</li>
+                        <li>Room ID/Password will be shared on the Match Details page 15 mins prior.</li>
+                        <li>Payment must be verified. Fake TIDs lead to permanent account suspension.</li>
+                        <li>Winner must provide a victory screenshot.</li>
+                    </ul>
+                </div>
+                <button class="btn-primary" onclick="nextStep(2)">ACCEPT & CONTINUE</button>
+            </div>
+
+            <!-- STEP 2: In-Game Details -->
+            <div id="step-2" class="step-container">
+                <h4 style="margin-bottom: 15px; font-size: 14px; text-transform: uppercase;">Player Identification</h4>
+                
+                <div class="input-group">
+                    <label>In-Game Name (Exact)</label>
+                    <input type="text" id="reg-ign" class="input-field" placeholder="e.g. NE_Slayer">
+                </div>
+                <div class="input-group">
+                    <label>Character ID / UID</label>
+                    <input type="number" id="reg-uid" class="input-field" placeholder="e.g. 5123456789">
+                </div>
+                <div class="input-group">
+                    <label>Squad Name (If applicable)</label>
+                    <input type="text" id="reg-squad" class="input-field" placeholder="Leave empty for Solo">
+                </div>
+                
+                <button class="btn-primary" onclick="nextStep(3)">PROCEED TO PAYMENT</button>
+            </div>
+
+            <!-- STEP 3: Payment Gateway -->
+            <div id="step-3" class="step-container">
+                <h4 style="margin-bottom: 15px; font-size: 14px; text-transform: uppercase;">Secure Payment</h4>
+                <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Transfer exactly <b style="color:var(--text-main);" id="pay-amount-display">0 PKR</b> to any account below and enter the Transaction ID (TID).</p>
+
+                <!-- Admin Accounts -->
+                <div class="payment-card">
+                    <div class="pay-details">
+                        <h5 style="color: #00E676;">EasyPaisa</h5>
+                        <p id="admin-ep">0345-1234567 (Ali Khan)</p>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('admin-ep')">COPY</button>
+                </div>
+
+                <div class="payment-card">
+                    <div class="pay-details">
+                        <h5 style="color: var(--accent-red);">JazzCash</h5>
+                        <p id="admin-jc">0300-1234567 (Ali Khan)</p>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('admin-jc')">COPY</button>
+                </div>
+
+                <div class="payment-card" style="border-color: var(--crypto);">
+                    <div class="pay-details">
+                        <h5 style="color: var(--crypto);">Binance (USDT - TRC20)</h5>
+                        <p id="admin-crypto">TXXX...CryptoAddressHere</p>
+                    </div>
+                    <button class="copy-btn" onclick="copyText('admin-crypto')">COPY</button>
+                </div>
+
+                <div style="margin-top: 25px;">
+                    <div class="input-group">
+                        <label>Sender Account / Name</label>
+                        <input type="text" id="pay-sender" class="input-field" placeholder="Number or Name sent from">
+                    </div>
+                    <div class="input-group">
+                        <label>11-Digit Transaction ID (TID)</label>
+                        <input type="text" id="pay-tid" class="input-field" placeholder="e.g. 12345678901">
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="btn-submit-reg" onclick="submitRegistration()">SUBMIT ENTRY REQUEST</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Bottom Nav -->
-    <nav class="nav-bar">
-        <a href="home.html" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>HOME
+    <!-- Bottom App Navigation -->
+    <nav class="bottom-nav">
+        <a href="/home" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span>
         </a>
-        <a href="tournaments.html" class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>MATCHES
+        <a href="/tournaments" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg><span>Arena</span>
         </a>
-        <a href="wallet.html" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89-2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>WALLET
+        <a href="/wallet" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg><span>Vault</span>
         </a>
-        <a href="profile.html" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>PROFILE
+        <a href="/profile" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profile</span>
         </a>
     </nav>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { auth, db, onAuthStateChanged, collection, query, where, getDocs, addDoc, doc, updateDoc, increment } from './firebase-config.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
-            authDomain: "nesports7.firebaseapp.com",
-            projectId: "nesports7",
-            storageBucket: "nesports7.firebasestorage.app",
-            messagingSenderId: "414629589331",
-            appId: "1:414629589331:web:2a30069688008d17d371a6"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
         let currentUser = null;
+        let selectedMatch = null;
 
+        // Verify User
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                loadMatches("All");
+                loadMatches('All');
             } else {
-                window.location.href = "auth.html";
+                window.location.replace("/auth");
             }
         });
 
-        window.filterMatches = (game, btn) => {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        window.filterMatches = (filter, btn) => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            loadMatches(game);
+            loadMatches(filter);
         };
 
+        // Fetch Matches & Calculate Dynamic Prize
         async function loadMatches(filter) {
-            const arena = document.getElementById('arena-list');
-            arena.innerHTML = "<p style='text-align:center; opacity:0.5;'>Loading matches...</p>";
+            const container = document.getElementById('matches-container');
+            container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 40px;">SCANNING ARENA...</p>`;
 
             let q = query(collection(db, "tournaments"), where("status", "==", "open"));
-            if (filter !== "All") {
-                q = query(collection(db, "tournaments"), where("game", "==", filter), where("status", "==", "open"));
+            if(filter !== 'All') {
+                // In production, you might structure data to support array-contains for multiple tags
+                q = query(collection(db, "tournaments"), where("tags", "array-contains", filter), where("status", "==", "open"));
             }
 
             const snap = await getDocs(q);
-            arena.innerHTML = "";
+            container.innerHTML = "";
 
             if (snap.empty) {
-                arena.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:50px;'>No active tournaments for this game.</p>";
+                container.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: 40px;">NO DEPLOYMENTS FOUND FOR THIS CATEGORY.</p>`;
                 return;
             }
 
-            snap.forEach(doc => {
-                const m = doc.data();
-                const progress = (m.joined / m.totalSlots) * 100;
+            snap.forEach(docSnap => {
+                const m = docSnap.data();
+                const mId = docSnap.id;
                 
-                arena.innerHTML += `
+                // CORE LOGIC: Dynamic Prize (40% of Collected Entry Fees)
+                const collected = (m.joined || 0) * m.entryFee;
+                let currentPrize = Math.floor(collected * 0.40);
+                
+                // If 0 joined, show estimated prize for 1 player joining to encourage them
+                if(currentPrize === 0) currentPrize = Math.floor(m.entryFee * 0.40); 
+
+                const fillPercent = ((m.joined || 0) / m.totalSlots) * 100;
+
+                container.innerHTML += `
                     <div class="match-card">
-                        <img src="${m.image || 'https://via.placeholder.com/400x150'}" class="match-banner">
-                        <div class="match-status">● ${m.status}</div>
-                        <div class="match-info">
+                        <div class="match-banner">
+                            <div class="match-time-badge">TODAY • ${m.time}</div>
+                            <img src="${m.image || 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000'}" alt="Game">
+                        </div>
+                        <div class="match-details">
                             <h2 class="match-title">${m.title}</h2>
-                            <div class="match-tags">
-                                <span class="tag">📅 ${m.date}</span>
-                                <span class="tag">⏰ ${m.time}</span>
-                                <span class="tag">🗺️ ${m.map}</span>
+                            
+                            <div class="dynamic-pool">
+                                <div style="display:flex; flex-direction:column; gap:4px;">
+                                    <span class="pool-label">Dynamic Prize Pool</span>
+                                    <span class="pool-value">PKR ${currentPrize}</span>
+                                </div>
+                                <span class="pool-live">LIVE</span>
                             </div>
-                            <div class="match-stats">
-                                <div class="stat-box"><span>Prize</span><b>${m.prize}</b></div>
-                                <div class="stat-box"><span>Type</span><b>${m.type}</b></div>
-                                <div class="stat-box"><span>Version</span><b>${m.version || 'Tpp'}</b></div>
-                            </div>
+
                             <div class="slot-area">
-                                <div class="slot-header">
-                                    <span>Slots Filled</span>
-                                    <span>${m.joined}/${m.totalSlots}</span>
+                                <div class="slot-info">
+                                    <span>OPERATIVES JOINED</span>
+                                    <span style="color:var(--text-main); font-weight:700;">${m.joined || 0}/${m.totalSlots}</span>
                                 </div>
-                                <div class="slot-bar-bg">
-                                    <div class="slot-bar-fill" style="width: ${progress}%"></div>
+                                <div class="slot-track">
+                                    <div class="slot-fill" style="width: ${fillPercent}%"></div>
                                 </div>
                             </div>
-                            <div class="join-area">
-                                <div class="entry-fee"><span>Entry:</span> ${m.entryFee} PKR</div>
-                                <button class="join-match-btn" onclick="joinArena('${doc.id}', ${m.entryFee})">JOIN NOW</button>
+
+                            <div class="join-row">
+                                <div class="entry-fee">PKR ${m.entryFee} <br><span>ENTRY FEE</span></div>
+                                <button class="btn-join" onclick='openEngine(${JSON.stringify({...m, id: mId, currentPrize})})'>ENTER MATCH</button>
                             </div>
                         </div>
                     </div>
@@ -266,37 +388,62 @@
             });
         }
 
-        window.joinArena = async (matchId, fee) => {
-            const userRef = doc(db, "users", currentUser.uid);
-            const userSnap = await getDoc(userRef);
-            
-            if (!userSnap.exists()) return;
-            const userData = userSnap.data();
+        // --- Registration Engine Logic ---
+        window.openEngine = (matchData) => {
+            selectedMatch = matchData;
+            document.getElementById('reg-engine').style.display = "flex";
+            document.getElementById('modal-prize-calc').innerText = `${matchData.currentPrize} PKR (Grows if more join!)`;
+            document.getElementById('pay-amount-display').innerText = `${matchData.entryFee} PKR`;
+            nextStep(1); // Reset to step 1
+        };
 
-            if (userData.wallet < fee) {
-                alert("Insufficient Balance! Please deposit first.");
-                window.location.href = "wallet.html";
-                return;
-            }
+        window.closeEngine = () => {
+            document.getElementById('reg-engine').style.display = "none";
+            selectedMatch = null;
+        };
 
-            if (confirm(`Do you want to join this match for ${fee} PKR?`)) {
-                try {
-                    // Update Wallet
-                    await updateDoc(userRef, {
-                        wallet: increment(-fee)
-                    });
+        window.nextStep = (stepNumber) => {
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+        };
 
-                    // Update Match Slots
-                    const matchRef = doc(db, "tournaments", matchId);
-                    await updateDoc(matchRef, {
-                        joined: increment(1)
-                    });
+        window.copyText = (elementId) => {
+            const text = document.getElementById(elementId).innerText.split(" ")[0]; // gets only number/address
+            navigator.clipboard.writeText(text);
+            alert("Copied: " + text);
+        };
 
-                    alert("Successfully Joined! Room details will be shared on match time.");
-                    location.reload();
-                } catch (e) {
-                    alert("Error joining match. Please try again.");
-                }
+        window.submitRegistration = async () => {
+            const ign = document.getElementById('reg-ign').value;
+            const uid = document.getElementById('reg-uid').value;
+            const squad = document.getElementById('reg-squad').value || "N/A";
+            const sender = document.getElementById('pay-sender').value;
+            const tid = document.getElementById('pay-tid').value;
+
+            if(!ign || !uid || !sender || !tid) return alert("System Error: All fields are required.");
+
+            document.getElementById('btn-submit-reg').innerText = "PROCESSING...";
+            document.getElementById('btn-submit-reg').disabled = true;
+
+            try {
+                // 1. Save Request to Firestore for Admin Approval
+                await addDoc(collection(db, "match_requests"), {
+                    userId: currentUser.uid,
+                    matchId: selectedMatch.id,
+                    matchTitle: selectedMatch.title,
+                    gameDetails: { ign, uid, squad },
+                    payment: { sender, tid, amount: selectedMatch.entryFee },
+                    status: "pending",
+                    timestamp: new Date().toISOString()
+                });
+
+                alert("Registration Request Sent! Admin will verify your TID and approve your slot.");
+                closeEngine();
+                location.reload(); // Refresh to update states
+            } catch (error) {
+                alert("Error submitting request. Please try again.");
+                document.getElementById('btn-submit-reg').innerText = "SUBMIT ENTRY REQUEST";
+                document.getElementById('btn-submit-reg').disabled = false;
             }
         };
     </script>

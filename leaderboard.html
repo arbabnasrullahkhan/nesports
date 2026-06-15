@@ -3,114 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hall of Fame | NE SPORTS</title>
+    <title>Global Rankings | NE SPORTS Enterprise</title>
     <meta name="theme-color" content="#050505">
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
+        /* [NE SPORTS LEADERBOARD DESIGN SYSTEM] */
         :root {
             --bg-base: #050505;
-            --surface-matte: #0A0A0A;
-            --surface-elevated: #151515;
-            --accent-crimson: #D32F2F;
-            --accent-gold: #D4AF37;
-            --accent-silver: #C0C0C0;
-            --accent-bronze: #CD7F32;
-            --border-glass: rgba(255, 255, 255, 0.08);
+            --surface: #0E0E0E;
+            --surface-elevated: #161616;
+            --accent: #D32F2F;
+            --gold: #D4AF37;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+            --border: rgba(255, 255, 255, 0.08);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.5);
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* Shared Component Mounts */
+        /* Shared Mount Points */
         #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
         #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
 
-        /* [1. LEADERSHIP PODIUM] */
-        .podium-section {
-            padding: 120px 20px 40px;
+        .leaderboard-container { padding: 80px 0 120px; }
+
+        /* [1. ELITE PODIUM] */
+        .podium-sec {
+            padding: 40px 20px;
             background: linear-gradient(180deg, rgba(211, 47, 47, 0.05) 0%, var(--bg-base) 100%);
             display: flex; align-items: flex-end; justify-content: center; gap: 10px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .podium-item {
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            flex: 1; transition: 0.5s ease;
+        .podium-item { text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; }
+        
+        .p-avatar-wrap { position: relative; margin-bottom: 15px; }
+        .p-avatar { 
+            width: 65px; height: 60px; border-radius: 50%; border: 2px solid var(--border); 
+            background: var(--surface); padding: 4px; object-fit: cover;
         }
-
-        .p-avatar-wrap { position: relative; margin-bottom: 12px; }
-        .p-avatar {
-            width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--border-glass);
-            background: var(--surface-matte); object-fit: cover;
-        }
-        .p-rank-tag {
-            position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+        .p-rank-label {
+            position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
             padding: 2px 10px; border-radius: 10px; font-size: 9px; font-weight: 900; color: #000;
         }
 
-        /* Rank Specifics */
-        .rank-1 { transform: scale(1.15); z-index: 10; }
-        .rank-1 .p-avatar { width: 85px; height: 85px; border-color: var(--accent-gold); box-shadow: 0 0 25px rgba(212, 175, 55, 0.3); }
-        .rank-1 .p-rank-tag { background: var(--accent-gold); }
-        
-        .rank-2 .p-avatar { border-color: var(--accent-silver); }
-        .rank-2 .p-rank-tag { background: var(--accent-silver); }
+        /* Rank 1 Highlight */
+        .rank-1 { transform: scale(1.18); z-index: 10; margin-bottom: 15px; }
+        .rank-1 .p-avatar { width: 85px; height: 85px; border-color: var(--gold); box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
+        .rank-1 .p-rank-tag { background: var(--gold); }
+        .rank-1 .p-name { color: var(--gold); font-size: 13px; }
 
-        .rank-3 .p-avatar { border-color: var(--accent-bronze); }
-        .rank-3 .p-rank-tag { background: var(--accent-bronze); }
+        .rank-2 .p-rank-tag { background: var(--silver); }
+        .rank-3 .p-rank-tag { background: var(--bronze); }
 
-        .p-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; margin-top: 5px;}
-        .p-meta { font-size: 9px; color: var(--accent-crimson); font-weight: 700; margin-top: 2px; }
+        .p-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; max-width: 90px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .p-stats { font-size: 9px; color: var(--text-dim); font-weight: 700; margin-top: 3px; }
 
-        /* [2. SEARCH & FILTERS] */
-        .leaderboard-controls { padding: 0 20px 20px; }
-        .search-bar {
-            width: 100%; background: var(--surface-matte); border: 1px solid var(--border-glass);
-            padding: 14px 20px; border-radius: 14px; color: #fff; font-size: 13px; outline: none;
-            margin-bottom: 20px; transition: 0.3s;
+        /* [2. TABS / FILTERS] */
+        .rank-nav {
+            position: sticky; top: 75px; z-index: 1000;
+            background: rgba(5,5,5,0.85); backdrop-filter: blur(25px);
+            padding: 15px 20px; border-bottom: 1px solid var(--border);
         }
-        .search-bar:focus { border-color: var(--accent-crimson); }
-
-        .filter-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
-        .f-btn {
-            padding: 8px 16px; background: var(--surface-elevated); border: 1px solid var(--border-glass);
-            border-radius: 20px; font-size: 10px; font-weight: 800; text-transform: uppercase;
-            color: var(--text-dim); white-space: nowrap; cursor: pointer;
+        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+        .filter-scroll::-webkit-scrollbar { display: none; }
+        .f-pill {
+            padding: 10px 20px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 30px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+            color: var(--text-dim); white-space: nowrap; cursor: pointer; transition: 0.3s;
         }
-        .f-btn.active { background: var(--text-main); color: #000; border-color: #fff; }
+        .f-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-        /* [3. RANKINGS LIST] */
-        .rank-list { padding: 0 20px 120px; display: flex; flex-direction: column; gap: 12px; }
-        .rank-row {
-            background: var(--surface-matte); border: 1px solid var(--border-glass);
-            padding: 12px 15px; border-radius: 16px; display: flex; align-items: center; gap: 15px;
-            animation: slideIn 0.5s ease forwards;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        .r-position { font-size: 14px; font-weight: 900; color: var(--text-dim); width: 25px; }
-        .r-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-elevated); }
-        .r-info { flex: 1; }
-        .r-name-row { display: flex; align-items: center; gap: 6px; }
-        .r-name { font-size: 13px; font-weight: 700; text-transform: uppercase; }
-        .r-badge { width: 14px; height: 14px; fill: var(--accent-crimson); }
-        .r-game-tag { font-size: 8px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-top: 2px; display: block; }
-        .r-points { text-align: right; }
-        .r-val { font-size: 15px; font-weight: 900; color: var(--accent-crimson); }
-        .r-lbl { font-size: 8px; color: var(--text-dim); text-transform: uppercase; display: block; }
-
-        /* Hall of Fame Highlights */
-        .hof-header { padding: 20px; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
-        .hof-scroll { display: flex; gap: 15px; padding: 0 20px 30px; overflow-x: auto; scrollbar-width: none; }
+        /* [3. HALL OF FAME HIGHLIGHTS] */
+        .hof-header { padding: 25px 20px 15px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); }
+        .hof-row { display: flex; gap: 15px; padding: 0 20px 30px; overflow-x: auto; scrollbar-width: none; }
         .hof-card {
-            min-width: 140px; background: var(--surface-elevated); border: 1px solid var(--border-glass);
-            padding: 20px 15px; border-radius: 20px; text-align: center;
+            min-width: 150px; background: var(--surface); border: 1px solid var(--border);
+            padding: 20px; border-radius: 20px; text-align: center;
         }
-        .hof-icon { width: 24px; height: 24px; fill: var(--accent-gold); margin-bottom: 10px; }
-        .hof-title { font-size: 9px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 5px; }
-        .hof-name { font-size: 12px; font-weight: 800; }
+        .hof-icon { width: 30px; height: 30px; fill: var(--gold); margin-bottom: 12px; }
+        .hof-lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; font-weight: 800; display: block; }
+        .hof-val { font-size: 14px; font-weight: 900; color: #fff; text-transform: uppercase; }
+
+        /* [4. RANKINGS LIST] */
+        .rank-list { padding: 0 20px; display: flex; flex-direction: column; gap: 12px; }
+        .rank-card {
+            background: var(--surface); border: 1px solid var(--border);
+            padding: 15px; border-radius: 18px; display: flex; align-items: center; gap: 15px;
+            animation: listFade 0.6s ease forwards;
+        }
+        @keyframes listFade { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .r-pos { font-size: 15px; font-weight: 900; color: var(--text-dim); width: 30px; }
+        .r-avatar { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface-elevated); }
+        .r-info { flex: 1; }
+        .r-name { font-size: 14px; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        .r-badge { width: 14px; height: 14px; fill: var(--accent); }
+        .r-meta { font-size: 9px; color: var(--text-dim); font-weight: 700; text-transform: uppercase; margin-top: 3px; display: flex; gap: 8px; }
+        .r-meta span { display: flex; align-items: center; gap: 4px; }
+
+        .r-score { text-align: right; }
+        .r-val { font-size: 16px; font-weight: 900; color: var(--accent); display: block; }
+        .r-lbl { font-size: 8px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; }
+
+        /* Game Tags */
+        .tag { padding: 2px 6px; border-radius: 4px; font-size: 8px; border: 1px solid var(--border); }
+        .tag-pubg { color: #FFC107; background: rgba(255, 193, 7, 0.1); border-color: #FFC107; }
+        .tag-ff { color: #2196F3; background: rgba(33, 150, 243, 0.1); border-color: #2196F3; }
+
     </style>
 </head>
 <body>
@@ -118,73 +123,74 @@
     <div id="loader-mount"></div>
     <div id="header-mount"></div>
 
-    <main id="main-leaderboard" style="opacity: 0; transition: 0.6s;">
+    <main class="leaderboard-container" id="main-ranks" style="opacity: 0; transition: 0.8s;">
         
-        <!-- [1. TOP 3 PODIUM] -->
-        <section class="podium-section" id="podium-container">
+        <!-- [PODIUM SECTION] -->
+        <section class="podium-sec" id="podium-mount">
             <!-- Rank 2 -->
             <div class="podium-item rank-2">
                 <div class="p-avatar-wrap">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rank2" class="p-avatar" id="p2-avatar">
-                    <span class="p-rank-tag">#2</span>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rank2" class="p-avatar" id="p2-img">
+                    <span class="p-rank-label p-rank-tag">#2</span>
                 </div>
-                <div class="p-name" id="p2-name">---</div>
-                <div class="p-meta" id="p2-xp">0 XP</div>
+                <div class="p-name" id="p2-name">Operative</div>
+                <div class="p-stats" id="p2-xp">0 XP</div>
             </div>
             <!-- Rank 1 -->
             <div class="podium-item rank-1">
                 <div class="p-avatar-wrap">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rank1" class="p-avatar" id="p1-avatar">
-                    <span class="p-rank-tag">#1</span>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rank1" class="p-avatar" id="p1-img">
+                    <span class="p-rank-label p-rank-tag">#1</span>
                 </div>
-                <div class="p-name" id="p1-name">---</div>
-                <div class="p-meta" id="p1-xp">0 XP</div>
+                <div class="p-name" id="p1-name">Elite Operative</div>
+                <div class="p-stats" id="p1-xp">0 XP</div>
             </div>
             <!-- Rank 3 -->
             <div class="podium-item rank-3">
                 <div class="p-avatar-wrap">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rank3" class="p-avatar" id="p3-avatar">
-                    <span class="p-rank-tag">#3</span>
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rank3" class="p-avatar" id="p3-img">
+                    <span class="p-rank-label p-rank-tag">#3</span>
                 </div>
-                <div class="p-name" id="p3-name">---</div>
-                <div class="p-meta" id="p3-xp">0 XP</div>
+                <div class="p-name" id="p3-name">Operative</div>
+                <div class="p-stats" id="p3-xp">0 XP</div>
             </div>
         </section>
 
-        <!-- [2. HALL OF FAME HIGHLIGHTS] -->
-        <div class="hof-header">Directives Highlights</div>
-        <section class="hof-scroll">
-            <div class="hof-card">
-                <svg class="hof-icon" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.83L19.17 19H4.83L12 5.83z"/></svg>
-                <div class="hof-title">Biggest Prize</div>
-                <div class="hof-name" id="hof-prize">Loading...</div>
+        <!-- [FILTERS] -->
+        <nav class="rank-nav">
+            <div class="filter-scroll">
+                <button class="f-pill active" onclick="loadRanks('Global', this)">Global Ranks</button>
+                <button class="f-pill" onclick="loadRanks('PUBG', this)">PUBG Elite</button>
+                <button class="f-pill" onclick="loadRanks('Free Fire', this)">Free Fire Pro</button>
+                <button class="f-pill" onclick="loadRanks('Ambassador', this)">Top Ambassadors</button>
+                <button class="f-pill" onclick="loadRanks('Clans', this)">Squad Rankings</button>
             </div>
-            <div class="hof-card">
-                <svg class="hof-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-                <div class="hof-title">Kill Leader</div>
-                <div class="hof-name" id="hof-killer">Loading...</div>
-            </div>
+        </nav>
+
+        <!-- [HALL OF FAME] -->
+        <div class="hof-header">Legendary Directives</div>
+        <section class="hof-row">
             <div class="hof-card">
                 <svg class="hof-icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <div class="hof-title">Elite Ambassador</div>
-                <div class="hof-name" id="hof-amb">Loading...</div>
+                <span class="hof-lbl">Biggest Prize Won</span>
+                <div class="hof-val" id="hof-prize">PKR ---</div>
+            </div>
+            <div class="hof-card">
+                <svg class="hof-icon" viewBox="0 0 24 24" style="fill:var(--accent);"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                <span class="hof-lbl">Total Match Kills</span>
+                <div class="hof-val" id="hof-kills">--- KILLS</div>
+            </div>
+            <div class="hof-card">
+                <svg class="hof-icon" viewBox="0 0 24 24" style="fill:#2196F3;"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span class="hof-lbl">Squad Points</span>
+                <div class="hof-val" id="hof-squad">--- PTS</div>
             </div>
         </section>
 
-        <!-- [3. GLOBAL RANKINGS ENGINE] -->
-        <section class="leaderboard-controls">
-            <input type="text" class="search-bar" id="player-search" placeholder="Search operative identity...">
-            <div class="filter-row">
-                <button class="f-btn active" onclick="filterLeaderboard('Global', this)">Global</button>
-                <button class="f-btn" onclick="filterLeaderboard('PUBG', this)">PUBG Only</button>
-                <button class="f-btn" onclick="filterLeaderboard('Free Fire', this)">Free Fire Only</button>
-                <button class="f-btn" onclick="filterLeaderboard('Ambassadors', this)">Ambassadors</button>
-            </div>
-        </section>
-
-        <section class="rank-list" id="rank-container">
-            <!-- Dynamic Ranked Rows -->
-            <p style="text-align: center; color: var(--text-dim); font-size: 11px; padding: 40px;">SYNCING SECURE GLOBAL RANKS...</p>
+        <!-- [LIST] -->
+        <section class="rank-list" id="ranking-body">
+            <!-- Firestore Sync -->
+            <p style="text-align: center; padding: 40px; color: var(--text-dim); font-size: 11px; letter-spacing: 2px;">SYNCING GLOBAL SIGNALS...</p>
         </section>
 
         <div id="footer-mount"></div>
@@ -192,10 +198,11 @@
 
     <div id="navigation-mount"></div>
 
+    <!-- [CORE LEADERBOARD LOGIC] -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, collection, query, orderBy, limit, getDocs, where } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, collection, query, where, orderBy, limit, onSnapshot, getDocs } from './firebase-config.js';
 
-        // Component Loading Utility
+        // 1. Component Mounter
         async function mount(id, file) {
             const res = await fetch(file);
             document.getElementById(id).innerHTML = await res.text();
@@ -215,94 +222,102 @@
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    document.getElementById('main-leaderboard').style.opacity = '1';
-                    initLeaderboard();
-                    loadHallOfFame();
+                    document.getElementById('main-ranks').style.opacity = '1';
+                    loadRanks('Global');
+                    syncHOF();
                 } else { window.location.replace('/auth'); }
             });
         });
 
-        // Fetch Rankings
-        async function initLeaderboard(filter = 'Global') {
-            const container = document.getElementById('rank-container');
-            container.innerHTML = "";
+        // 2. Ranking Engine
+        function loadRanks(filter, btn = null) {
+            if(btn) {
+                document.querySelectorAll('.f-pill').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+            }
 
+            const container = document.getElementById('ranking-body');
             let q;
-            if (filter === 'Global') {
-                q = query(collection(db, "users"), orderBy("xp", "desc"), limit(50));
-            } else if (filter === 'Ambassadors') {
-                q = query(collection(db, "users"), where("isAmbassador", "==", true), orderBy("xp", "desc"), limit(50));
-            } else {
-                q = query(collection(db, "users"), where("favGame", "==", filter), orderBy("xp", "desc"), limit(50));
-            }
 
-            const snap = await getDocs(q);
-            const players = [];
-            snap.forEach(doc => players.push(doc.data()));
+            // Define Query based on Tab
+            if(filter === 'Global') q = query(collection(db, "users"), orderBy("xp", "desc"), limit(50));
+            else if(filter === 'PUBG') q = query(collection(db, "users"), where("favGame", "==", "PUBG"), orderBy("xp", "desc"), limit(50));
+            else if(filter === 'Free Fire') q = query(collection(db, "users"), where("favGame", "==", "FreeFire"), orderBy("xp", "desc"), limit(50));
+            else if(filter === 'Ambassador') q = query(collection(db, "users"), where("isAmbassador", "==", true), orderBy("xp", "desc"), limit(50));
+            else if(filter === 'Clans') q = query(collection(db, "teams"), orderBy("points", "desc"), limit(50));
 
-            // Update Top 3 Podium
-            if(players.length >= 3) {
-                // Rank 1
-                document.getElementById('p1-name').innerText = players[0].name;
-                document.getElementById('p1-avatar').src = players[0].avatar;
-                document.getElementById('p1-xp').innerText = (players[0].xp || 0) + " XP";
-                // Rank 2
-                document.getElementById('p2-name').innerText = players[1].name;
-                document.getElementById('p2-avatar').src = players[1].avatar;
-                document.getElementById('p2-xp').innerText = (players[1].xp || 0) + " XP";
-                // Rank 3
-                document.getElementById('p3-name').innerText = players[2].name;
-                document.getElementById('p3-avatar').src = players[2].avatar;
-                document.getElementById('p3-xp').innerText = (players[2].xp || 0) + " XP";
-            }
+            onSnapshot(q, (snap) => {
+                container.innerHTML = "";
+                const players = [];
+                snap.forEach(d => players.push({...d.data(), id: d.id}));
 
-            // Render Rest (Rank 4+)
-            players.slice(3).forEach((p, i) => {
-                const pos = i + 4;
-                container.innerHTML += `
-                    <div class="rank-row">
-                        <span class="r-position">#${pos}</span>
-                        <img src="${p.avatar}" class="r-avatar">
-                        <div class="r-info">
-                            <div class="r-name-row">
-                                <span class="r-name">${p.name}</span>
-                                ${p.verified ? '<svg class="r-badge" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>' : ''}
+                if(players.length === 0) {
+                    container.innerHTML = `<p style="text-align:center; font-size:11px; color:var(--text-dim); padding:40px;">NO RECORDS FOUND FOR THIS SECTOR.</p>`;
+                    return;
+                }
+
+                // Update Top 3 Podium (Only for User-based filters)
+                if(filter !== 'Clans' && players.length >= 3) {
+                    updatePodium(players[0], players[1], players[2]);
+                }
+
+                // Render List
+                players.forEach((p, index) => {
+                    const pos = index + 1;
+                    const gameTag = p.favGame === 'PUBG' ? 'tag-pubg' : 'tag-ff';
+                    const score = filter === 'Clans' ? (p.points || 0) : (p.xp || 0);
+                    const label = filter === 'Clans' ? 'Points' : 'XP Rank';
+
+                    container.innerHTML += `
+                        <div class="rank-card">
+                            <span class="r-pos">#${pos}</span>
+                            <img src="${p.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed='+p.name}" class="r-avatar">
+                            <div class="r-info">
+                                <h4 class="r-name">
+                                    ${p.name}
+                                    ${p.isAmbassador ? '<svg class="r-badge" viewBox="0 0 24 24" style="fill:var(--gold);"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>' : ''}
+                                </h4>
+                                <div class="r-meta">
+                                    <span class="tag ${gameTag}">${p.favGame || 'NE OPERATIVE'}</span>
+                                    <span>🏆 ${p.totalWins || 0} Wins</span>
+                                </div>
                             </div>
-                            <span class="r-game-tag">${p.favGame || 'NE OPERATIVE'}</span>
+                            <div class="r-score">
+                                <span class="r-val">${score.toLocaleString()}</span>
+                                <span class="r-lbl">${label}</span>
+                            </div>
                         </div>
-                        <div class="r-points">
-                            <span class="r-val">${p.xp || 0}</span>
-                            <span class="r-lbl">XP Rank</span>
-                        </div>
-                    </div>
-                `;
+                    `;
+                });
             });
         }
 
-        async function loadHallOfFame() {
-            const hSnap = await getDocs(query(collection(db, "hall_of_fame"), limit(1)));
-            if(!hSnap.empty) {
-                const data = hSnap.docs[0].data();
-                document.getElementById('hof-prize').innerText = data.top_earner || "---";
-                document.getElementById('hof-killer').innerText = data.top_slayer || "---";
-                document.getElementById('hof-amb').innerText = data.top_ambassador || "---";
-            }
+        function updatePodium(p1, p2, p3) {
+            document.getElementById('p1-name').innerText = p1.name;
+            document.getElementById('p1-xp').innerText = (p1.xp || 0).toLocaleString() + " XP";
+            document.getElementById('p1-img').src = p1.avatar;
+
+            document.getElementById('p2-name').innerText = p2.name;
+            document.getElementById('p2-xp').innerText = (p2.xp || 0).toLocaleString() + " XP";
+            document.getElementById('p2-img').src = p2.avatar;
+
+            document.getElementById('p3-name').innerText = p3.name;
+            document.getElementById('p3-xp').innerText = (p3.xp || 0).toLocaleString() + " XP";
+            document.getElementById('p3-img').src = p3.avatar;
         }
 
-        window.filterLeaderboard = (type, btn) => {
-            document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            initLeaderboard(type);
-        };
-
-        // Search logic
-        document.getElementById('player-search').addEventListener('input', (e) => {
-            const val = e.target.value.toUpperCase();
-            document.querySelectorAll('.rank-row').forEach(row => {
-                const name = row.querySelector('.r-name').innerText.toUpperCase();
-                row.style.display = name.includes(val) ? 'flex' : 'none';
+        function syncHOF() {
+            onSnapshot(doc(db, "system_stats", "hall_of_fame"), (snap) => {
+                if(snap.exists()) {
+                    const d = snap.data();
+                    document.getElementById('hof-prize').innerText = "PKR " + (d.max_prize || 0).toLocaleString();
+                    document.getElementById('hof-kills').innerText = (d.max_kills || 0).toLocaleString() + " KILLS";
+                    document.getElementById('hof-squad').innerText = (d.top_squad_pts || 0).toLocaleString() + " PTS";
+                }
             });
-        });
+        }
+
+        window.loadRanks = loadRanks;
 
     </script>
 </body>

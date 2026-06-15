@@ -1,0 +1,422 @@
+<!-- [NE SPORTS SHARED COMPONENT: HEADER VERSION 7.7] -->
+<style>
+    :root {
+        --header-height: 80px;
+        --island-width: 94%;
+        --island-max-width: 500px;
+        --accent-crimson: #D32F2F;
+        --surface-glass: rgba(15, 15, 15, 0.85);
+        --border-glass: rgba(255, 255, 255, 0.08);
+        --text-main: #FFFFFF;
+        --text-dim: rgba(255, 255, 255, 0.5);
+        --z-header: 5000;
+        --z-drawer: 6000;
+    }
+
+    /* Dynamic Island Structure */
+    .header-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--header-height);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: var(--z-header);
+        pointer-events: none; /* Allow clicks through to content, but island will have pointer-events: auto */
+    }
+
+    .dynamic-island {
+        width: var(--island-width);
+        max-width: var(--island-max-width);
+        height: 56px;
+        background: var(--surface-glass);
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid var(--border-glass);
+        border-radius: 40px;
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px 0 18px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.05);
+        transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        animation: islandEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes islandEntrance {
+        from { transform: translateY(-30px) scale(0.9); opacity: 0; }
+        to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* Left Side: Brand & Live Indicator */
+    .island-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .brand-logo-small {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 8px var(--accent-crimson));
+    }
+
+    .live-status-pill {
+        display: none; /* Controlled by Firestore */
+        align-items: center;
+        gap: 6px;
+        background: rgba(211, 47, 47, 0.15);
+        border: 1px solid var(--accent-crimson);
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .live-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent-crimson);
+        border-radius: 50%;
+        animation: pulseLive 1.5s infinite;
+    }
+
+    @keyframes pulseLive {
+        0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+        70% { box-shadow: 0 0 0 8px rgba(211, 47, 47, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+    }
+
+    .live-text {
+        font-size: 9px;
+        font-weight: 800;
+        color: var(--accent-crimson);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    /* Right Side: Wallet & Profile */
+    .island-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .wallet-status {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-glass);
+        padding: 6px 14px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.3s;
+    }
+
+    .wallet-status:active {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(0.96);
+    }
+
+    .wallet-icon {
+        width: 14px;
+        height: 14px;
+        fill: var(--accent-crimson);
+    }
+
+    .wallet-balance {
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        color: var(--text-main);
+    }
+
+    .profile-trigger {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid var(--border-glass);
+        background-color: var(--surface-matte);
+        cursor: pointer;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+    .profile-trigger:hover {
+        border-color: var(--accent-crimson);
+        box-shadow: 0 0 15px rgba(211, 47, 47, 0.3);
+    }
+
+    .profile-trigger img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .menu-toggle {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-left: 4px;
+    }
+
+    .menu-toggle svg {
+        width: 22px;
+        height: 22px;
+        fill: var(--text-main);
+    }
+
+    /* Slide-out Enterprise Drawer */
+    .side-drawer {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 85%;
+        max-width: 320px;
+        height: 100%;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border-left: 1px solid var(--border-glass);
+        z-index: var(--z-drawer);
+        transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 40px 25px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .side-drawer.active {
+        right: 0;
+    }
+
+    .drawer-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .drawer-logo {
+        width: 50px;
+    }
+
+    .close-drawer {
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .close-drawer svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--text-main);
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .nav-link-item {
+        padding: 15px 20px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-glass);
+        border-radius: 14px;
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: 0.3s;
+    }
+
+    .nav-link-item:active {
+        background: var(--accent-crimson);
+        border-color: var(--accent-crimson);
+        transform: translateX(8px);
+    }
+
+    .nav-link-item svg {
+        width: 16px;
+        height: 16px;
+        fill: var(--text-dim);
+    }
+
+    .drawer-footer {
+        margin-top: auto;
+        padding-top: 30px;
+        border-top: 1px solid var(--border-glass);
+        text-align: center;
+    }
+
+    .drawer-footer p {
+        font-size: 10px;
+        color: var(--text-dim);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    /* Overlay Blur */
+    .drawer-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: calc(var(--z-drawer) - 1);
+        display: none;
+        opacity: 0;
+        transition: 0.5s;
+    }
+
+    .drawer-overlay.active {
+        display: block;
+        opacity: 1;
+    }
+</style>
+
+<div class="header-wrapper">
+    <div class="dynamic-island" id="global-island">
+        <!-- Logo & Live Section -->
+        <div class="island-left" onclick="window.location.href='/home'">
+            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="brand-logo-small" alt="NE">
+            <div class="live-status-pill" id="live-match-indicator">
+                <div class="live-dot"></div>
+                <span class="live-text">Live Arena</span>
+            </div>
+        </div>
+
+        <!-- Wallet & Quick Profile -->
+        <div class="island-right">
+            <div class="wallet-status" onclick="window.location.href='/wallet'">
+                <svg class="wallet-icon" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                <span class="wallet-balance" id="global-wallet-amount">---</span>
+            </div>
+            
+            <div class="profile-trigger" id="header-profile-box" onclick="window.location.href='/profile'">
+                <img id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Operative" alt="User">
+            </div>
+
+            <div class="menu-toggle" id="drawer-trigger">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide-out Side Drawer -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="side-drawer" id="side-drawer">
+    <div class="drawer-header">
+        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="drawer-logo" alt="NE Logo">
+        <div class="close-drawer" id="drawer-close">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </div>
+    </div>
+
+    <nav class="nav-links">
+        <a href="/about" class="nav-link-item"><span>About Platform</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/refund" class="nav-link-item"><span>Refund Policy</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/disclaimer" class="nav-link-item"><span>Disclaimer</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/terms" class="nav-link-item"><span>Terms & Conditions</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/privacy" class="nav-link-item"><span>Privacy Policy</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/contact" class="nav-link-item"><span>Direct Contact</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/sponsor" class="nav-link-item"><span>Sponsor Program</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+        <a href="/community" class="nav-link-item"><span>Community Hub</span> <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg></a>
+    </nav>
+
+    <div class="drawer-footer">
+        <p>NE SPORTS Enterprise</p>
+        <p style="opacity: 0.3; margin-top: 5px; font-size: 8px;">Secured v7.7.0</p>
+    </div>
+</aside>
+
+<!-- [NE SPORTS HEADER CORE LOGIC] -->
+<script type="module">
+    import { auth, db, onAuthStateChanged, doc, onSnapshot, collection, query, where } from './firebase-config.js';
+
+    const walletEl = document.getElementById('global-wallet-amount');
+    const avatarEl = document.getElementById('header-avatar');
+    const liveIndicator = document.getElementById('live-match-indicator');
+    const sideDrawer = document.getElementById('side-drawer');
+    const drawerTrigger = document.getElementById('drawer-trigger');
+    const drawerClose = document.getElementById('drawer-close');
+    const drawerOverlay = document.getElementById('drawer-overlay');
+
+    // 1. Session & Real-time Wallet Tracking
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Persistent Listener for User Data
+            onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    walletEl.innerText = `${data.wallet || 0}`;
+                    avatarEl.src = data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`;
+                    
+                    // Style Profile box based on Tier
+                    const pBox = document.getElementById('header-profile-box');
+                    if(data.isAmbassador) {
+                        pBox.style.borderColor = '#D4AF37'; // Gold
+                        pBox.style.boxShadow = '0 0 10px rgba(212, 175, 55, 0.4)';
+                    } else if(data.profileTier === 'VIP') {
+                        pBox.style.borderColor = '#D32F2F'; // Crimson
+                    }
+                }
+            });
+        }
+    });
+
+    // 2. Live Tournament Detection
+    const qLive = query(collection(db, "tournaments"), where("status", "==", "live"));
+    onSnapshot(qLive, (snapshot) => {
+        if (!snapshot.empty) {
+            liveIndicator.style.display = 'flex';
+        } else {
+            liveIndicator.style.display = 'none';
+        }
+    });
+
+    // 3. Side Drawer Interaction
+    const toggleDrawer = (state) => {
+        if(state) {
+            sideDrawer.classList.add('active');
+            drawerOverlay.classList.add('active');
+        } else {
+            sideDrawer.classList.remove('active');
+            drawerOverlay.classList.remove('active');
+        }
+    };
+
+    drawerTrigger.onclick = () => toggleDrawer(true);
+    drawerClose.onclick = () => toggleDrawer(false);
+    drawerOverlay.onclick = () => toggleDrawer(false);
+
+    // Dynamic Island Adaptive Scaling (Example: Shrink on Scroll)
+    window.addEventListener('scroll', () => {
+        const island = document.getElementById('global-island');
+        if (window.scrollY > 50) {
+            island.style.height = '48px';
+            island.style.transform = 'translateY(-5px) scale(0.98)';
+        } else {
+            island.style.height = '56px';
+            island.style.transform = 'translateY(0) scale(1)';
+        }
+    });
+
+</script>

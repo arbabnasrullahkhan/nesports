@@ -2,276 +2,237 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NE SPORTS | Squad Hub</title>
-    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
     <style>
         :root {
-            --bg: #0A0A0A;
-            --cyan: #00D4FF;
-            --purple: #7B61FF;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-base: #050505;
+            --surface: #121212;
+            --surface-elevated: #1E1E1E;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-red: #D32F2F;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(18, 18, 18, 0.85);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
 
-        body {
-            background-color: var(--bg);
-            color: white;
-            padding-bottom: 100px;
-            background: radial-gradient(circle at top left, rgba(0, 212, 255, 0.1), transparent);
-        }
+        body { background-color: var(--bg-base); color: var(--text-main); padding-bottom: 100px; }
 
-        /* Header Tabs */
+        /* Navigation Tabs */
         .tab-bar {
-            display: flex;
-            padding: 20px;
-            gap: 10px;
-            position: sticky;
-            top: 0;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(15px);
-            z-index: 100;
+            position: sticky; top: 0; z-index: 100;
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            display: flex; padding: 20px 20px 10px; gap: 15px;
+            border-bottom: 1px solid var(--border-subtle);
         }
         .tab-btn {
-            flex: 1;
-            padding: 12px;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            color: rgba(255,255,255,0.5);
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
+            flex: 1; padding: 12px; background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 12px; color: var(--text-muted); font-size: 12px; font-weight: 800;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
-        .tab-btn.active {
-            background: white;
-            color: black;
-            border-color: white;
-        }
+        .tab-btn.active { background: var(--text-main); color: var(--bg-base); border-color: var(--text-main); }
 
-        /* Create Team Section */
-        .content-section { padding: 20px; display: none; }
-        .content-section.active { display: block; animation: fadeIn 0.5s ease; }
-
+        /* Section Handling */
+        .content-sec { padding: 20px; display: none; animation: fadeIn 0.4s ease; }
+        .content-sec.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .team-card {
-            background: linear-gradient(135deg, rgba(123, 97, 255, 0.1), rgba(0, 212, 255, 0.1));
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 30px 20px;
-            text-align: center;
-            margin-bottom: 20px;
+        /* My Team Styling */
+        .squad-empty-state {
+            background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 20px; padding: 40px 20px; text-align: center;
+        }
+        .squad-icon-large { width: 64px; height: 64px; fill: var(--accent-red); margin-bottom: 20px; }
+        
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-left: 5px; }
+        .input-field {
+            width: 100%; padding: 14px; background: var(--bg-base); border: 1px solid var(--border-subtle);
+            border-radius: 12px; color: white; outline: none; font-size: 14px;
+        }
+        .input-field:focus { border-color: var(--accent-red); }
+
+        .btn-primary {
+            width: 100%; padding: 16px; background: var(--accent-red); color: white;
+            border: none; border-radius: 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer;
         }
 
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { font-size: 11px; opacity: 0.6; margin-left: 10px; }
-        .input-group input {
-            width: 100%; padding: 15px; background: var(--glass);
-            border: 1px solid var(--glass-border); border-radius: 15px;
-            color: white; margin-top: 5px; outline: none;
+        /* Clan Rank List */
+        .clan-card {
+            background: var(--surface); border: 1px solid var(--border-subtle);
+            padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 15px; margin-bottom: 12px;
         }
-
-        .primary-btn {
-            width: 100%; padding: 15px; background: var(--cyan);
-            color: black; border: none; border-radius: 15px;
-            font-weight: 800; cursor: pointer;
-        }
-
-        /* Clan List */
-        .clan-item {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .clan-rank { width: 30px; font-weight: 900; color: var(--cyan); }
-        .clan-logo { width: 45px; height: 45px; border-radius: 12px; margin: 0 15px; background: #222; }
+        .clan-rank-id { font-size: 14px; font-weight: 900; color: var(--accent-red); width: 30px; }
         .clan-info { flex: 1; }
-        .clan-info h4 { font-size: 15px; }
-        .clan-info p { font-size: 11px; opacity: 0.5; }
-        .clan-points { text-align: right; font-weight: 800; color: #FFD700; }
+        .clan-name { font-size: 15px; font-weight: 700; text-transform: uppercase; }
+        .clan-meta { font-size: 11px; color: var(--text-muted); }
+        .clan-pts { font-size: 14px; font-weight: 800; text-align: right; }
 
         /* Bottom Nav */
-        .nav-bar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 90%; height: 70px; background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(25px); border-radius: 25px; border: 1px solid var(--glass-border);
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            background: var(--glass-bg); backdrop-filter: blur(25px); border-top: 1px solid var(--border-subtle);
             display: flex; justify-content: space-around; align-items: center; z-index: 1000;
         }
-        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; }
-        .nav-item.active { color: var(--cyan); }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--text-muted); }
+        .nav-item svg { width: 22px; height: 22px; fill: var(--text-muted); }
+        .nav-item span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+        .nav-item.active { color: var(--accent-red); }
+        .nav-item.active svg { fill: var(--accent-red); }
     </style>
 </head>
 <body>
 
     <div class="tab-bar">
-        <div class="tab-btn active" onclick="switchTab('my-team', this)">MY SQUAD</div>
-        <div class="tab-btn" onclick="switchTab('rankings', this)">CLAN RANKS</div>
+        <button class="tab-btn active" onclick="switchTab('my-squad', this)">My Squad</button>
+        <button class="tab-btn" onclick="switchTab('clan-ranks', this)">Clan Ranks</button>
     </div>
 
-    <!-- My Team Section -->
-    <div id="my-team" class="content-section active">
-        <div id="no-team-view">
-            <div class="team-card">
-                <div style="font-size: 50px; margin-bottom: 15px;">🛡️</div>
-                <h2>No Squad Found</h2>
-                <p style="font-size: 13px; opacity: 0.6; margin-bottom: 25px;">Create your own squad or join an existing one using a team code.</p>
+    <!-- MY SQUAD SECTION -->
+    <div id="my-squad" class="content-sec active">
+        <!-- Not in a team view -->
+        <div id="no-team" class="squad-empty-state">
+            <svg class="squad-icon-large" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <h2 style="font-size: 18px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px;">No Active Squad</h2>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 30px;">Form an elite unit or join using a secure recruitment code.</p>
+            
+            <div class="input-group">
+                <label>New Squad Name</label>
+                <input type="text" id="new-team-name" class="input-field" placeholder="e.g. ALPHA_TERMINATORS">
+            </div>
+            <button class="btn-primary" onclick="createSquad()">INITIALIZE SQUAD</button>
+
+            <div style="margin: 25px 0; font-size: 11px; color: var(--text-muted); letter-spacing: 2px;">OR</div>
+
+            <div class="input-group">
+                <label>Recruitment Code</label>
+                <input type="text" id="join-team-code" class="input-field" placeholder="Enter 6-digit Code">
+            </div>
+            <button class="btn-primary" style="background: var(--text-main); color: var(--bg-base);" onclick="joinSquad()">JOIN SECURE SQUAD</button>
+        </div>
+
+        <!-- In a team view -->
+        <div id="team-view" style="display: none;">
+            <div class="squad-empty-state">
+                <h1 id="view-team-name" style="text-transform: uppercase; font-size: 24px; font-weight: 900;">SQUAD NAME</h1>
+                <p id="view-team-code" style="color: var(--accent-red); font-family: monospace; letter-spacing: 2px; margin-top: 10px;">CODE: ------</p>
                 
-                <div class="input-group">
-                    <label>Squad Name</label>
-                    <input type="text" id="team-name" placeholder="e.g. Team Nexra">
+                <div style="margin-top: 30px; border-top: 1px solid var(--border-subtle); padding-top: 20px;">
+                    <h4 style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px;">Operative Roster</h4>
+                    <div id="team-roster">
+                        <!-- Members List -->
+                    </div>
                 </div>
-                <button class="primary-btn" onclick="createTeam()">Create Squad</button>
-                
-                <div style="margin: 20px 0; opacity: 0.3;">——— OR ———</div>
-                
-                <div class="input-group">
-                    <label>Team Code</label>
-                    <input type="text" id="join-code" placeholder="Enter 6-digit code">
-                </div>
-                <button class="primary-btn" style="background: white;" onclick="joinTeam()">Join Squad</button>
             </div>
         </div>
+    </div>
 
-        <div id="team-details-view" style="display: none;">
-            <!-- Will be populated if user has a team -->
-            <div class="team-card">
-                <h1 id="display-team-name">Squad Name</h1>
-                <p id="display-team-code" style="color: var(--cyan); font-family: monospace; letter-spacing: 2px;">CODE: ------</p>
-                <div style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;" id="team-members">
-                    <!-- Member Avatars -->
-                </div>
-            </div>
+    <!-- CLAN RANKS SECTION -->
+    <div id="clan-ranks" class="content-sec">
+        <div id="clan-list-container">
+            <!-- Dynamic Clans -->
+            <p style="text-align: center; color: var(--text-muted); font-size: 11px; margin-top: 40px;">SYNCING GLOBAL CLAN DATA...</p>
         </div>
     </div>
 
-    <!-- Clan Rankings Section -->
-    <div id="rankings" class="content-section">
-        <div id="clan-list">
-            <!-- Dynamic Clan List -->
-            <p style="text-align: center; opacity: 0.5;">Loading Clan Rankings...</p>
-        </div>
-    </div>
-
-    <nav class="nav-bar">
-        <a href="home.html" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>HOME
+    <nav class="bottom-nav">
+        <a href="/home" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span>
         </a>
-        <a href="tournaments.html" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>MATCHES
+        <a href="/tournaments" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg><span>Arena</span>
         </a>
-        <a href="teams.html" class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>SQUAD
+        <a href="/teams" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>Squad</span>
         </a>
-        <a href="profile.html" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>PROFILE
+        <a href="/profile" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profile</span>
         </a>
     </nav>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, query, orderBy, getDocs, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { auth, db, onAuthStateChanged, doc, getDoc, setDoc, updateDoc, collection, query, orderBy, getDocs, arrayUnion } from './firebase-config.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
-            authDomain: "nesports7.firebaseapp.com",
-            projectId: "nesports7",
-            storageBucket: "nesports7.firebasestorage.app",
-            messagingSenderId: "414629589331",
-            appId: "1:414629589331:web:2a30069688008d17d371a6"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
         let currentUser = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                checkUserTeam();
-                loadClanRankings();
-            } else {
-                window.location.href = "auth.html";
-            }
+                checkSquadStatus();
+                loadClanRanks();
+            } else { window.location.replace("/auth"); }
         });
 
-        window.switchTab = (tabId, btn) => {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+        window.switchTab = (tab, btn) => {
+            document.querySelectorAll('.content-sec').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
             btn.classList.add('active');
         };
 
-        async function checkUserTeam() {
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            const userData = userDoc.data();
-            
-            if (userData.teamId) {
-                document.getElementById('no-team-view').style.display = "none";
-                document.getElementById('team-details-view').style.display = "block";
-                loadTeamDetails(userData.teamId);
+        async function checkSquadStatus() {
+            const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+            const data = userSnap.data();
+            if (data.teamId) {
+                document.getElementById('no-team').style.display = "none";
+                document.getElementById('team-view').style.display = "block";
+                loadMyTeam(data.teamId);
             }
         }
 
-        window.createTeam = async () => {
-            const name = document.getElementById('team-name').value;
-            if (!name) return alert("Enter Squad Name");
-
-            const teamId = "TEAM-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        window.createSquad = async () => {
+            const name = document.getElementById('new-team-name').value.trim();
+            if(!name) return alert("System Error: Squad Name required.");
             
-            await setDoc(doc(db, "teams", teamId), {
-                name: name,
-                leader: currentUser.uid,
-                members: [currentUser.uid],
-                points: 0,
-                createdAt: new Date()
-            });
+            const teamId = "SQD-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+            
+            try {
+                await setDoc(doc(db, "teams", teamId), {
+                    name: name,
+                    leader: currentUser.uid,
+                    members: [currentUser.uid],
+                    points: 0,
+                    createdAt: new Date().toISOString()
+                });
 
-            await updateDoc(doc(db, "users", currentUser.uid), {
-                teamId: teamId
-            });
-
-            alert("Squad Created Successfully!");
-            location.reload();
+                await updateDoc(doc(db, "users", currentUser.uid), { teamId: teamId });
+                alert("Squad Initialization Complete.");
+                location.reload();
+            } catch(e) { alert("Initialization Failed."); }
         };
 
-        async function loadTeamDetails(id) {
-            const teamDoc = await getDoc(doc(db, "teams", id));
-            if (teamDoc.exists()) {
-                const data = teamDoc.data();
-                document.getElementById('display-team-name').innerText = data.name;
-                document.getElementById('display-team-code').innerText = "CODE: " + id;
+        async function loadMyTeam(id) {
+            const teamSnap = await getDoc(doc(db, "teams", id));
+            if(teamSnap.exists()) {
+                const team = teamSnap.data();
+                document.getElementById('view-team-name').innerText = team.name;
+                document.getElementById('view-team-code').innerText = "CODE: " + id;
+                // Member logic would go here to fetch individual names
             }
         }
 
-        async function loadClanRankings() {
+        async function loadClanRanks() {
+            const list = document.getElementById('clan-list-container');
             const q = query(collection(db, "teams"), orderBy("points", "desc"));
             const snap = await getDocs(q);
-            const list = document.getElementById('clan-list');
+            
             list.innerHTML = "";
-
             let rank = 1;
             snap.forEach(doc => {
                 const clan = doc.data();
                 list.innerHTML += `
-                    <div class="clan-item">
-                        <div class="clan-rank">#${rank++}</div>
-                        <div class="clan-logo" style="background: linear-gradient(45deg, var(--purple), var(--cyan))"></div>
+                    <div class="clan-card">
+                        <div class="clan-rank-id">#${rank++}</div>
                         <div class="clan-info">
-                            <h4>${clan.name}</h4>
-                            <p>${clan.members.length} Members</p>
+                            <h4 class="clan-name">${clan.name}</h4>
+                            <span class="clan-meta">${clan.members.length} Operatives Active</span>
                         </div>
-                        <div class="clan-points">${clan.points} PTS</div>
+                        <div class="clan-pts">${clan.points} PTS</div>
                     </div>
                 `;
             });

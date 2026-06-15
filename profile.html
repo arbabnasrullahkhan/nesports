@@ -3,131 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Operative Profile | NE SPORTS</title>
+    <title>Operative Identity | NE SPORTS</title>
     <meta name="theme-color" content="#050505">
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
-        /* [GLOBAL THEME VARIABLES] */
+        /* [NE SPORTS PROFILE CORE DESIGN] */
         :root {
             --bg-base: #050505;
-            --surface-matte: #0A0A0A;
-            --surface-elevated: #151515;
-            --accent-primary: #D32F2F; /* Default User Crimson */
-            --accent-gold: #D4AF37;    /* Ambassador Gold */
-            --border-glass: rgba(255, 255, 255, 0.08);
+            --surface: #0E0E0E;
+            --surface-elevated: #161616;
+            --accent: #D32F2F; 
+            --gold: #D4AF37;
+            --border: rgba(255, 255, 255, 0.08);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.5);
-            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --success: #4CAF50;
         }
 
-        /* Ambassador Mode Override */
+        /* Ambassador Theme Override */
         body.mode-ambassador {
-            --accent-primary: var(--accent-gold);
+            --accent: var(--gold);
+            --bg-base: #070600;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; transition: background 0.5s ease; }
 
-        /* Shared Component Mounts */
+        /* Shared Mount Points */
         #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
         #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
 
-        /* [1. PROFILE HERO] */
+        .profile-container { padding: 80px 0 120px; }
+
+        /* [1. IDENTITY HERO] */
         .profile-hero {
-            padding: 120px 20px 40px;
-            text-align: center;
-            background: linear-gradient(180deg, rgba(211, 47, 47, 0.08) 0%, var(--bg-base) 100%);
-            border-bottom: 1px solid var(--border-glass);
-            transition: var(--transition);
+            padding: 40px 20px;
+            background: linear-gradient(180deg, rgba(211, 47, 47, 0.05) 0%, var(--bg-base) 100%);
+            text-align: center; border-bottom: 1px solid var(--border); position: relative;
         }
         body.mode-ambassador .profile-hero {
             background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, var(--bg-base) 100%);
         }
 
-        .avatar-wrap {
-            position: relative; width: 110px; height: 110px; margin: 0 auto 20px;
-        }
-        .main-avatar {
-            width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent-primary);
-            padding: 5px; background: var(--surface-matte); object-fit: cover;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.8);
-        }
-        .verified-badge {
-            position: absolute; bottom: 5px; right: 5px; width: 28px; height: 28px;
-            background: var(--accent-primary); border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; border: 3px solid var(--bg-base);
-        }
-        .verified-badge svg { width: 14px; height: 14px; fill: white; }
+        .avatar-engine { position: relative; width: 120px; height: 120px; margin: 0 auto 20px; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; border: 4px solid var(--accent); padding: 5px; background: var(--surface); object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .verified-tick { position: absolute; bottom: 5px; right: 5px; width: 30px; height: 30px; background: var(--accent); border-radius: 50%; border: 4px solid var(--bg-base); display: flex; align-items: center; justify-content: center; }
+        
+        .u-name { font-size: 26px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .u-rank-label { font-size: 10px; font-weight: 800; color: var(--accent); text-transform: uppercase; letter-spacing: 3px; }
 
-        .op-name { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .op-tier { font-size: 10px; font-weight: 800; color: var(--accent-primary); letter-spacing: 2px; text-transform: uppercase; }
+        /* [2. XP & LEVELING] */
+        .level-card { margin: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; }
+        .level-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .lvl-tag { font-size: 12px; font-weight: 900; text-transform: uppercase; }
+        .xp-count { font-size: 11px; color: var(--text-dim); font-weight: 700; }
+        .progress-track { width: 100%; height: 6px; background: var(--surface-elevated); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: 1.5s cubic-bezier(0.65, 0, 0.35, 1); box-shadow: 0 0 10px var(--accent); }
 
-        /* [2. ENTERPRISE STATS] */
-        .stats-container {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 25px 20px;
-        }
-        .stat-card {
-            background: var(--surface-matte); border: 1px solid var(--border-glass);
-            border-radius: 16px; padding: 15px 10px; text-align: center;
-        }
-        .s-val { font-size: 18px; font-weight: 900; color: #fff; display: block; margin-bottom: 4px; }
-        .s-lbl { font-size: 9px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
+        /* [3. ANALYTICS GRID] */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 20px 30px; }
+        .stat-box { background: var(--surface); border: 1px solid var(--border); padding: 20px; border-radius: 20px; text-align: center; }
+        .stat-val { font-size: 20px; font-weight: 900; color: #fff; display: block; margin-bottom: 5px; }
+        .stat-lbl { font-size: 9px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* [3. ACTION GRID] */
-        .action-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 20px 30px;
-        }
-        .action-item {
-            background: var(--surface-elevated); border: 1px solid var(--border-glass);
-            border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px;
-            text-decoration: none; color: white; transition: var(--transition);
-        }
-        .action-item:active { transform: scale(0.96); background: var(--surface-matte); }
-        .a-icon { width: 32px; height: 32px; fill: var(--accent-primary); }
-        .a-text { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* [4. AMBASSADOR COMMAND MODULE] */
-        #ambassador-module {
-            display: none; padding: 0 20px 30px;
-        }
-        .amb-card {
+        /* [4. AMBASSADOR EXCLUSIVE PANEL] */
+        #ambassador-panel { display: none; padding: 0 20px 30px; }
+        .amb-card { 
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(0,0,0,0));
-            border: 1px solid var(--accent-gold); border-radius: 24px; padding: 25px;
-            position: relative; overflow: hidden;
+            border: 1px solid var(--gold); border-radius: 24px; padding: 25px; position: relative; overflow: hidden;
         }
-        .amb-card::before {
-            content: "VIP"; position: absolute; top: -10px; right: -10px; font-size: 60px;
-            font-weight: 900; color: var(--accent-gold); opacity: 0.05;
-        }
-        .ref-box {
-            background: rgba(0,0,0,0.4); border: 1px dashed var(--accent-gold);
-            border-radius: 12px; padding: 15px; margin-top: 15px; display: flex;
-            align-items: center; justify-content: space-between;
-        }
-        .ref-code { font-family: monospace; font-size: 16px; font-weight: 800; color: var(--accent-gold); }
-        .btn-copy { background: var(--accent-gold); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; cursor: pointer; }
+        .amb-card::before { content: "VIP"; position: absolute; top: -10px; right: -10px; font-size: 60px; font-weight: 900; color: var(--gold); opacity: 0.05; }
+        .ref-link-box { background: rgba(0,0,0,0.4); border: 1px dashed var(--gold); border-radius: 12px; padding: 15px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; }
+        .ref-url { font-family: monospace; font-size: 14px; font-weight: 800; color: var(--gold); }
+        .btn-copy { background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 8px; font-size: 10px; font-weight: 900; cursor: pointer; }
 
-        /* [5. TROPHY ROOM] */
-        .section-title { padding: 0 20px 15px; font-size: 12px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
-        .badge-row {
-            display: flex; gap: 15px; padding: 0 20px 40px; overflow-x: auto; scrollbar-width: none;
-        }
-        .badge-item {
-            min-width: 90px; height: 110px; background: var(--surface-matte); border: 1px solid var(--border-glass);
-            border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-            opacity: 0.3; filter: grayscale(1); transition: var(--transition);
-        }
-        .badge-item.unlocked { opacity: 1; filter: grayscale(0); border-color: var(--accent-primary); }
-        .badge-item svg { width: 36px; height: 36px; fill: var(--accent-primary); }
+        /* [5. TROPHY & HISTORY] */
+        .section-title { padding: 0 20px 15px; font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-dim); letter-spacing: 2px; }
+        .badge-row { display: flex; gap: 15px; padding: 0 20px 30px; overflow-x: auto; scrollbar-width: none; }
+        .badge-item { min-width: 90px; height: 110px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; opacity: 0.2; filter: grayscale(1); transition: 0.3s; }
+        .badge-item.active { opacity: 1; filter: grayscale(0); border-color: var(--accent); background: rgba(255,255,255,0.02); }
+        .badge-item svg { width: 36px; height: 36px; fill: var(--accent); }
         .badge-name { font-size: 9px; font-weight: 800; text-transform: uppercase; }
 
-        /* [6. LOGOUT] */
-        .logout-area { padding: 0 20px 120px; }
-        .btn-logout {
-            width: 100%; padding: 18px; background: rgba(211, 47, 47, 0.1); border: 1px solid rgba(211, 47, 47, 0.2);
-            border-radius: 16px; color: #D32F2F; font-size: 13px; font-weight: 800; text-transform: uppercase; cursor: pointer;
-        }
+        .history-list { padding: 0 20px 30px; display: flex; flex-direction: column; gap: 12px; }
+        .history-card { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
+        .h-info h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+        .h-info p { font-size: 10px; color: var(--text-dim); font-weight: 600; }
+        .h-prize { font-size: 14px; font-weight: 900; color: var(--accent); }
+
+        /* [6. ACTION BUTTONS] */
+        .action-area { padding: 0 20px 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn-p { padding: 16px; border-radius: 14px; border: 1px solid var(--border); font-size: 11px; font-weight: 900; text-transform: uppercase; cursor: pointer; text-align: center; text-decoration: none; color: #fff; background: var(--surface-elevated); }
+        .btn-logout { grid-column: 1 / -1; border-color: rgba(211, 47, 47, 0.2); color: #D32F2F; background: rgba(211, 47, 47, 0.05); }
 
     </style>
 </head>
@@ -136,69 +105,55 @@
     <div id="loader-mount"></div>
     <div id="header-mount"></div>
 
-    <main id="main-profile" style="opacity: 0; transition: 0.6s;">
+    <main class="profile-container" id="main-profile" style="opacity: 0; transition: 0.8s;">
         
-        <!-- [HERO SECTION] -->
+        <!-- IDENTITY HERO -->
         <section class="profile-hero">
-            <div class="avatar-wrap">
-                <img id="u-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Operative" class="main-avatar">
-                <div class="verified-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+            <div class="avatar-engine">
+                <img id="p-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Operative" class="avatar-img">
+                <div class="verified-tick"><svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
             </div>
-            <h1 class="op-name" id="u-name">SYSTEM_OFFLINE</h1>
-            <div class="op-tier" id="u-tier">RANK: INITIALIZING</div>
+            <h1 class="u-name" id="p-name">Loading...</h1>
+            <div class="u-rank-label" id="p-tier-display">Tier: Initializing</div>
         </section>
 
-        <!-- [STATS GRID] -->
-        <section class="stats-container">
-            <div class="stat-card"><span class="s-val" id="s-wins">0</span><span class="s-lbl">Wins</span></div>
-            <div class="stat-card"><span class="s-val" id="s-kills">0</span><span class="s-lbl">Kills</span></div>
-            <div class="stat-card"><span class="s-val" id="s-earnings">0</span><span class="s-lbl">Earnings</span></div>
+        <!-- PROGRESS MODULE -->
+        <section class="level-card">
+            <div class="level-head">
+                <span class="lvl-tag" id="lvl-current">Bronze Operative</span>
+                <span class="xp-count" id="xp-text">0 / 500 XP</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" id="xp-bar"></div></div>
         </section>
 
-        <!-- [AMBASSADOR COMMAND MODULE] -->
-        <section id="ambassador-module">
+        <!-- ANALYTICS GRID -->
+        <section class="stats-grid">
+            <div class="stat-box"><span class="stat-val" id="s-wins">0</span><span class="stat-lbl">Match Wins</span></div>
+            <div class="stat-box"><span class="stat-val" id="s-kills">0</span><span class="stat-lbl">Total Kills</span></div>
+            <div class="stat-box"><span class="stat-val" id="s-winrate">0%</span><span class="stat-lbl">Win Ratio</span></div>
+            <div class="stat-box"><span class="stat-val" id="s-earn">0</span><span class="stat-lbl">Total PKR</span></div>
+        </section>
+
+        <!-- AMBASSADOR DASHBOARD (DYNAMIC) -->
+        <section id="ambassador-panel">
             <div class="section-title">Influencer Intelligence</div>
             <div class="amb-card">
-                <h3 style="font-size: 16px; font-weight: 900; text-transform: uppercase; color: var(--accent-gold);">Elite Command Panel</h3>
-                <p style="font-size: 11px; color: var(--text-dim); margin-top: 5px;">Track your referral conversions and revenue performance.</p>
-                
-                <div class="stats-container" style="padding: 20px 0 0; grid-template-columns: 1fr 1fr;">
-                    <div class="stat-card" style="background: rgba(255,255,255,0.03);"><span class="s-val" id="amb-refs">0</span><span class="s-lbl">Referrals</span></div>
-                    <div class="stat-card" style="background: rgba(255,255,255,0.03);"><span class="s-val" id="amb-comm">0</span><span class="s-lbl">Commission</span></div>
+                <div class="stats-grid" style="padding: 0; margin-bottom: 20px;">
+                    <div class="stat-box" style="background: rgba(255,255,255,0.02);"><span class="stat-val" id="a-refs">0</span><span class="stat-lbl">Referrals</span></div>
+                    <div class="stat-box" style="background: rgba(255,255,255,0.02);"><span class="stat-val" id="a-comm">0</span><span class="stat-lbl">Commission</span></div>
                 </div>
-
-                <div class="ref-box">
-                    <span class="ref-code" id="u-ref-link">NES-XXXXXX</span>
-                    <button class="btn-copy" onclick="copyRef()">Copy Link</button>
+                <h4 style="font-size: 10px; font-weight: 800; color: var(--gold); text-transform: uppercase;">Direct Deployment Link</h4>
+                <div class="ref-link-box">
+                    <span class="ref-url" id="ref-code-display">NES-XXXXX</span>
+                    <button class="btn-copy" onclick="copyRef()">COPY LINK</button>
                 </div>
             </div>
         </section>
 
-        <!-- [ACTION GRID] -->
-        <div class="section-title">Operational Access</div>
-        <section class="action-grid">
-            <a href="/settings" class="action-item">
-                <svg class="a-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-                <span class="a-text">Settings</span>
-            </a>
-            <a href="/teams" class="action-item">
-                <svg class="a-icon" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                <span class="a-text">My Squad</span>
-            </a>
-            <a href="/marketplace" class="action-item">
-                <svg class="a-icon" viewBox="0 0 24 24"><path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2c0 .55.45 1 1 1v5h10v-5h6c.55 0 1-.45 1-1zm-9 4H5v-4h7v4z"/></svg>
-                <span class="a-text">Marketplace</span>
-            </a>
-            <a href="/legal" class="action-item">
-                <svg class="a-icon" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg>
-                <span class="a-text">Refunds</span>
-            </a>
-        </section>
-
-        <!-- [TROPHY ROOM] -->
+        <!-- TROPHY ROOM -->
         <div class="section-title">Trophy Room</div>
         <section class="badge-row">
-            <div class="badge-item unlocked" id="badge-verified">
+            <div class="badge-item active" id="badge-verified">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
                 <span class="badge-name">Verified</span>
             </div>
@@ -206,14 +161,28 @@
                 <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
                 <span class="badge-name">Slayer</span>
             </div>
-            <div class="badge-item" id="badge-elite">
-                <svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.83L19.17 19H4.83L12 5.83z"/></svg>
-                <span class="badge-name">Elite</span>
+            <div class="badge-item" id="badge-legend">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span class="badge-name">Legend</span>
+            </div>
+            <div class="badge-item" id="badge-vip">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                <span class="badge-name">VIP Elite</span>
             </div>
         </section>
 
-        <section class="logout-area">
-            <button class="btn-logout" onclick="userLogout()">Terminate Session</button>
+        <!-- TOURNAMENT HISTORY -->
+        <div class="section-title">Deployment Archive</div>
+        <section class="history-list" id="match-history">
+            <!-- Real-time sync -->
+            <p style="text-align: center; color: var(--text-dim); font-size: 11px; padding: 20px;">SYNCING MISSION LOGS...</p>
+        </section>
+
+        <!-- ACTION MENU -->
+        <section class="action-area">
+            <a href="/settings" class="btn-p">Edit Identity</a>
+            <a href="/wallet" class="btn-p" style="border-color: var(--accent); color: var(--accent);">Vault Access</a>
+            <button class="btn-p btn-logout" onclick="userLogout()">Terminate Session</button>
         </section>
 
         <div id="footer-mount"></div>
@@ -221,14 +190,14 @@
 
     <div id="navigation-mount"></div>
 
-    <!-- [CORE PROFILE LOGIC ENGINE] -->
+    <!-- [PROFILE LOGIC ENGINE] -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, doc, getDoc, onSnapshot, signOut } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, doc, getDoc, onSnapshot, collection, query, where, orderBy, getDocs, signOut } from './firebase-config.js';
 
-        let currentUser = null;
+        let userData = null;
 
-        // 1. Component Mounting
-        async function loadComponent(id, file) {
+        // 1. Module Mounter
+        async function mount(id, file) {
             const res = await fetch(file);
             document.getElementById(id).innerHTML = await res.text();
             const scripts = document.getElementById(id).querySelectorAll('script');
@@ -240,69 +209,118 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            await loadComponent('loader-mount', '/loader.html');
-            await loadComponent('header-mount', '/header.html');
-            await loadComponent('navigation-mount', '/navigation.html');
-            await loadComponent('footer-mount', '/footer.html');
+            await mount('loader-mount', '/loader.html');
+            await mount('header-mount', '/header.html');
+            await mount('navigation-mount', '/navigation.html');
+            await mount('footer-mount', '/footer.html');
 
-            onAuthStateChanged(auth, (user) => {
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    currentUser = user;
                     document.getElementById('main-profile').style.opacity = '1';
-                    syncProfileData();
+                    syncProfile(user.uid);
+                    loadMatchHistory(user.uid);
                 } else { window.location.replace('/auth'); }
             });
         });
 
-        // 2. Real-time Profile Synchronization
-        function syncProfileData() {
-            onSnapshot(doc(db, "users", currentUser.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Basic Identity
-                    document.getElementById('u-name').innerText = data.name || "Unknown Operative";
-                    document.getElementById('u-avatar').src = data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}`;
-                    document.getElementById('u-tier').innerText = `RANK: ${data.level || 'BRONZE'}`;
-                    
-                    // Stats
-                    document.getElementById('s-wins').innerText = data.totalWins || 0;
-                    document.getElementById('s-kills').innerText = data.totalKills || 0;
-                    document.getElementById('s-earnings').innerText = (data.totalEarnings || 0).toLocaleString();
+        // 2. Real-time Profile Engine
+        function syncProfile(uid) {
+            onSnapshot(doc(db, "users", uid), (snap) => {
+                if(!snap.exists()) return;
+                userData = snap.data();
 
-                    // AMBASSADOR LOGIC (THE MASTER SWITCH)
-                    if (data.isAmbassador === true) {
-                        document.body.classList.add('mode-ambassador');
-                        document.getElementById('ambassador-module').style.display = 'block';
-                        document.getElementById('u-tier').innerText = "OFFICIAL BRAND AMBASSADOR";
-                        document.getElementById('u-ref-link').innerText = data.referralCode || "NES-GEN-001";
-                        document.getElementById('amb-refs').innerText = data.referralCount || 0;
-                        document.getElementById('amb-comm').innerText = (data.referralEarnings || 0).toLocaleString();
-                    } else {
-                        document.body.classList.remove('mode-ambassador');
-                        document.getElementById('ambassador-module').style.display = 'none';
-                    }
-
-                    // Achievement Unlock Logic
-                    if (data.totalKills >= 100) document.getElementById('badge-slayer').classList.add('unlocked');
-                    if (data.level === 'LEGEND') document.getElementById('badge-elite').classList.add('unlocked');
+                // Theme Detect
+                if(userData.isAmbassador) {
+                    document.body.classList.add('mode-ambassador');
+                    document.getElementById('ambassador-panel').style.display = 'block';
+                    document.getElementById('p-tier-display').innerText = "Official Brand Ambassador";
+                    document.getElementById('ref-code-display').innerText = userData.referralCode || "NES-GEN-001";
+                    document.getElementById('a-refs').innerText = userData.referralCount || 0;
+                    document.getElementById('a-comm').innerText = (userData.referralEarnings || 0).toLocaleString();
+                    document.getElementById('badge-vip').classList.add('active');
                 }
+
+                // Identity
+                document.getElementById('p-name').innerText = userData.name;
+                document.getElementById('p-avatar').src = userData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.name}`;
+                
+                // Stats
+                document.getElementById('s-wins').innerText = userData.totalWins || 0;
+                document.getElementById('s-kills').innerText = userData.totalKills || 0;
+                document.getElementById('s-earn').innerText = (userData.totalEarnings || 0).toLocaleString();
+                
+                const winRate = userData.matchesPlayed > 0 ? ((userData.totalWins / userData.matchesPlayed) * 100).toFixed(1) : 0;
+                document.getElementById('s-winrate').innerText = winRate + "%";
+
+                // XP & Level Logic
+                calculateLevel(userData.xp || 0);
+
+                // Badge Logic
+                if(userData.totalKills >= 100) document.getElementById('badge-slayer').classList.add('active');
+                if(userData.level === 'LEGEND') document.getElementById('badge-legend').classList.add('active');
             });
         }
 
-        // 3. Helper Functions
+        function calculateLevel(xp) {
+            const levels = [
+                { name: 'Bronze Operative', min: 0, max: 500 },
+                { name: 'Silver Warrior', min: 501, max: 1500 },
+                { name: 'Gold Veteran', min: 1501, max: 4000 },
+                { name: 'Platinum Elite', min: 4001, max: 10000 },
+                { name: 'Diamond Master', min: 10001, max: 25000 },
+                { name: 'Grandmaster', min: 25001, max: 50000 },
+                { name: 'Legendary Sovereign', min: 50001, max: 100000 }
+            ];
+
+            let current = levels[0];
+            for (let l of levels) {
+                if (xp >= l.min) current = l;
+            }
+
+            document.getElementById('lvl-current').innerText = current.name;
+            document.getElementById('xp-text').innerText = `${xp.toLocaleString()} / ${current.max.toLocaleString()} XP`;
+            const pct = (xp / current.max) * 100;
+            document.getElementById('xp-bar').style.width = Math.min(pct, 100) + "%";
+        }
+
+        // 3. Match History Engine
+        async function loadMatchHistory(uid) {
+            const container = document.getElementById('match-history');
+            const q = query(collection(db, "tickets"), where("uid", "==", uid), orderBy("timestamp", "desc"));
+            const snap = await getDocs(q);
+
+            container.innerHTML = "";
+            if(snap.empty) {
+                container.innerHTML = `<p style="text-align:center; font-size:11px; color:var(--text-dim); padding:20px;">NO MISSION DATA FOUND</p>`;
+                return;
+            }
+
+            snap.forEach(docSnap => {
+                const h = docSnap.data();
+                const date = new Date(h.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                container.innerHTML += `
+                    <div class="history-card">
+                        <div class="h-info">
+                            <h4>Match Deployment</h4>
+                            <p>${date} • Ticket: ${h.ticketId.substring(0,8)}</p>
+                        </div>
+                        <div class="h-prize">ID: ${h.playerUid}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // 4. Helper Functions
         window.copyRef = () => {
-            const code = document.getElementById('u-ref-link').innerText;
+            const code = document.getElementById('ref-code-display').innerText;
             const fullLink = `https://nesports.vercel.app/auth?ref=${code}`;
             navigator.clipboard.writeText(fullLink);
-            alert("Ambassador Referral Link Copied to Clipboard!");
+            alert("Success: Ambassador Referral Link encoded and copied to clipboard.");
         };
 
         window.userLogout = () => {
-            if(confirm("Are you sure you want to exit the NE SPORTS ecosystem?")) {
-                signOut(auth).then(() => {
-                    window.location.replace('/auth');
-                });
+            if(confirm("Confirm: Terminate secure session?")) {
+                signOut(auth).then(() => window.location.replace('/auth'));
             }
         };
 

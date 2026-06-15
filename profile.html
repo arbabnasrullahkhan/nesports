@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NE SPORTS | Player Profile</title>
+    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --cyan: #00D4FF;
+            --purple: #7B61FF;
+            --gold: #FFD700;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            padding-bottom: 100px;
+            background: radial-gradient(circle at top left, rgba(123, 97, 255, 0.1), transparent);
+        }
+
+        /* Profile Header */
+        .profile-header {
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(0, 212, 255, 0.05), transparent);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 15px;
+        }
+
+        .avatar-main {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--cyan);
+            padding: 5px;
+            background: var(--bg);
+        }
+
+        .verified-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background: var(--cyan);
+            border-radius: 50%;
+            display: none; /* Shown only for Ambassadors */
+            border: 2px solid var(--bg);
+        }
+
+        .player-name { font-size: 24px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .player-rank { color: var(--cyan); font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; }
+
+        /* Stats Grid */
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 0 20px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 15px 10px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        .stat-card h4 { font-size: 18px; font-weight: 800; }
+        .stat-card p { font-size: 10px; opacity: 0.5; margin-top: 4px; }
+
+        /* XP Progress */
+        .xp-section { padding: 30px 20px; }
+        .xp-header { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px; }
+        .xp-bar-bg { width: 100%; height: 8px; background: var(--glass); border-radius: 10px; overflow: hidden; }
+        .xp-bar-fill { width: 45%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--purple)); border-radius: 10px; }
+
+        /* Referral Box */
+        .referral-card {
+            margin: 0 20px;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(123, 97, 255, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            position: relative;
+        }
+        .referral-card h3 { font-size: 16px; margin-bottom: 10px; }
+        .referral-card p { font-size: 12px; opacity: 0.7; margin-bottom: 20px; }
+        .ref-code-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px dashed var(--cyan);
+        }
+        .ref-code { font-family: monospace; font-size: 18px; font-weight: 700; color: var(--cyan); }
+        .copy-btn { background: var(--cyan); color: black; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; }
+
+        /* Brand Ambassador Banner */
+        .ambassador-banner {
+            margin: 20px;
+            padding: 20px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border-radius: 20px;
+            color: black;
+            display: none; /* Hidden by default */
+            align-items: center;
+            gap: 15px;
+        }
+        .ambassador-banner h4 { font-weight: 800; }
+
+        /* Logout Button */
+        .logout-btn {
+            margin: 30px 20px;
+            padding: 15px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            color: #ff4d4d;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* Bottom Nav */
+        .nav-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; height: 70px; background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(25px); border-radius: 25px; border: 1px solid var(--glass-border);
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        }
+        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; }
+        .nav-item.active { color: var(--cyan); }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="profile-header">
+        <div class="avatar-container">
+            <img id="p-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=NE" class="avatar-main">
+            <div id="p-verified" class="verified-badge">
+                <svg viewBox="0 0 24 24" fill="black"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            </div>
+        </div>
+        <h1 class="player-name" id="p-name">Loading...</h1>
+        <p class="player-rank" id="p-level">BRONZE PLAYER</p>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <h4 id="p-xp">0</h4>
+            <p>Total XP</p>
+        </div>
+        <div class="stat-card">
+            <h4 id="p-matches">0</h4>
+            <p>Matches</p>
+        </div>
+        <div class="stat-card">
+            <h4 id="p-refs">0</h4>
+            <p>Referrals</p>
+        </div>
+    </div>
+
+    <div class="xp-section">
+        <div class="xp-header">
+            <span>Level Progress</span>
+            <span id="xp-percent">45%</span>
+        </div>
+        <div class="xp-bar-bg">
+            <div class="xp-bar-fill" id="xp-fill" style="width: 45%;"></div>
+        </div>
+    </div>
+
+    <div id="amb-banner" class="ambassador-banner">
+        <div style="font-size: 30px;">👑</div>
+        <div>
+            <h4>Brand Ambassador</h4>
+            <p style="font-size: 11px;">You are a verified NE SPORTS influencer.</p>
+        </div>
+    </div>
+
+    <div class="referral-card">
+        <h3>Invite & Earn</h3>
+        <p>Share your code and get 50 PKR for every friend who joins a paid match.</p>
+        <div class="ref-code-box">
+            <span class="ref-code" id="p-refcode">NES-0000</span>
+            <button class="copy-btn" onclick="copyRef()">COPY</button>
+        </div>
+    </div>
+
+    <div class="logout-btn" onclick="logout()">Logout Account</div>
+
+    <nav class="nav-bar">
+        <a href="home.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>HOME
+        </a>
+        <a href="tournaments.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>MATCHES
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>WALLET
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>PROFILE
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
+            authDomain: "nesports7.firebaseapp.com",
+            projectId: "nesports7",
+            storageBucket: "nesports7.firebasestorage.app",
+            messagingSenderId: "414629589331",
+            appId: "1:414629589331:web:2a30069688008d17d371a6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+                    document.getElementById('p-name').innerText = data.name;
+                    document.getElementById('p-avatar').src = data.avatar;
+                    document.getElementById('p-level').innerText = data.level + " PLAYER";
+                    document.getElementById('p-xp').innerText = data.xp || 0;
+                    document.getElementById('p-refcode').innerText = data.referralCode || "N/A";
+                    
+                    // Ambassador Check
+                    if(data.isAmbassador) {
+                        document.getElementById('amb-banner').style.display = 'flex';
+                        document.getElementById('p-verified').style.display = 'block';
+                        document.getElementById('p-name').innerHTML += ` <svg width="18" height="18" viewBox="0 0 24 24" fill="#00D4FF"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+                    }
+                }
+            } else {
+                window.location.href = "auth.html";
+            }
+        });
+
+        window.copyRef = () => {
+            const code = document.getElementById('p-refcode').innerText;
+            navigator.clipboard.writeText(code);
+            alert("Referral Code Copied!");
+        };
+
+        window.logout = () => {
+            signOut(auth).then(() => {
+                window.location.href = "auth.html";
+            });
+        };
+    </script>
+</body>
+</html>

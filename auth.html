@@ -9,21 +9,20 @@
 
     <style>
         :root {
-            --bg-base: #050505;
+            --bg: #050505;
             --surface: #0E0E0E;
-            --surface-light: #161616;
-            --accent-crimson: #D32F2F;
+            --surface-elevated: #161616;
+            --accent: #D32F2F;
             --accent-hover: #B71C1C;
             --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.4);
+            --text-muted: rgba(255, 255, 255, 0.5);
             --border: rgba(255, 255, 255, 0.08);
-            --font-main: 'Inter', -apple-system, sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; outline: none; }
 
         body {
-            background-color: var(--bg-base);
+            background-color: var(--bg);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -34,172 +33,188 @@
             position: relative;
         }
 
-        /* Tech-Grid Background */
+        /* Tech-Grid Background for Trust */
         body::before {
             content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
             background-size: 40px 40px; opacity: 0.1; z-index: 0;
         }
 
-        /* Custom Toast Notification */
-        #custom-toast {
+        /* Premium Toast */
+        #status-toast {
             position: fixed; top: -100px; left: 50%; transform: translateX(-50%);
-            background: var(--surface-light); border: 1px solid var(--accent-crimson);
-            padding: 12px 24px; border-radius: 50px; font-size: 13px; font-weight: 600;
-            z-index: 9999; transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--surface-elevated); border: 1px solid var(--accent);
+            padding: 14px 28px; border-radius: 12px; font-size: 13px; font-weight: 600;
+            z-index: 9999; transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            display: flex; align-items: center; gap: 10px;
         }
 
-        .auth-container {
+        .auth-box {
             width: 100%; max-width: 400px;
             background: var(--surface); border: 1px solid var(--border);
-            border-radius: 20px; padding: 40px 30px;
+            border-radius: 24px; padding: 45px 35px;
             position: relative; z-index: 10;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-            animation: slideUp 0.6s ease-out;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            animation: slideUp 0.7s ease-out;
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .header { text-align: center; margin-bottom: 35px; }
-        .logo { width: 70px; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(211, 47, 47, 0.2)); }
-        .title { font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
-        .subtitle { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+        .auth-header { text-align: center; margin-bottom: 40px; }
+        .auth-logo { width: 75px; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(211, 47, 47, 0.2)); }
+        .auth-title { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .auth-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; letter-spacing: 0.5px; }
 
-        /* Multi-View System */
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.4s ease; }
+        /* Form Logic */
+        .auth-view { display: none; }
+        .auth-view.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Inputs */
-        .input-group { margin-bottom: 18px; position: relative; }
-        .input-group label { display: block; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-left: 5px; }
+        /* Input Styling */
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-label { display: block; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; padding-left: 5px; }
         .input-ctrl {
-            width: 100%; padding: 15px 15px 15px 45px;
-            background: var(--surface-light); border: 1px solid var(--border);
-            border-radius: 12px; color: #fff; font-size: 14px; transition: 0.3s;
+            width: 100%; padding: 16px 16px 16px 48px;
+            background: var(--surface-elevated); border: 1px solid var(--border);
+            border-radius: 14px; color: #fff; font-size: 14px; transition: 0.3s;
         }
-        .input-ctrl:focus { border-color: var(--accent-crimson); background: #121212; box-shadow: 0 0 15px rgba(211, 47, 47, 0.1); }
+        .input-ctrl:focus { border-color: var(--accent); background: #121212; box-shadow: 0 0 20px rgba(211, 47, 47, 0.1); }
         
-        .input-icon { position: absolute; left: 15px; top: 38px; width: 18px; height: 18px; fill: var(--text-muted); transition: 0.3s; }
-        .input-ctrl:focus + .input-icon { fill: var(--accent-crimson); }
+        .input-icon { position: absolute; left: 18px; top: 38px; width: 18px; height: 18px; fill: var(--text-muted); transition: 0.3s; }
+        .input-ctrl:focus + .input-icon { fill: var(--accent); }
 
         /* Buttons */
         .btn-prime {
-            width: 100%; padding: 16px; background: var(--accent-crimson); color: #fff;
-            border: none; border-radius: 12px; font-size: 13px; font-weight: 800;
+            width: 100%; padding: 18px; background: var(--accent); color: #fff;
+            border: none; border-radius: 14px; font-size: 14px; font-weight: 800;
             text-transform: uppercase; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            letter-spacing: 1px;
         }
         .btn-prime:hover { background: var(--accent-hover); transform: translateY(-2px); }
-        .btn-prime:active { transform: scale(0.98); }
+        .btn-prime:active { transform: scale(0.97); }
         .btn-prime:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .btn-google {
-            width: 100%; padding: 14px; background: #fff; color: #000;
-            border: none; border-radius: 12px; font-size: 13px; font-weight: 700;
-            margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 15px; background: #fff; color: #000;
+            border: none; border-radius: 14px; font-size: 13px; font-weight: 700;
+            margin-top: 25px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
         }
 
-        /* Footer Links */
-        .footer-links { margin-top: 25px; text-align: center; font-size: 13px; color: var(--text-muted); }
-        .link { color: var(--accent-crimson); font-weight: 700; cursor: pointer; }
-        .forgot-trigger { display: block; text-align: right; font-size: 11px; color: var(--text-muted); margin-top: -10px; margin-bottom: 20px; cursor: pointer; }
+        .auth-footer { margin-top: 30px; text-align: center; font-size: 13px; color: var(--text-muted); }
+        .auth-link { color: var(--accent); font-weight: 700; cursor: pointer; text-decoration: none; }
+        .forgot-pass { display: block; text-align: right; font-size: 11px; color: var(--text-muted); margin-top: -12px; margin-bottom: 25px; cursor: pointer; }
 
-        /* Loader Spinner */
-        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
+        /* Loader */
+        .spin { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Security Badge for Trust */
+        .trust-badge {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-top: 20px; font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+        }
+        .trust-badge svg { width: 12px; height: 12px; fill: var(--text-muted); }
 
     </style>
 </head>
 <body>
 
-    <div id="custom-toast">SYSTEM MESSAGE</div>
+    <div id="status-toast">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="toast-msg">SYSTEM MESSAGE</span>
+    </div>
 
-    <div class="auth-container">
-        <div class="header">
-            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="logo" alt="NE Logo">
-            <h2 id="main-title">Command Center</h2>
-            <p class="subtitle" id="main-subtitle">Secure access to NE SPORTS ecosystem</p>
+    <div class="auth-box">
+        <div class="auth-header">
+            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="auth-logo" alt="NE Logo">
+            <h2 id="view-title">Command Center</h2>
+            <p class="auth-sub" id="view-subtitle">Secure Access to NE SPORTS Platform</p>
         </div>
 
-        <!-- [LOGIN VIEW] -->
-        <div id="view-login" class="view active">
+        <!-- [LOGIN] -->
+        <div id="view-login" class="auth-view active">
             <div class="input-group">
-                <label>Email Address</label>
-                <input type="email" id="log-email" class="input-ctrl" placeholder="operative@nesports.com">
+                <label class="input-label">Operative Email</label>
+                <input type="email" id="log-email" class="input-ctrl" placeholder="name@domain.com">
                 <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             </div>
             <div class="input-group">
-                <label>Security Password</label>
+                <label class="input-label">Access Password</label>
                 <input type="password" id="log-pass" class="input-ctrl" placeholder="••••••••">
                 <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             </div>
-            <span class="forgot-trigger" onclick="switchView('forgot')">Recover Access?</span>
+            <span class="forgot-pass" onclick="window.switchView('recovery')">Signal Lost? Recover Access</span>
             
-            <button class="btn-prime" onclick="handleAuth('login')" id="btn-login">
-                <div class="spinner" id="spin-login"></div>
-                <span id="txt-login">INITIALIZE LOGIN</span>
+            <button class="btn-prime" onclick="window.processAuth('login')" id="btn-login">
+                <div class="spin" id="spin-login"></div>
+                <span id="txt-login">Initialize Session</span>
             </button>
         </div>
 
-        <!-- [REGISTER VIEW] -->
-        <div id="view-reg" class="view">
+        <!-- [REGISTER] -->
+        <div id="view-register" class="auth-view">
             <div class="input-group">
-                <label>Operative Name</label>
+                <label class="input-label">Operative IGN</label>
                 <input type="text" id="reg-name" class="input-ctrl" placeholder="In-Game Name">
                 <svg class="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </div>
             <div class="input-group">
-                <label>Email ID</label>
-                <input type="email" id="reg-email" class="input-ctrl" placeholder="name@domain.com">
+                <label class="input-label">Deployment Email</label>
+                <input type="email" id="reg-email" class="input-ctrl" placeholder="operative@nesports.com">
                 <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             </div>
             <div class="input-group">
-                <label>Create Password</label>
+                <label class="input-label">Secure Password</label>
                 <input type="password" id="reg-pass" class="input-ctrl" placeholder="Min 6 Characters">
                 <svg class="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             </div>
             
-            <button class="btn-prime" onclick="handleAuth('reg')" id="btn-reg">
-                <div class="spinner" id="spin-reg"></div>
-                <span id="txt-reg">CREATE OPERATIVE PROFILE</span>
+            <button class="btn-prime" onclick="window.processAuth('register')" id="btn-reg">
+                <div class="spin" id="spin-reg"></div>
+                <span id="txt-reg">Establish Profile</span>
             </button>
         </div>
 
-        <!-- [FORGOT VIEW] -->
-        <div id="view-forgot" class="view">
+        <!-- [RECOVERY] -->
+        <div id="view-recovery" class="auth-view">
             <div class="input-group">
-                <label>Recovery Email</label>
-                <input type="email" id="for-email" class="input-ctrl" placeholder="Registered Email">
+                <label class="input-label">Registered Email</label>
+                <input type="email" id="rec-email" class="input-ctrl" placeholder="Enter your email">
                 <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
             </div>
-            <button class="btn-prime" onclick="handleAuth('forgot')" id="btn-for">
-                <div class="spinner" id="spin-for"></div>
-                <span id="txt-for">SEND RECOVERY SIGNAL</span>
+            <button class="btn-prime" onclick="window.processAuth('recovery')" id="btn-rec">
+                <div class="spin" id="spin-rec"></div>
+                <span id="txt-rec">Dispatch Recovery Signal</span>
             </button>
         </div>
 
-        <!-- Social Auth -->
-        <div id="social-block">
+        <!-- Social Section -->
+        <div id="social-node">
             <div style="display: flex; align-items: center; margin: 25px 0; opacity: 0.2;">
                 <div style="flex:1; height:1px; background:#fff;"></div>
-                <div style="padding: 0 10px; font-size: 10px; font-weight: 800;">OR</div>
+                <div style="padding: 0 15px; font-size: 10px; font-weight: 900; letter-spacing: 1px;">ENCRYPTED AUTH</div>
                 <div style="flex:1; height:1px; background:#fff;"></div>
             </div>
-            <button class="btn-google" onclick="handleGoogle()">
+            <button class="btn-google" onclick="window.handleGoogle()">
                 <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/></svg>
-                Sign in with Google
+                Continue with Google
             </button>
         </div>
 
-        <div class="footer-links">
-            <span id="footer-text">New operative? </span>
-            <span class="link" id="footer-btn" onclick="toggleView()">Initialize Registration</span>
+        <div class="auth-footer">
+            <span id="switch-text">New Operative? </span>
+            <span class="auth-link" id="switch-btn" onclick="window.toggleMain()">Join the Elite</span>
+        </div>
+
+        <div class="trust-badge">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15l-4-4 1.41-1.41L10 13.17l5.59-5.59L17 9l-7 7z"/></svg>
+            Enterprise SSL Secured System
         </div>
     </div>
 
-    <!-- [AUTH LOGIC] -->
+    <!-- [CORE LOGIC MODULE] -->
     <script type="module">
         import { 
             auth, db, googleProvider,
@@ -207,122 +222,128 @@
             doc, getDoc, setDoc 
         } from './firebase-config.js';
 
-        let currentActive = 'login';
+        let currentView = 'login';
 
-        // UI Helpers
-        const toast = (msg) => {
-            const el = document.getElementById('custom-toast');
-            el.innerText = msg;
+        // 1. Toast Engine
+        const showToast = (msg) => {
+            const el = document.getElementById('status-toast');
+            document.getElementById('toast-msg').innerText = msg;
             el.style.top = '30px';
-            setTimeout(() => el.style.top = '-100px', 4000);
+            setTimeout(() => el.style.top = '-100px', 4500);
         };
 
+        // 2. Loading Controller
         const setLoad = (type, state) => {
-            document.getElementById(`spin-${type}`).style.display = state ? 'block' : 'none';
-            document.getElementById(`txt-${type}`).style.display = state ? 'none' : 'block';
-            document.getElementById(`btn-${type}`).disabled = state;
+            const btn = document.getElementById(`btn-${type}`);
+            const spin = document.getElementById(`spin-${type}`);
+            const txt = document.getElementById(`txt-${type}`);
+            btn.disabled = state;
+            spin.style.display = state ? 'block' : 'none';
+            txt.style.display = state ? 'none' : 'block';
         };
 
+        // 3. UI Switcher (Attached to Window for onclick access)
         window.switchView = (view) => {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
             document.getElementById(`view-${view}`).classList.add('active');
-            currentActive = view;
+            currentView = view;
             
-            const title = document.getElementById('main-title');
-            const sub = document.getElementById('main-subtitle');
-            const fText = document.getElementById('footer-text');
-            const fBtn = document.getElementById('footer-btn');
-            const social = document.getElementById('social-block');
+            const title = document.getElementById('view-title');
+            const sub = document.getElementById('view-subtitle');
+            const fText = document.getElementById('switch-text');
+            const fBtn = document.getElementById('switch-btn');
+            const social = document.getElementById('social-node');
 
             if(view === 'login') {
                 title.innerText = "Command Center";
-                sub.innerText = "Secure access to NE SPORTS ecosystem";
-                fText.innerText = "New operative? ";
-                fBtn.innerText = "Initialize Registration";
+                sub.innerText = "Secure Access to NE SPORTS Platform";
+                fText.innerText = "New Operative? ";
+                fBtn.innerText = "Join the Elite";
                 social.style.display = 'block';
-            } else if(view === 'reg') {
-                title.innerText = "Recruitment Hub";
-                sub.innerText = "Join the elite esports network";
-                fText.innerText = "Already an operative? ";
-                fBtn.innerText = "Access Dashboard";
+            } else if(view === 'register') {
+                title.innerText = "New Recruitment";
+                sub.innerText = "Establish Your Professional Gaming Identity";
+                fText.innerText = "Existing Operative? ";
+                fBtn.innerText = "Return to Base";
                 social.style.display = 'block';
             } else {
                 title.innerText = "Access Recovery";
-                sub.innerText = "Issue a recovery protocol";
-                fText.innerText = "Protocol remembered? ";
-                fBtn.innerText = "Back to Login";
+                sub.innerText = "Initiate Secure Protocol Reset";
+                fText.innerText = "Signal Found? ";
+                fBtn.innerText = "Back to Base";
                 social.style.display = 'none';
             }
         };
 
-        window.toggleView = () => {
-            if(currentActive === 'login' || currentActive === 'forgot') switchView('reg');
-            else switchView('login');
+        window.toggleMain = () => {
+            if(currentView === 'login' || currentView === 'recovery') window.switchView('register');
+            else window.switchView('login');
         };
 
-        // Profile Initializer
-        const createDBProfile = async (user, name = null) => {
+        // 4. Firestore Profile Engine
+        const initProfile = async (user, name = null) => {
             const ref = doc(db, "users", user.uid);
             const snap = await getDoc(ref);
             if(!snap.exists()) {
-                const code = "NES-" + Math.floor(1000 + Math.random() * 9000);
+                const code = "NES-" + Math.floor(100000 + Math.random() * 900000);
                 await setDoc(ref, {
                     uid: user.uid,
-                    name: name || user.displayName || "Unknown Operative",
+                    name: name || user.displayName || "Gamer_" + user.uid.substring(0,4),
                     email: user.email,
                     wallet: 0, xp: 0, level: "Bronze",
                     referralCode: code, isAmbassador: false,
-                    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=" + (name || user.uid),
+                    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user.uid,
                     createdAt: new Date().toISOString()
                 });
             }
         };
 
-        // Handlers
-        window.handleAuth = async (type) => {
+        // 5. Auth Processors
+        window.processAuth = async (type) => {
             if(type === 'login') {
-                const email = document.getElementById('log-email').value;
+                const email = document.getElementById('log-email').value.trim();
                 const pass = document.getElementById('log-pass').value;
-                if(!email || !pass) return toast("ERROR: Enter all credentials.");
+                if(!email || !pass) return showToast("ERROR: Missing Credentials");
                 setLoad('login', true);
                 try {
                     await signInWithEmailAndPassword(auth, email, pass);
                     window.location.replace("/home");
-                } catch(e) { toast("AUTH FAILURE: Check credentials."); setLoad('login', false); }
+                } catch(e) { showToast("DENIED: Invalid Credentials"); setLoad('login', false); }
             }
 
-            if(type === 'reg') {
-                const name = document.getElementById('reg-name').value;
-                const email = document.getElementById('reg-email').value;
+            if(type === 'register') {
+                const name = document.getElementById('reg-name').value.trim();
+                const email = document.getElementById('reg-email').value.trim();
                 const pass = document.getElementById('reg-pass').value;
-                if(!name || !email || !pass) return toast("ERROR: Recruitment data incomplete.");
+                if(!name || !email || !pass) return showToast("ERROR: Data Incomplete");
+                if(pass.length < 6) return showToast("WEAK: Password min 6 chars");
                 setLoad('reg', true);
                 try {
                     const res = await createUserWithEmailAndPassword(auth, email, pass);
-                    await createDBProfile(res.user, name);
+                    await initProfile(res.user, name);
                     window.location.replace("/home");
-                } catch(e) { toast("REGISTRATION FAILED: Try another email."); setLoad('reg', false); }
+                } catch(e) { showToast("FAILED: Account already exists"); setLoad('reg', false); }
             }
 
-            if(type === 'forgot') {
-                const email = document.getElementById('for-email').value;
-                if(!email) return toast("ERROR: Recovery email required.");
-                setLoad('for', true);
+            if(type === 'recovery') {
+                const email = document.getElementById('rec-email').value.trim();
+                if(!email) return showToast("ERROR: Email required");
+                setLoad('rec', true);
                 try {
                     await sendPasswordResetEmail(auth, email);
-                    toast("SIGNAL DISPATCHED: Check your inbox.");
-                    switchView('login');
-                } catch(e) { toast("ERROR: Email not found."); }
-                setLoad('for', false);
+                    showToast("SENT: Check your transmission hub (Inbox)");
+                    window.switchView('login');
+                } catch(e) { showToast("ERROR: Signal not found"); }
+                setLoad('rec', false);
             }
         };
 
         window.handleGoogle = async () => {
             try {
                 const res = await signInWithPopup(auth, googleProvider);
-                await createDBProfile(res.user);
+                await initProfile(res.user);
                 window.location.replace("/home");
-            } catch(e) { toast("GOOGLE AUTH FAILED."); }
+            } catch(e) { showToast("AUTH CANCELED"); }
         };
 
     </script>

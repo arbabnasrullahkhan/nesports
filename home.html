@@ -3,267 +3,398 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NE SPORTS | Dashboard</title>
+    <title>NE SPORTS | Command Dashboard</title>
     <meta name="theme-color" content="#050505">
+    
+    <!-- Core Identity -->
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
-        /* Enterprise Design System */
+        /* [NE SPORTS ENTERPRISE DESIGN SYSTEM - HOME] */
         :root {
             --bg-base: #050505;
-            --surface: #121212;
-            --surface-elevated: #1E1E1E;
+            --surface-matte: #0A0A0A;
+            --surface-glass: rgba(18, 18, 18, 0.8);
+            --accent-crimson: #D32F2F;
+            --accent-gold: #D4AF37;
             --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.5);
-            --accent-red: #D32F2F;
-            --accent-red-hover: #B71C1C;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --glass-bg: rgba(18, 18, 18, 0.85);
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --shadow-premium: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             background-color: var(--bg-base);
             color: var(--text-main);
-            padding-bottom: 90px; /* Space for Bottom Nav */
             overflow-x: hidden;
+            padding-top: 80px; /* Header Offset */
+            padding-bottom: 90px; /* Nav Offset */
         }
 
-        /* Dynamic Island Header */
-        .dynamic-island {
-            position: fixed;
-            top: 15px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 500px; height: 60px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            border-radius: 40px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px 0 10px; z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* [SHARED COMPONENT MOUNT POINTS] */
+        #header-mount, #nav-mount, #loader-mount { width: 100%; }
+
+        /* [CINEMATIC HERO SLIDER] */
+        .hero-engine {
+            width: 100%;
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
         }
 
-        @keyframes slideDown { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
-
-        .user-snippet { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--surface-elevated); }
-        .user-info { display: flex; flex-direction: column; }
-        .user-name { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
-        .user-level { font-size: 10px; color: var(--accent-red); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-
-        .wallet-pill {
-            background: var(--surface-elevated);
-            padding: 8px 14px;
-            border-radius: 20px;
-            display: flex; align-items: center; gap: 6px;
-            border: 1px solid var(--border-subtle);
+        .slider-track {
+            display: flex;
+            width: 200%; /* 2 Slides */
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
         }
-        .wallet-pill svg { width: 14px; height: 14px; fill: var(--text-muted); }
-        .wallet-pill span { font-size: 13px; font-weight: 700; }
 
-        /* Cinematic Hero Banner */
-        .hero-section { margin-top: 95px; padding: 0 20px; }
-        .hero-card {
-            width: 100%; height: 200px;
-            background: linear-gradient(to right, rgba(5,5,5,0.9), rgba(5,5,5,0.2)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1000') center/cover;
-            border-radius: 20px;
-            border: 1px solid var(--border-subtle);
-            display: flex; flex-direction: column; justify-content: center;
-            padding: 25px; position: relative; overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+        .slide {
+            width: 50%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 25px;
         }
-        .live-badge {
-            position: absolute; top: 20px; right: 20px;
-            background: rgba(211, 47, 47, 0.2); border: 1px solid var(--accent-red);
-            color: var(--accent-red); font-size: 10px; font-weight: 800;
-            padding: 4px 10px; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px;
-            display: flex; align-items: center; gap: 5px;
+
+        .slide-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.9) 20%, transparent 100%);
+            z-index: 1;
         }
-        .live-dot { width: 6px; height: 6px; background: var(--accent-red); border-radius: 50%; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
+
+        .slide-watermark {
+            position: absolute;
+            right: 20px; bottom: 20px;
+            width: 80px; opacity: 0.15;
+            z-index: 2;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 5;
+            max-width: 260px;
+        }
+
+        .slide-game-tag {
+            font-size: 9px; font-weight: 900; letter-spacing: 2px;
+            color: var(--accent-crimson); text-transform: uppercase;
+            margin-bottom: 8px; display: block;
+        }
+
+        .slide-title { font-size: 24px; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 12px; }
         
-        .hero-card h1 { font-size: 24px; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        .hero-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; max-width: 200px; }
-        .hero-btn {
-            background: var(--text-main); color: var(--bg-base);
-            padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 800;
-            border: none; width: max-content; cursor: pointer; text-transform: uppercase;
+        .slide-cta {
+            display: inline-block; padding: 12px 24px;
+            background-color: var(--text-main); color: var(--bg-base);
+            border-radius: 8px; font-size: 11px; font-weight: 800;
+            text-transform: uppercase; text-decoration: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
 
-        /* Section Titles */
+        /* [ENTERPRISE STATS MODULE] */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; padding: 0 20px; margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--surface-matte); border: 1px solid var(--border-subtle);
+            padding: 15px 10px; border-radius: 14px; text-align: center;
+        }
+
+        .stat-value { font-size: 16px; font-weight: 800; color: var(--text-main); display: block; }
+        .stat-label { font-size: 8px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        /* [SECTION TITLES] */
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 30px 20px 15px;
-        }
-        .section-title { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .section-link { font-size: 11px; color: var(--accent-red); font-weight: 600; cursor: pointer; text-decoration: none; text-transform: uppercase; }
-
-        /* Tournament Cards Grid */
-        .arena-grid { padding: 0 20px; display: grid; gap: 15px; }
-        .arena-card {
-            background: var(--surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px; padding: 15px;
-            display: flex; gap: 15px; align-items: center;
-            transition: 0.3s;
-        }
-        .arena-card:active { transform: scale(0.98); background: var(--surface-elevated); }
-        .arena-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; background: var(--surface-elevated); }
-        .arena-info { flex: 1; }
-        .arena-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-        .arena-meta { display: flex; gap: 10px; font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
-        .arena-meta div { display: flex; align-items: center; gap: 4px; }
-        .arena-meta svg { width: 12px; height: 12px; fill: var(--text-muted); }
-        
-        .arena-bottom { display: flex; justify-content: space-between; align-items: center; }
-        .arena-prize { font-size: 14px; font-weight: 800; color: var(--text-main); }
-        .arena-join {
-            background: rgba(255,255,255,0.05); color: var(--text-main);
-            padding: 6px 16px; border-radius: 8px; font-size: 11px; font-weight: 700;
-            border: 1px solid var(--border-subtle); cursor: pointer; text-transform: uppercase;
+            padding: 0 20px 15px;
         }
 
-        /* Bottom App Navigation */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
-            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-top: 1px solid var(--border-subtle);
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
-            padding-bottom: env(safe-area-inset-bottom);
+        .section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .section-action { font-size: 10px; font-weight: 700; color: var(--accent-crimson); text-transform: uppercase; text-decoration: none; }
+
+        /* [TOURNAMENT CARDS] */
+        .deployment-scroll {
+            display: flex; gap: 15px; overflow-x: auto; padding: 0 20px 30px;
+            scrollbar-width: none;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            text-decoration: none; color: var(--text-muted); transition: 0.3s;
+
+        .deployment-card {
+            min-width: 280px; background: var(--surface-matte);
+            border-radius: 18px; border: 1px solid var(--border-subtle);
+            overflow: hidden; position: relative;
         }
-        .nav-item svg { width: 22px; height: 22px; fill: var(--text-muted); transition: 0.3s; }
-        .nav-item span { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .card-thumb { width: 100%; height: 140px; object-fit: cover; opacity: 0.7; }
         
-        /* Active State */
-        .nav-item.active { color: var(--accent-red); }
-        .nav-item.active svg { fill: var(--accent-red); filter: drop-shadow(0 2px 8px rgba(211,47,47,0.4)); }
+        .card-live-pill {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--accent-crimson); color: white;
+            font-size: 8px; font-weight: 900; padding: 4px 10px;
+            border-radius: 20px; animation: pulse 2s infinite;
+        }
+
+        .card-body { padding: 15px; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
+        .card-title { font-size: 16px; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; }
+        
+        .prize-box {
+            background: rgba(255,255,255,0.03); border-radius: 10px;
+            padding: 10px; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .prize-amount { font-size: 14px; font-weight: 900; color: var(--accent-crimson); }
+        .btn-card-action {
+            background: var(--text-main); color: #000; font-size: 10px; font-weight: 800;
+            padding: 8px 16px; border-radius: 6px; text-decoration: none;
+        }
+
+        /* [ID MARKETPLACE PREVIEW] */
+        .marketplace-banner {
+            margin: 0 20px 30px; padding: 25px;
+            background: linear-gradient(135deg, #121212, #050505);
+            border: 1px dashed var(--accent-crimson); border-radius: 20px;
+            text-align: center;
+        }
+
+        .market-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; }
+        .market-desc { font-size: 11px; color: var(--text-dim); margin-bottom: 20px; }
+        
+        .btn-market {
+            background: var(--accent-crimson); color: white;
+            padding: 12px 30px; border-radius: 10px; font-size: 11px; font-weight: 800;
+            border: none; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* [LEADERBOARD PREVIEW] */
+        .ranking-module { padding: 0 20px 30px; }
+        .rank-item {
+            display: flex; align-items: center; gap: 15px;
+            background: var(--surface-matte); border: 1px solid var(--border-subtle);
+            margin-bottom: 10px; padding: 12px 15px; border-radius: 14px;
+        }
+
+        .rank-id { font-size: 14px; font-weight: 900; color: var(--text-dim); width: 25px; }
+        .rank-avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--border-subtle); }
+        .rank-info { flex: 1; }
+        .rank-name { font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .rank-tag { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+        .tag-pubg { background: #E6B325; color: #000; }
+        .tag-ff { background: #3B82F6; color: #fff; }
+        .rank-xp { font-size: 12px; font-weight: 800; color: var(--accent-crimson); }
+
+        /* [SPONSOR GRID] */
+        .sponsor-sec { padding: 0 20px 40px; text-align: center; }
+        .sponsor-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            gap: 15px; margin-top: 15px; opacity: 0.4;
+        }
+        .sponsor-logo { width: 100%; filter: grayscale(1); }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
     </style>
 </head>
 <body>
 
-    <!-- Dynamic Island Header -->
-    <header class="dynamic-island" onclick="window.location.href='/profile'">
-        <div class="user-snippet">
-            <img id="user-avatar" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="User" class="user-avatar">
-            <div class="user-info">
-                <span class="user-name" id="user-name">Loading...</span>
-                <span class="user-level" id="user-level">SYSTEM BOOT</span>
+    <!-- Shared Mount Points -->
+    <div id="loader-mount"></div>
+    <div id="header-mount"></div>
+
+    <!-- Cinematic Slider Engine -->
+    <section class="hero-engine">
+        <div class="slider-track" id="hero-slider">
+            <!-- Slide 1: PUBG -->
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000')">
+                <div class="slide-overlay"></div>
+                <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="slide-watermark">
+                <div class="slide-content">
+                    <span class="slide-game-tag">Tactical Deployment</span>
+                    <h2 class="slide-title">PUBG MOBILE ARENA</h2>
+                    <a href="/tournaments?game=PUBG" class="slide-cta">Enter PUBG Arena</a>
+                </div>
+            </div>
+            <!-- Slide 2: Free Fire -->
+            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1000')">
+                <div class="slide-overlay"></div>
+                <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="slide-watermark">
+                <div class="slide-content">
+                    <span class="slide-game-tag">Survival Protocol</span>
+                    <h2 class="slide-title">FREE FIRE CLASH</h2>
+                    <a href="/tournaments?game=FreeFire" class="slide-cta">Enter Free Fire Arena</a>
+                </div>
             </div>
         </div>
-        <div class="wallet-pill">
-            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            <span id="user-wallet">0</span>
-        </div>
-    </header>
+    </section>
 
-    <!-- Cinematic Hero -->
-    <div class="hero-section">
-        <div class="hero-card">
-            <div class="live-badge"><div class="live-dot"></div> LIVE EVENT</div>
-            <h1>PUBG MOBILE</h1>
-            <p>Premium Solo Showdown. Enter the arena and claim the bounty.</p>
-            <button class="hero-btn" onclick="window.location.href='/tournaments'">ENTER ARENA</button>
+    <!-- Statistics Engine -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-value" id="stat-players">---</span>
+            <span class="stat-label">Operatives</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">99.8%</span>
+            <span class="stat-label">Trust Score</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value" id="stat-prize">---</span>
+            <span class="stat-label">Bounty Paid</span>
         </div>
     </div>
 
-    <!-- Active Tournaments -->
+    <!-- Featured Deployments -->
     <div class="section-header">
-        <div class="section-title">Active Deployments</div>
-        <a href="/tournaments" class="section-link">View All</a>
+        <h3 class="section-title">Live Deployments</h3>
+        <a href="/tournaments" class="section-action">View All</a>
+    </div>
+    <div class="deployment-scroll" id="live-deployments">
+        <!-- Live Cards via JS -->
+        <p style="padding: 20px; font-size: 10px; color: var(--text-dim);">SCANNING SATELLITE DATA...</p>
     </div>
 
-    <div class="arena-grid" id="arena-list">
-        <!-- Skeleton Loader -->
-        <div class="arena-card" style="opacity: 0.5;">
-            <div class="arena-thumb"></div>
-            <div class="arena-info">
-                <div style="height: 14px; width: 60%; background: var(--surface-elevated); margin-bottom: 8px; border-radius: 4px;"></div>
-                <div style="height: 10px; width: 40%; background: var(--surface-elevated); border-radius: 4px;"></div>
-            </div>
+    <!-- Marketplace Bridge -->
+    <div class="marketplace-banner">
+        <h2 class="market-title">ID Marketplace</h2>
+        <p class="market-desc">Liquidate your elite gaming assets or acquire high-tier IDs. Direct admin escrow protection.</p>
+        <button class="btn-market" onclick="window.location.href='/marketplace'">List Your ID for Sale</button>
+    </div>
+
+    <!-- Top Ranking Preview -->
+    <div class="section-header">
+        <h3 class="section-title">Elite Operatives</h3>
+        <a href="/leaderboard" class="section-action">Full Ranks</a>
+    </div>
+    <div class="ranking-module" id="leaderboard-preview">
+        <!-- Top 5 Preview -->
+    </div>
+
+    <!-- Partner Showcase -->
+    <div class="sponsor-sec">
+        <span class="stat-label">Authorized Partnership Network</span>
+        <div class="sponsor-grid">
+            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
+            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
+            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
+            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
         </div>
     </div>
 
-    <!-- iOS Native Style Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="/home" class="nav-item active">
-            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span>Home</span>
-        </a>
-        <a href="/tournaments" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>
-            <span>Arena</span>
-        </a>
-        <a href="/wallet" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            <span>Vault</span>
-        </a>
-        <a href="/profile" class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Profile</span>
-        </a>
-    </nav>
+    <div id="footer-mount"></div>
+    <div id="nav-mount"></div>
 
-    <!-- Core App Logic -->
+    <!-- [CORE LOGIC ENGINE] -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, doc, getDoc, collection, query, where, limit, getDocs } from './firebase-config.js';
+        import { db, collection, query, where, limit, getDocs, onSnapshot, doc } from './firebase-config.js';
 
-        // 1. Authenticate and Load User Data
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-                    document.getElementById('user-name').innerText = data.name;
-                    document.getElementById('user-wallet').innerText = data.wallet;
-                    document.getElementById('user-level').innerText = data.level + " TIER";
-                    document.getElementById('user-avatar').src = data.avatar;
-                }
-                loadDeployments(); // Load matches
-            } else {
-                window.location.replace("/auth");
+        // 1. Load Shared Components
+        const loadComponent = async (id, file) => {
+            try {
+                const res = await fetch(file);
+                const html = await res.text();
+                document.getElementById(id).innerHTML = html;
+            } catch (e) { console.error(`Error loading ${file}`); }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadComponent('loader-mount', 'loader.html');
+            loadComponent('header-mount', 'header.html');
+            loadComponent('footer-mount', 'footer.html');
+            loadComponent('nav-mount', 'navigation.html');
+        });
+
+        // 2. Cinematic Slider Logic
+        let currentSlide = 0;
+        const sliderTrack = document.getElementById('hero-slider');
+        setInterval(() => {
+            currentSlide = currentSlide === 0 ? 1 : 0;
+            sliderTrack.style.transform = `translateX(-${currentSlide * 50}%)`;
+        }, 3000);
+
+        // 3. Real-time Platform Statistics
+        onSnapshot(doc(db, "system_config", "stats"), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.getElementById('stat-players').innerText = (data.total_users || 0).toLocaleString();
+                document.getElementById('stat-prize').innerText = (data.total_prize || 0).toLocaleString() + " PKR";
             }
         });
 
-        // 2. Fetch Live Tournaments (Max 3 for Dashboard)
-        async function loadDeployments() {
-            const listEl = document.getElementById('arena-list');
-            const q = query(collection(db, "tournaments"), where("status", "==", "open"), limit(3));
+        // 4. Fetch Live Matches
+        const fetchLiveMatches = async () => {
+            const q = query(collection(db, "tournaments"), where("status", "in", ["live", "open"]), limit(5));
             const snap = await getDocs(q);
+            const container = document.getElementById('live-deployments');
+            container.innerHTML = "";
 
-            listEl.innerHTML = "";
-
-            if (snap.empty) {
-                listEl.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">NO ACTIVE DEPLOYMENTS.</div>`;
-                return;
+            if(snap.empty) {
+                container.innerHTML = `<div style="font-size:11px; color:var(--text-dim);">No active deployments at this time.</div>`;
             }
 
-            snap.forEach(doc => {
-                const t = doc.data();
-                listEl.innerHTML += `
-                    <div class="arena-card">
-                        <img src="${t.image || 'https://via.placeholder.com/70x70/1E1E1E/FFFFFF?text=MATCH'}" class="arena-thumb">
-                        <div class="arena-info">
-                            <h3 class="arena-title">${t.title}</h3>
-                            <div class="arena-meta">
-                                <div><svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg> ${t.game}</div>
-                                <div><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> ${t.joined || 0}/${t.totalSlots}</div>
+            snap.forEach(docSnap => {
+                const t = docSnap.data();
+                const totalPool = (t.joined || 0) * t.entryFee;
+                const winnerPrize = Math.floor(totalPool * 0.35); // 35% prize pool auto-calc
+
+                container.innerHTML += `
+                    <div class="deployment-card">
+                        <img src="${t.image}" class="card-thumb">
+                        ${t.status === 'live' ? '<span class="card-live-pill">LIVE ARENA</span>' : ''}
+                        <div class="card-body">
+                            <div class="card-meta">
+                                <span>${t.game} • ${t.type}</span>
+                                <span style="color:var(--text-main);">${t.joined || 0}/${t.totalSlots} SLOTS</span>
                             </div>
-                            <div class="arena-bottom">
-                                <span class="arena-prize">PKR ${t.prize}</span>
-                                <button class="arena-join" onclick="window.location.href='/tournaments'">DETAILS</button>
+                            <h4 class="card-title">${t.title}</h4>
+                            <div class="prize-box">
+                                <span class="prize-amount">PKR ${winnerPrize || t.prizePool}</span>
+                                <a href="/tournaments" class="btn-card-action">JOIN MATCH</a>
                             </div>
                         </div>
                     </div>
                 `;
             });
-        }
+        };
+
+        // 5. Leaderboard Preview
+        const fetchRanks = async () => {
+            const q = query(collection(db, "users"), limit(5)); // Order by XP in production
+            const snap = await getDocs(q);
+            const container = document.getElementById('leaderboard-preview');
+            container.innerHTML = "";
+
+            let count = 1;
+            snap.forEach(docSnap => {
+                const u = docSnap.data();
+                container.innerHTML += `
+                    <div class="rank-item">
+                        <span class="rank-id">0${count++}</span>
+                        <img src="${u.avatar}" class="rank-avatar">
+                        <div class="rank-info">
+                            <span class="rank-name">${u.name} <span class="rank-tag ${u.primaryGame === 'PUBG' ? 'tag-pubg' : 'tag-ff'}">${u.primaryGame || 'PRO'}</span></span>
+                        </div>
+                        <span class="rank-xp">${u.xp || 0} XP</span>
+                    </div>
+                `;
+            });
+        };
+
+        fetchLiveMatches();
+        fetchRanks();
+
     </script>
 </body>
 </html>

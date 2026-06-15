@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Information Hub | NE SPORTS Enterprise</title>
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
+    <style>
+        :root {
+            --bg-base: #050505;
+            --surface-matte: #0A0A0A;
+            --surface-elevated: #151515;
+            --accent-crimson: #D32F2F;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #FFFFFF;
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+        /* Component Mount Points */
+        #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
+        #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
+
+        /* [1. SIDEBAR / TAB NAVIGATION] */
+        .info-container { display: flex; flex-direction: column; padding-top: 80px; min-height: 100vh; }
+        
+        .tab-scroller {
+            position: sticky; top: 80px; z-index: 1000;
+            background: rgba(5, 5, 5, 0.8); backdrop-filter: blur(20px);
+            padding: 15px 20px; border-bottom: 1px solid var(--border-glass);
+            display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none;
+        }
+        .tab-scroller::-webkit-scrollbar { display: none; }
+
+        .info-tab {
+            padding: 10px 20px; background: var(--surface-matte); border: 1px solid var(--border-glass);
+            border-radius: 12px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+            color: var(--text-dim); white-space: nowrap; cursor: pointer; transition: var(--transition);
+        }
+        .info-tab.active { background: var(--accent-crimson); color: #fff; border-color: var(--accent-crimson); box-shadow: 0 5px 15px rgba(211, 47, 47, 0.2); }
+
+        /* [2. CONTENT MODULES] */
+        .content-area { padding: 30px 20px 120px; }
+        .info-section { display: none; animation: fadeIn 0.5s ease forwards; }
+        .info-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .title-large { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; color: var(--accent-crimson); }
+        .text-block { font-size: 14px; line-height: 1.8; color: var(--text-dim); margin-bottom: 25px; }
+        .highlight-card { background: var(--surface-matte); border: 1px solid var(--border-glass); border-radius: 20px; padding: 25px; margin-bottom: 25px; }
+        
+        /* [3. PARTNERSHIP FORM STYLING] */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .input-ctrl { width: 100%; padding: 15px; background: var(--surface-elevated); border: 1px solid var(--border-glass); border-radius: 12px; color: #fff; outline: none; transition: 0.3s; }
+        .input-ctrl:focus { border-color: var(--accent-crimson); }
+
+        .btn-send {
+            width: 100%; padding: 18px; background: var(--text-main); color: #000;
+            border: none; border-radius: 12px; font-size: 13px; font-weight: 900;
+            text-transform: uppercase; cursor: pointer; margin-top: 10px;
+        }
+
+        /* [4. POLICY BULLETS] */
+        .policy-list { list-style: none; }
+        .policy-item { margin-bottom: 20px; border-left: 2px solid var(--accent-crimson); padding-left: 15px; }
+        .policy-head { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 5px; }
+        .policy-body { font-size: 13px; color: var(--text-dim); }
+
+    </style>
+</head>
+<body>
+
+    <div id="loader-mount"></div>
+    <div id="header-mount"></div>
+
+    <main class="info-container" id="main-content" style="opacity: 0; transition: 0.5s;">
+        
+        <nav class="tab-scroller">
+            <button class="info-tab active" onclick="switchInfo('about', this)">About</button>
+            <button class="info-tab" onclick="switchInfo('refund', this)">Refund</button>
+            <button class="info-tab" onclick="switchInfo('privacy', this)">Privacy</button>
+            <button class="info-tab" onclick="switchInfo('disclaimer', this)">Disclaimer</button>
+            <button class="info-tab" onclick="switchInfo('terms', this)">Terms</button>
+            <button class="info-tab" onclick="switchInfo('sponsor', this)">Sponsorship</button>
+        </nav>
+
+        <section class="content-area">
+            
+            <!-- [ABOUT US SECTION] -->
+            <div id="sec-about" class="info-section active">
+                <h1 class="title-large">Operational Mission</h1>
+                <div class="highlight-card">
+                    <p class="text-block" style="margin-bottom: 0;">NE SPORTS Enterprise is a tier-one mobile-first esports ecosystem engineered for professional gaming operatives. Our mission is to bridge the gap between casual play and professional deployment through automated tournament systems.</p>
+                </div>
+                <h3 style="font-size: 14px; margin-bottom: 15px;">Platform Intelligence</h3>
+                <div class="policy-list">
+                    <div class="policy-item">
+                        <span class="policy-head">Global Reach</span>
+                        <span class="policy-body">Serving over 10,000+ registered operatives across PUBG and Free Fire divisions.</span>
+                    </div>
+                    <div class="policy-item">
+                        <span class="policy-head">Automated Engine</span>
+                        <span class="policy-body">Real-time match updates, room credentials, and instant prize pool calculations.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [REFUND POLICY SECTION] -->
+            <div id="sec-refund" class="info-section">
+                <h1 class="title-large">Refund Protocol</h1>
+                <div class="highlight-card" style="border-color: var(--accent-crimson); background: rgba(211, 47, 47, 0.05);">
+                    <p style="color: var(--accent-crimson); font-weight: 800; font-size: 13px;">CRITICAL NOTICE: All entry fees are final once a deployment ticket is issued.</p>
+                </div>
+                <div class="policy-list">
+                    <div class="policy-item">
+                        <span class="policy-head">Non-Refundable Scenarios</span>
+                        <span class="policy-body">Refunds will NOT be issued if an operative misses the match time, fails to enter the Room ID/Password, or experiences personal internet connectivity issues.</span>
+                    </div>
+                    <div class="policy-item">
+                        <span class="policy-head">Match Cancellation</span>
+                        <span class="policy-body">In the rare event of a total system failure or match cancellation by NE SPORTS, 100% of the entry fee will be credited back to the operative's vault within 24 hours.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [PRIVACY POLICY SECTION] -->
+            <div id="sec-privacy" class="info-section">
+                <h1 class="title-large">Data Sovereignty</h1>
+                <p class="text-block">Your operative data is protected under high-level encryption. We only collect data necessary for match verification and payout processing.</p>
+                <div class="policy-list">
+                    <div class="policy-item">
+                        <span class="policy-head">Identity Protection</span>
+                        <span class="policy-body">Your Game UID and IGN are only shared with match referees and verified participants in your specific deployment.</span>
+                    </div>
+                    <div class="policy-item">
+                        <span class="policy-head">Payment Data</span>
+                        <span class="policy-body">Transaction IDs (TIDs) are stored for 90 days for audit purposes before being purged from the live server.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [DISCLAIMER SECTION] -->
+            <div id="sec-disclaimer" class="info-section">
+                <h1 class="title-large">Legal Disclaimer</h1>
+                <p class="text-block">NE SPORTS is an independent tournament platform and is not affiliated with, endorsed by, or sponsored by Tencent Games (PUBG) or Garena (Free Fire).</p>
+                <div class="highlight-card">
+                    <span class="policy-head" style="color: var(--accent-crimson);">Fair Play Mandate</span>
+                    <p class="text-block" style="font-size: 12px;">Use of emulators, hacks, third-party scripts, or teaming results in an immediate permanent ban and forfeiture of all vault earnings.</p>
+                </div>
+            </div>
+
+            <!-- [TERMS & CONDITIONS SECTION] -->
+            <div id="sec-terms" class="info-section">
+                <h1 class="title-large">Engagement Terms</h1>
+                <div class="policy-list">
+                    <div class="policy-item">
+                        <span class="policy-head">Account Ownership</span>
+                        <span class="policy-body">One operative per account. Multi-accounting is monitored by device ID tracking.</span>
+                    </div>
+                    <div class="policy-item">
+                        <span class="policy-head">Payout Verification</span>
+                        <span class="policy-body">All cashout requests are subject to manual review of match logs and victory screenshots.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [SPONSORSHIP / PARTNERSHIP SECTION] -->
+            <div id="sec-sponsor" class="info-section">
+                <h1 class="title-large">Brand Partnership</h1>
+                <p class="text-block">Collaborate with NE SPORTS to reach the largest competitive gaming demographic in the region.</p>
+                
+                <div class="highlight-card">
+                    <div class="input-group">
+                        <label>Organization / Brand Name</label>
+                        <input type="text" id="biz-name" class="input-ctrl" placeholder="e.g. RedBull / G Fuel">
+                    </div>
+                    <div class="input-group">
+                        <label>Application Type</label>
+                        <select id="biz-type" class="input-ctrl">
+                            <option value="Sponsor">Event Sponsor</option>
+                            <option value="Promoter">Brand Promoter / Influencer</option>
+                            <option value="Clan">Clan Partnership</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Official Email / WhatsApp</label>
+                        <input type="text" id="biz-contact" class="input-ctrl" placeholder="contact@brand.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Partnership Proposal</label>
+                        <textarea id="biz-msg" class="input-ctrl" style="height: 100px; resize: none;" placeholder="Briefly describe your collaboration goal..."></textarea>
+                    </div>
+                    <button class="btn-send" onclick="submitPartnerApp()">Dispatch Proposal</button>
+                </div>
+            </div>
+
+        </section>
+
+        <div id="footer-mount"></div>
+    </main>
+
+    <div id="navigation-mount"></div>
+
+    <!-- [CORE INFORMATION LOGIC ENGINE] -->
+    <script type="module">
+        import { auth, db, onAuthStateChanged, collection, addDoc } from './firebase-config.js';
+
+        // 1. Component Mounting System
+        async function loadComponent(id, file) {
+            const res = await fetch(file);
+            document.getElementById(id).innerHTML = await res.text();
+            const scripts = document.getElementById(id).querySelectorAll('script');
+            scripts.forEach(s => {
+                const ns = document.createElement('script');
+                ns.type = 'module'; ns.textContent = s.textContent;
+                document.body.appendChild(ns);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadComponent('loader-mount', '/loader.html');
+            await loadComponent('header-mount', '/header.html');
+            await loadComponent('navigation-mount', '/navigation.html');
+            await loadComponent('footer-mount', '/footer.html');
+
+            onAuthStateChanged(auth, (user) => {
+                document.getElementById('main-content').style.opacity = '1';
+                // Note: More page is accessible even if not logged in for legal reasons
+            });
+        });
+
+        // 2. Internal Navigation Logic
+        window.switchInfo = (targetId, btn) => {
+            document.querySelectorAll('.info-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.info-tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(`sec-${targetId}`).classList.add('active');
+            btn.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // 3. Partnership Submission Engine
+        window.submitPartnerApp = async () => {
+            const name = document.getElementById('biz-name').value.trim();
+            const type = document.getElementById('biz-type').value;
+            const contact = document.getElementById('biz-contact').value.trim();
+            const msg = document.getElementById('biz-msg').value.trim();
+
+            if(!name || !contact || !msg) {
+                return alert("Command Center: All partnership fields are mandatory.");
+            }
+
+            NE_Loader.show("Dispatching Inquiry...");
+
+            try {
+                await addDoc(collection(db, "partnerships"), {
+                    name, type, contact, message: msg,
+                    status: "under_review",
+                    timestamp: new Date().toISOString()
+                });
+
+                alert("Success: Your proposal has been securely dispatched. Our partnership team will contact you shortly.");
+                location.reload();
+            } catch (e) {
+                alert("Security Error: Communication failed.");
+            } finally {
+                NE_Loader.hide();
+            }
+        };
+
+    </script>
+</body>
+</html>

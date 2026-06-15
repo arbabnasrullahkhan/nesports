@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NE SPORTS | Loading</title>
+    <title>NE SPORTS | Booting</title>
     <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
     <style>
         :root {
-            --bg-base: #050505;
-            --surface: #121212;
-            --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.4);
-            --accent-red: #D32F2F; /* Premium Crimson */
+            --bg-base: #030303;
+            --bg-surface: #0A0A0A;
+            --text-main: #F3F3F3;
+            --text-muted: #666666;
+            --accent-red: #E50914; /* Cinematic Premium Red */
+            --accent-green: #2E7D32; /* Success Green */
         }
 
         * {
@@ -19,10 +20,12 @@
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            user-select: none;
         }
 
         body {
             background-color: var(--bg-base);
+            background-image: radial-gradient(circle at 50% 50%, var(--bg-surface) 0%, var(--bg-base) 100%);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -31,40 +34,66 @@
             overflow: hidden;
         }
 
-        .brand-container {
+        /* Ambient Vignette Effect */
+        .vignette {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: inset 0 0 150px rgba(0,0,0,0.9);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .boot-container {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: cinematicFadeIn 1.5s ease-out forwards;
+            animation: systemBoot 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             opacity: 0;
+            transform: translateY(20px);
         }
 
         .brand-logo {
-            width: 120px;
+            width: 110px;
             height: auto;
-            margin-bottom: 20px;
-            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.8));
+            margin-bottom: 25px;
+            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.6));
+            animation: subtleFloat 4s ease-in-out infinite;
         }
 
         .brand-title {
             color: var(--text-main);
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .brand-subtitle {
+            color: var(--text-muted);
+            font-size: 10px;
             letter-spacing: 4px;
             text-transform: uppercase;
         }
 
+        /* Precision Progress Bar */
         .loader-wrapper {
-            margin-top: 40px;
-            width: 150px;
+            margin-top: 50px;
+            width: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .progress-track {
             width: 100%;
             height: 2px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
             position: relative;
             overflow: hidden;
+            border-radius: 2px;
         }
 
         .progress-fill {
@@ -74,67 +103,118 @@
             height: 100%;
             width: 0%;
             background-color: var(--accent-red);
-            animation: fillProgress 2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+            transition: width 0.3s ease;
         }
 
         .system-status {
             margin-top: 15px;
             color: var(--text-muted);
-            font-size: 10px;
+            font-size: 9px;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 2px;
-            animation: pulseText 1.5s infinite;
+            transition: color 0.3s ease;
+        }
+
+        .version-tag {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 10px;
+            letter-spacing: 1px;
+            font-family: monospace;
+            z-index: 2;
         }
 
         /* Animations */
-        @keyframes cinematicFadeIn {
-            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
+        @keyframes systemBoot {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fillProgress {
-            0% { width: 0%; }
-            50% { width: 60%; }
-            100% { width: 100%; }
-        }
-
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.8; }
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="brand-container">
+    <div class="vignette"></div>
+
+    <div class="boot-container">
         <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="brand-logo">
-        <div class="brand-title">NE SPORTS</div>
+        <h1 class="brand-title">NE SPORTS</h1>
+        <div class="brand-subtitle">Enterprise Esports Protocol</div>
         
         <div class="loader-wrapper">
             <div class="progress-track">
-                <div class="progress-fill"></div>
+                <div class="progress-fill" id="progress-bar"></div>
             </div>
-            <div class="system-status" id="status-text">INITIALIZING SYSTEM</div>
+            <div class="system-status" id="status-text">INITIALIZING CORE...</div>
         </div>
     </div>
 
-    <!-- Importing Firebase Engine -->
+    <div class="version-tag">v2.0.0 | SECURE BUILD</div>
+
+    <!-- Core Engine Import & Routing Logic -->
     <script type="module">
         import { auth, onAuthStateChanged } from './firebase-config.js';
 
-        // Update status text dynamically
-        setTimeout(() => document.getElementById('status-text').innerText = "AUTHENTICATING...", 1000);
+        const statusText = document.getElementById('status-text');
+        const progressBar = document.getElementById('progress-bar');
+        
+        let authResolved = false;
+        let targetDestination = "auth.html"; // Default fallback
 
-        // 2.2 Seconds wait for animation to complete
+        // 1. Listen to Firebase Auth State (Is user logged in?)
+        onAuthStateChanged(auth, (user) => {
+            authResolved = true; // Signal that Firebase has responded
+            if (user) {
+                targetDestination = "home.html"; // Daily regular user
+            } else {
+                targetDestination = "auth.html"; // New or logged out user
+            }
+        });
+
+        // 2. Cinematic Loading Sequence
         setTimeout(() => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    window.location.replace("home.html");
-                } else {
-                    window.location.replace("auth.html");
+            progressBar.style.width = "40%";
+            statusText.innerText = "ESTABLISHING SECURE CONNECTION...";
+        }, 600);
+
+        setTimeout(() => {
+            progressBar.style.width = "75%";
+            statusText.innerText = "VERIFYING PLAYER IDENTITY...";
+        }, 1400);
+
+        // 3. Final Execution & Routing
+        setTimeout(() => {
+            // Check every 100ms if Firebase has replied
+            const routeCheck = setInterval(() => {
+                if (authResolved) {
+                    clearInterval(routeCheck);
+                    
+                    progressBar.style.width = "100%";
+                    
+                    if (targetDestination === "home.html") {
+                        statusText.innerText = "ACCESS GRANTED. ENTERING ARENA...";
+                        statusText.style.color = "var(--accent-green)";
+                        progressBar.style.backgroundColor = "var(--accent-green)";
+                        progressBar.style.boxShadow = "0 0 10px rgba(46, 125, 50, 0.5)";
+                    } else {
+                        statusText.innerText = "AUTHENTICATION REQUIRED. ROUTING...";
+                        statusText.style.color = "var(--accent-red)";
+                    }
+
+                    // Smooth transition to the next screen after reading the final text
+                    setTimeout(() => {
+                        window.location.replace(targetDestination);
+                    }, 800);
                 }
-            });
-        }, 2200);
+            }, 100);
+        }, 2200); // Minimum wait time for the cinematic effect
+
     </script>
 </body>
 </html>

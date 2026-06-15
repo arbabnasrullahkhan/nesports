@@ -746,26 +746,66 @@ const bootTimer = setInterval(() => {
     bIdx++;
     if (bIdx >= bootMessages.length) clearInterval(bootTimer);
 }, 500);
+/* ─── Master Admin Credentials ────────────────────────── */
+const MASTER_UID = "16o8M5YWPvNYEIS3T4ausK6DJAi1";
+const MASTER_EMAIL = "arbabnadu@gmail.com";
 
-/* ─── Auth Gate ───────────────────────────────── */
+/* ─── Updated Auth Gate with Master Bypass ────────────── */
 onAuthStateChanged(auth, async (user) => {
-    if (!user) { redirect('/auth'); return; }
-    try {
-        const snap = await getDoc(doc(db, "users", user.uid));
-        if (snap.exists() && (snap.data().isAdmin === true || snap.data().role === 'admin')) {
-            setTimeout(() => {
-                document.getElementById('boot-screen').style.display = 'none';
-                document.getElementById('app').style.display = 'block';
-                document.querySelector('.topbar-user').innerHTML = `<span class="live-dot"></span>${snap.data().name || user.email}`;
-                initAdminEngine();
-            }, 2400);
-        } else {
-            toast("UNAUTHORIZED: Redirecting.", 'error');
-            setTimeout(() => redirect('/home'), 1500);
-        }
-    } catch { redirect('/auth'); }
-});
+    // 1. اگر یوزر لاگ ان نہیں ہے تو ری ڈائریکٹ کریں
+    if (!user) { 
+        console.log("No user detected, redirecting to auth...");
+        window.location.replace('/auth'); 
+        return; 
+    }
 
+    try {
+        // 2. فائر اسٹور سے یوزر کا ڈیٹا نکالیں
+        const snap = await getDoc(doc(db, "users", user.uid));
+        const userData = snap.exists() ? snap.data() : {};
+
+        // 3. سیکیورٹی چیک: ای میل، UID، یا ڈیٹا بیس رول
+        const isMasterAdmin = (user.uid === MASTER_UID || user.email === MASTER_EMAIL);
+        const isDatabaseAdmin = (userData.isAdmin === true || userData.role === 'admin');
+
+        if (isMasterAdmin || isDatabaseAdmin) {
+            // ایڈمن ایکسیس مل گیا
+            console.log("Admin Access Granted for:", user.email);
+            
+            setTimeout(() => {
+                // اسکرینز کو سوئچ کریں
+                const bootScreen = document.getElementById('boot-screen');
+                const appScreen = document.getElementById('app');
+                
+                if(bootScreen) bootScreen.style.display = 'none';
+                if(appScreen) appScreen.style.display = 'block';
+
+                // ٹاپ بار پر نام دکھائیں
+                const topUser = document.querySelector('.topbar-user');
+                if(topUser) {
+                    topUser.innerHTML = `<span class="live-dot"></span>${userData.name || user.email}`;
+                }
+
+                // ایڈمن انجن لوڈ کریں
+                if (typeof initAdminEngine === "function") {
+                    initAdminEngine();
+                }
+            }, 2400);
+
+        } else {
+            // اگر ایڈمن نہیں ہے
+            console.warn("Unauthorized access attempt by:", user.email);
+            if(typeof toast === "function") toast("UNAUTHORIZED: Redirecting to Home.", 'error');
+            
+            setTimeout(() => {
+                window.location.replace('/home');
+            }, 1500);
+        }
+    } catch (error) {
+        console.error("Auth Gate Error:", error);
+        window.location.replace('/auth');
+    }
+});
 /* ─── Logout ──────────────────────────────────── */
 window.logoutAdmin = async () => {
     await signOut(auth);

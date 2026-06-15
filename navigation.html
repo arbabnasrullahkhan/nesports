@@ -1,0 +1,224 @@
+<!-- [NE SPORTS SHARED COMPONENT: NAVIGATION VERSION 7.7] -->
+<style>
+    :root {
+        --nav-height: 70px;
+        --nav-bg: rgba(10, 10, 10, 0.8);
+        --nav-border: rgba(255, 255, 255, 0.08);
+        --nav-active: #D32F2F;
+        --nav-inactive: rgba(255, 255, 255, 0.4);
+        --z-nav: 4000;
+        --z-fab: 4500;
+    }
+
+    /* Bottom Navigation Container */
+    .nav-container {
+        position: fixed;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 92%;
+        max-width: 500px;
+        height: var(--nav-height);
+        background: var(--nav-bg);
+        backdrop-filter: blur(25px) saturate(180%);
+        -webkit-backdrop-filter: blur(25px) saturate(180%);
+        border: 1px solid var(--nav-border);
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 10px;
+        z-index: var(--z-nav);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        animation: navSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes navSlideUp {
+        from { transform: translate(-50%, 100px); opacity: 0; }
+        to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    /* Navigation Items */
+    .nav-item {
+        flex: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        gap: 5px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .nav-item svg {
+        width: 22px;
+        height: 22px;
+        fill: var(--nav-inactive);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), fill 0.3s ease;
+    }
+
+    .nav-item span {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--nav-inactive);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+
+    /* Active State Styling */
+    .nav-item.active svg {
+        fill: var(--nav-active);
+        transform: translateY(-2px);
+        filter: drop-shadow(0 2px 10px rgba(211, 47, 47, 0.5));
+    }
+
+    .nav-item.active span {
+        color: var(--nav-active);
+    }
+
+    /* Indicator dot for active item */
+    .nav-item.active::after {
+        content: "";
+        position: absolute;
+        bottom: 8px;
+        width: 4px;
+        height: 4px;
+        background: var(--nav-active);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--nav-active);
+    }
+
+    /* Floating WhatsApp Button */
+    .floating-wa-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 100px; /* Above the bottom nav */
+        width: 50px;
+        height: 50px;
+        background: #25D366;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+        z-index: var(--z-fab);
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: waPulse 2s infinite;
+    }
+
+    .floating-wa-btn:active {
+        transform: scale(0.9);
+    }
+
+    .floating-wa-btn svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
+    }
+
+    @keyframes waPulse {
+        0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+
+    /* Desktop/Wide screen adjustment */
+    @media (min-width: 768px) {
+        .nav-container {
+            width: 400px;
+        }
+        .floating-wa-btn {
+            right: calc(50% - 250px);
+        }
+    }
+</style>
+
+<!-- Floating Support Button -->
+<a href="#" class="floating-wa-btn" id="global-wa-channel" target="_blank" aria-label="WhatsApp Channel">
+    <svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.025 3.14l-.841 3.085 3.167-.831c.829.453 1.554.686 2.417.687h.001c3.181 0 5.767-2.587 5.768-5.766 0-3.18-2.586-5.766-5.769-5.766zm3.43 8.351c-.139.393-.721.721-1.002.766-.282.045-.561.066-.861-.027-.3-.092-.683-.243-1.155-.448-1.99-.861-3.266-2.883-3.366-3.016-.099-.133-.815-1.084-.815-2.07 0-.986.513-1.472.695-1.671.183-.199.399-.249.531-.249.133 0 .266.001.382.006.12.005.281-.045.441.341.163.393.565 1.378.614 1.478.049.099.083.216.017.348-.066.133-.1.216-.199.332-.099.117-.208.261-.298.35-.099.099-.202.208-.087.406.116.199.516.852 1.109 1.38.765.682 1.408.894 1.607.994.199.099.316.083.432-.05.116-.133.498-.581.631-.78.133-.199.266-.166.449-.1.182.066 1.162.548 1.362.648.199.099.332.149.382.232.05.083.05.481-.089.874z"/></svg>
+</a>
+
+<!-- Bottom Navigation Bar -->
+<nav class="nav-container">
+    <a href="/home" class="nav-item" id="nav-home">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Home</span>
+    </a>
+    
+    <a href="/tournaments" class="nav-item" id="nav-arena">
+        <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>
+        <span>Arena</span>
+    </a>
+
+    <a href="/leaderboard" class="nav-item" id="nav-ranks">
+        <svg viewBox="0 0 24 24"><path d="M16 11V3H8v8H2v10h20V11h-6zM10 5h4v14h-4V5zm-6 8h4v6H4v-6zm16 6h-4v-8h4v8z"/></svg>
+        <span>Ranks</span>
+    </a>
+
+    <a href="/wallet" class="nav-item" id="nav-wallet">
+        <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+        <span>Vault</span>
+    </a>
+
+    <a href="/more" class="nav-item" id="nav-more">
+        <svg viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        <span>More</span>
+    </a>
+</nav>
+
+<!-- [NE SPORTS NAVIGATION LOGIC ENGINE] -->
+<script type="module">
+    import { db, doc, onSnapshot } from './firebase-config.js';
+
+    // 1. Dynamic Active Link Detection
+    const updateActiveNav = () => {
+        const path = window.location.pathname;
+        const navMap = {
+            '/home': 'nav-home',
+            '/tournaments': 'nav-arena',
+            '/leaderboard': 'nav-ranks',
+            '/wallet': 'nav-wallet',
+            '/more': 'nav-more'
+        };
+
+        // Reset all
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+
+        // Apply active class
+        const activeId = navMap[path];
+        if (activeId) {
+            document.getElementById(activeId).classList.add('active');
+        }
+    };
+
+    // 2. Real-time Admin Controlled WhatsApp Channel Link
+    const syncWAChannel = () => {
+        const waRef = doc(db, "system_config", "external_links");
+        onSnapshot(waRef, (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (data.whatsapp_channel) {
+                    document.getElementById('global-wa-channel').href = data.whatsapp_channel;
+                }
+            } else {
+                // Fallback link if document doesn't exist
+                document.getElementById('global-wa-channel').href = "https://whatsapp.com/channel/fallback_id";
+            }
+        });
+    };
+
+    // Initialize
+    window.addEventListener('load', () => {
+        updateActiveNav();
+        syncWAChannel();
+    });
+
+    // Handle single-page-app style navigation changes if applicable
+    window.addEventListener('popstate', updateActiveNav);
+
+</script>

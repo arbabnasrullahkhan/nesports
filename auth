@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NE SPORTS | Access Portal</title>
+    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --cyan: #00D4FF;
+            --purple: #7B61FF;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', -apple-system, sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(circle at top right, rgba(123, 97, 255, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(0, 212, 255, 0.1), transparent);
+        }
+
+        /* Glass Card */
+        .auth-card {
+            width: 90%;
+            max-width: 400px;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo { width: 80px; margin-bottom: 20px; }
+
+        h2 { font-size: 24px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+        p { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 30px; }
+
+        /* Input Styles */
+        .input-group { position: relative; margin-bottom: 20px; }
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .input-group input:focus {
+            border-color: var(--cyan);
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+
+        .divider {
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 12px;
+        }
+        .divider::before, .divider::after {
+            content: ""; flex: 1; height: 1px; background: var(--glass-border); margin: 0 10px;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            border: none;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .toggle-text {
+            margin-top: 25px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+        .toggle-text span { color: var(--cyan); cursor: pointer; font-weight: 600; }
+
+        /* Loader */
+        #loader { display: none; margin-top: 15px; color: var(--cyan); font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="logo">
+        <h2 id="auth-title">Welcome Back</h2>
+        <p id="auth-desc">Enter your credentials to access the arena.</p>
+
+        <div id="form-container">
+            <div class="input-group" id="name-field" style="display: none;">
+                <input type="text" id="reg-name" placeholder="Full Name">
+            </div>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email Address">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Password">
+            </div>
+            
+            <button class="btn-primary" id="main-btn" onclick="handleAuth()">Sign In</button>
+        </div>
+
+        <div class="divider">OR CONTINUE WITH</div>
+
+        <button class="google-btn" onclick="googleSignIn()">
+            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path></svg>
+            Google Account
+        </button>
+
+        <div id="loader">Processing...</div>
+
+        <div class="toggle-text">
+            <span id="toggle-link" onclick="toggleAuth()">Don't have an account? Sign Up</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
+            authDomain: "nesports7.firebaseapp.com",
+            projectId: "nesports7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let isLogin = true;
+
+        window.toggleAuth = () => {
+            isLogin = !isLogin;
+            document.getElementById('auth-title').innerText = isLogin ? "Welcome Back" : "Join the Elite";
+            document.getElementById('auth-desc').innerText = isLogin ? "Enter your credentials to access the arena." : "Create your profile and start competing.";
+            document.getElementById('main-btn').innerText = isLogin ? "Sign In" : "Create Account";
+            document.getElementById('toggle-link').innerText = isLogin ? "Don't have an account? Sign Up" : "Already a member? Sign In";
+            document.getElementById('name-field').style.display = isLogin ? "none" : "block";
+        };
+
+        window.handleAuth = async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const name = document.getElementById('reg-name').value;
+            const loader = document.getElementById('loader');
+
+            if(!email || !password) return alert("Please fill all fields");
+            loader.style.display = "block";
+
+            try {
+                if (isLogin) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    const res = await createUserWithEmailAndPassword(auth, email, password);
+                    await createUserDoc(res.user.uid, name || "Pro Player", email);
+                }
+                window.location.href = "home.html";
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                loader.style.display = "none";
+            }
+        };
+
+        window.googleSignIn = async () => {
+            try {
+                const res = await signInWithPopup(auth, provider);
+                const user = res.user;
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    await createUserDoc(user.uid, user.displayName, user.email);
+                }
+                window.location.href = "home.html";
+            } catch (error) {
+                alert(error.message);
+            }
+        };
+
+        async function createUserDoc(uid, name, email) {
+            const refCode = "NES-" + Math.floor(1000 + Math.random() * 9000);
+            await setDoc(doc(db, "users", uid), {
+                uid: uid,
+                name: name,
+                email: email,
+                wallet: 0,
+                xp: 0,
+                level: "Bronze",
+                referralCode: refCode,
+                isAmbassador: false,
+                avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=" + name
+            });
+        }
+    </script>
+</body>
+</html>

@@ -3,136 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NE SPORTS | Loading...</title>
+    <title>NE SPORTS | Loading</title>
     <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
     <style>
         :root {
-            --bg: #0A0A0A;
-            --cyan: #00D4FF;
-            --purple: #7B61FF;
-            --glass: rgba(255, 255, 255, 0.05);
+            --bg-base: #050505;
+            --surface: #121212;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-red: #D32F2F; /* Premium Crimson */
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--bg-base);
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
         }
 
-        .splash-container {
-            text-align: center;
-            position: relative;
+        .brand-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: cinematicFadeIn 1.5s ease-out forwards;
+            opacity: 0;
         }
 
-        .logo-wrapper {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            z-index: 2;
-        }
-
-        .logo {
-            width: 100%;
-            filter: drop-shadow(0 0 20px var(--cyan));
-            animation: pulse 2s infinite ease-in-out;
-        }
-
-        .glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, var(--purple) 0%, transparent 70%);
-            opacity: 0.3;
-            filter: blur(30px);
-            z-index: 1;
-        }
-
-        .loader-bar {
+        .brand-logo {
             width: 120px;
-            height: 4px;
-            background: var(--glass);
-            margin-top: 30px;
-            border-radius: 10px;
-            overflow: hidden;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.8));
+        }
+
+        .brand-title {
+            color: var(--text-main);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .loader-wrapper {
+            margin-top: 40px;
+            width: 150px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.1);
             position: relative;
-            left: 50%;
-            transform: translateX(-50%);
+            overflow: hidden;
         }
 
-        .loader-progress {
-            width: 0%;
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
             height: 100%;
-            background: linear-gradient(90deg, var(--cyan), var(--purple));
-            animation: load 2.5s forwards cubic-bezier(0.42, 0, 0.58, 1);
+            width: 0%;
+            background-color: var(--accent-red);
+            animation: fillProgress 2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
+        .system-status {
+            margin-top: 15px;
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: pulseText 1.5s infinite;
         }
 
-        @keyframes load {
+        /* Animations */
+        @keyframes cinematicFadeIn {
+            0% { opacity: 0; transform: scale(0.95) translateY(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes fillProgress {
             0% { width: 0%; }
+            50% { width: 60%; }
             100% { width: 100%; }
         }
 
-        .powered-by {
-            position: absolute;
-            bottom: 40px;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
 
-    <div class="glow"></div>
-    
-    <div class="splash-container">
-        <div class="logo-wrapper">
-            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="logo">
-        </div>
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
+    <div class="brand-container">
+        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="brand-logo">
+        <div class="brand-title">NE SPORTS</div>
+        
+        <div class="loader-wrapper">
+            <div class="progress-track">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="system-status" id="status-text">INITIALIZING SYSTEM</div>
         </div>
     </div>
 
-    <div class="powered-by">Powered by Nexra</div>
-
-    <!-- Firebase Logic -->
+    <!-- Importing Firebase Engine -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { auth, onAuthStateChanged } from './firebase-config.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
-            authDomain: "nesports7.firebaseapp.com",
-            projectId: "nesports7"
-        };
+        // Update status text dynamically
+        setTimeout(() => document.getElementById('status-text').innerText = "AUTHENTICATING...", 1000);
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        // 2.5 Seconds wait for animation then redirect
+        // 2.2 Seconds wait for animation to complete
         setTimeout(() => {
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    window.location.href = "home.html";
+                    window.location.replace("home.html");
                 } else {
-                    window.location.href = "auth.html";
+                    window.location.replace("auth.html");
                 }
             });
-        }, 2500);
+        }, 2200);
     </script>
 </body>
 </html>

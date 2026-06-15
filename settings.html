@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NE SPORTS | Settings & Alerts</title>
+    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --cyan: #00D4FF;
+            --purple: #7B61FF;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            padding-bottom: 100px;
+            background: radial-gradient(circle at bottom right, rgba(123, 97, 255, 0.1), transparent);
+        }
+
+        /* Header */
+        .settings-header {
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+        .settings-header h1 { font-size: 28px; font-weight: 900; }
+
+        /* Tabs */
+        .settings-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .tab-link {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+        }
+        .tab-link.active {
+            color: var(--cyan);
+            border-bottom-color: var(--cyan);
+        }
+
+        /* Sections */
+        .section { padding: 0 20px; display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Notification Items */
+        .notif-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .notif-icon {
+            width: 40px; height: 40px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+        }
+        .notif-content h4 { font-size: 14px; margin-bottom: 2px; }
+        .notif-content p { font-size: 11px; opacity: 0.5; }
+
+        /* Profile Form */
+        .edit-group { margin-bottom: 20px; }
+        .edit-group label { display: block; font-size: 11px; opacity: 0.5; margin-bottom: 8px; text-transform: uppercase; }
+        .edit-group input {
+            width: 100%; padding: 15px; background: var(--glass);
+            border: 1px solid var(--glass-border); border-radius: 15px;
+            color: white; outline: none;
+        }
+
+        .save-btn {
+            width: 100%; padding: 15px; background: var(--cyan);
+            color: black; border: none; border-radius: 15px;
+            font-weight: 800; cursor: pointer; margin-top: 10px;
+        }
+
+        /* App Info */
+        .app-info {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 11px;
+            opacity: 0.3;
+        }
+
+        /* Bottom Nav */
+        .nav-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; height: 70px; background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(25px); border-radius: 25px; border: 1px solid var(--glass-border);
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        }
+        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="settings-header">
+        <h1>Control Center</h1>
+    </div>
+
+    <div class="settings-tabs">
+        <span class="tab-link active" onclick="showSection('notif-sec', this)">ALERTS</span>
+        <span class="tab-link" onclick="showSection('edit-sec', this)">PROFILE</span>
+        <span class="tab-link" onclick="showSection('app-sec', this)">APP</span>
+    </div>
+
+    <!-- Notifications Section -->
+    <div id="notif-sec" class="section active">
+        <div id="notif-list">
+            <!-- Dynamic Notifications -->
+            <div class="notif-card">
+                <div class="notif-icon">🔔</div>
+                <div class="notif-content">
+                    <h4>Welcome to NE SPORTS!</h4>
+                    <p>Start your journey and win big prizes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Section -->
+    <div id="edit-sec" class="section">
+        <div class="edit-group">
+            <label>Display Name</label>
+            <input type="text" id="edit-name" placeholder="Loading...">
+        </div>
+        <div class="edit-group">
+            <label>Avatar URL (Image Link)</label>
+            <input type="text" id="edit-avatar" placeholder="Paste image link here">
+        </div>
+        <button class="save-btn" onclick="updateProfile()">SAVE CHANGES</button>
+    </div>
+
+    <!-- App Info Section -->
+    <div id="app-sec" class="section">
+        <div class="notif-card">
+            <div class="notif-content">
+                <h4>Version</h4>
+                <p>1.0.4 (Stable Build)</p>
+            </div>
+        </div>
+        <div class="notif-card">
+            <div class="notif-content">
+                <h4>Powered By</h4>
+                <p>Nexra Systems & Firebase v10</p>
+            </div>
+        </div>
+        <div class="app-info">
+            &copy; 2024 NE SPORTS ECOSYSTEM<br>All Rights Reserved.
+        </div>
+    </div>
+
+    <nav class="nav-bar">
+        <a href="home.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>HOME
+        </a>
+        <a href="tournaments.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>MATCHES
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>WALLET
+        </a>
+        <a href="settings.html" class="nav-item" style="color: var(--cyan);">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.35,2.84,9.48l2.03,1.58C4.82,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.5c-1.93,0-3.5-1.57-3.5-3.5 s1.57-3.5,3.5-3.5s3.5,1.57,3.5,3.5S13.93,15.5,12,15.5z"/></svg>SETTINGS
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
+            authDomain: "nesports7.firebaseapp.com",
+            projectId: "nesports7",
+            storageBucket: "nesports7.firebasestorage.app",
+            messagingSenderId: "414629589331",
+            appId: "1:414629589331:web:2a30069688008d17d371a6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                loadUserData();
+                loadNotifications();
+            } else {
+                window.location.href = "auth.html";
+            }
+        });
+
+        window.showSection = (id, btn) => {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-link').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+        };
+
+        async function loadUserData() {
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                document.getElementById('edit-name').value = data.name;
+                document.getElementById('edit-avatar').value = data.avatar;
+            }
+        }
+
+        window.updateProfile = async () => {
+            const newName = document.getElementById('edit-name').value;
+            const newAvatar = document.getElementById('edit-avatar').value;
+            
+            await updateDoc(doc(db, "users", currentUser.uid), {
+                name: newName,
+                avatar: newAvatar
+            });
+            alert("Profile Updated Successfully!");
+        };
+
+        async function loadNotifications() {
+            const q = query(collection(db, "notifications"), where("uid", "in", [currentUser.uid, "all"]), orderBy("timestamp", "desc"));
+            const snap = await getDocs(q);
+            const list = document.getElementById('notif-list');
+            
+            if(!snap.empty) {
+                list.innerHTML = "";
+                snap.forEach(doc => {
+                    const n = doc.data();
+                    list.innerHTML += `
+                        <div class="notif-card">
+                            <div class="notif-icon">${n.icon || '🔔'}</div>
+                            <div class="notif-content">
+                                <h4>${n.title}</h4>
+                                <p>${n.message}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+    </script>
+</body>
+</html>

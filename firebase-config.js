@@ -1,13 +1,32 @@
 // firebase-config.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
-    getAuth, onAuthStateChanged, signInWithEmailAndPassword, 
-    createUserWithEmailAndPassword, signOut, sendPasswordResetEmail,
-    GoogleAuthProvider, signInWithPopup 
+    getAuth, 
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    signOut, 
+    sendPasswordResetEmail,
+    GoogleAuthProvider,
+    signInWithPopup 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
 import { 
-    getFirestore, doc, getDoc, setDoc, updateDoc, collection, 
-    query, where, getDocs, orderBy, limit, onSnapshot, addDoc, increment, arrayUnion 
+    getFirestore, 
+    doc, 
+    getDoc, 
+    setDoc, 
+    updateDoc, 
+    collection, 
+    query, 
+    where, 
+    getDocs, 
+    orderBy, 
+    limit, 
+    onSnapshot, 
+    addDoc, 
+    increment, 
+    arrayUnion 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -23,10 +42,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
-// Exporting EVERYTHING needed for the ecosystem
 export { 
-    app, auth, db, 
-    onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, GoogleAuthProvider, signInWithPopup,
+    app, auth, db, googleProvider,
+    onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithPopup,
     doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, limit, onSnapshot, addDoc, increment, arrayUnion 
 };

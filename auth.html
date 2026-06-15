@@ -3,585 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Access Portal | NE SPORTS Enterprise</title>
     <meta name="theme-color" content="#050505">
-    <title>Access Portal | NE SPORTS</title>
-    
-    <!-- Identity -->
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
-        /* [NE SPORTS DESIGN SYSTEM - AUTH MODULE] */
+        /* [NE SPORTS DESIGN SYSTEM - AUTH v7.7] */
         :root {
             --bg-base: #050505;
-            --surface: #121212;
-            --surface-light: #1A1A1A;
+            --surface-matte: #0A0A0A;
+            --surface-elevated: #151515;
             --accent-crimson: #D32F2F;
             --accent-hover: #B71C1C;
             --text-main: #FFFFFF;
-            --text-muted: rgba(255, 255, 255, 0.5);
-            --text-error: #FF5252;
-            --border-matte: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(211, 47, 47, 0.5);
-            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        * {
-            margin: 0; padding: 0; box-sizing: border-box;
-            font-family: 'Inter', -apple-system, sans-serif;
-            outline: none;
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+
+        /* Shared Component Mounts */
+        #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
+        
+        /* [MAIN AUTH CONTAINER] */
+        .auth-container {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 20px; z-index: 10; position: relative;
+            background: radial-gradient(circle at center, rgba(211, 47, 47, 0.05) 0%, transparent 70%);
         }
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-
-        /* Branding Assets */
-        .auth-watermark {
-            position: fixed;
-            bottom: -50px;
-            right: -50px;
-            width: 300px;
-            height: 300px;
-            background: url('https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png') no-repeat center;
-            background-size: contain;
-            opacity: 0.03;
-            pointer-events: none;
-        }
-
-        /* Auth Container Card */
         .auth-card {
-            width: 100%;
-            max-width: 420px;
-            background-color: var(--surface);
-            border: 1px solid var(--border-matte);
-            border-radius: 12px;
-            padding: 40px 30px;
-            position: relative;
-            z-index: 10;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-            animation: cardEntrance 0.8s ease-out;
+            width: 100%; max-width: 400px; background: var(--surface-matte);
+            border: 1px solid var(--border-glass); border-radius: 20px;
+            padding: 40px 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: cardEntrance 0.6s var(--transition) forwards;
         }
 
-        @keyframes cardEntrance {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        @keyframes cardEntrance { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .auth-header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
+        .auth-head { text-align: center; margin-bottom: 35px; }
+        .auth-logo { width: 70px; margin-bottom: 15px; filter: drop-shadow(0 0 10px rgba(0,0,0,0.5)); }
+        .auth-title { font-size: 22px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .auth-subtitle { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
-        .auth-logo {
-            width: 80px;
-            margin-bottom: 15px;
-        }
+        /* [FORM STATES] */
+        .auth-form { display: none; flex-direction: column; gap: 15px; }
+        .auth-form.active { display: flex; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .auth-card h2 {
-            font-size: 24px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
+        .input-grp { position: relative; }
+        .input-grp label { display: block; font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; padding-left: 5px; }
+        
+        .input-wrapper { position: relative; }
+        .input-wrapper svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: var(--text-dim); }
+        .input-ctrl {
+            width: 100%; padding: 15px 15px 15px 45px; background: var(--surface-elevated);
+            border: 1px solid var(--border-glass); border-radius: 12px; color: #fff;
+            font-size: 14px; outline: none; transition: 0.3s;
         }
+        .input-ctrl:focus { border-color: var(--accent-crimson); background: var(--surface-matte); }
+        .input-ctrl:focus + svg { fill: var(--accent-crimson); }
 
-        .auth-card p {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
+        .forgot-trigger { font-size: 11px; color: var(--text-dim); text-align: right; display: block; margin-top: -10px; cursor: pointer; }
 
-        /* Form Layout */
-        .auth-form {
-            display: none; /* Controlled via JS */
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .auth-form.active {
-            display: flex;
-        }
-
-        /* Input System */
-        .input-group {
-            position: relative;
-            width: 100%;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-        }
-
-        .input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .input-wrapper svg {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            fill: var(--text-muted);
-            transition: var(--transition-smooth);
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            background-color: var(--surface-light);
-            border: 1px solid var(--border-matte);
-            border-radius: 8px;
-            padding: 14px 14px 14px 44px;
-            color: var(--text-main);
-            font-size: 14px;
-            transition: var(--transition-smooth);
-        }
-
-        .input-wrapper input:focus {
-            border-color: var(--border-focus);
-            background-color: var(--surface);
-            box-shadow: 0 0 15px rgba(211, 47, 47, 0.1);
-        }
-
-        .input-wrapper input:focus + svg {
-            fill: var(--accent-crimson);
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-            fill: var(--text-muted);
-            transition: var(--transition-smooth);
-        }
-
-        .password-toggle:hover {
-            fill: var(--text-main);
-        }
-
-        /* Action Buttons */
+        /* [BUTTONS] */
         .btn-prime {
-            width: 100%;
-            background-color: var(--accent-crimson);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 16px;
-            font-size: 14px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            width: 100%; padding: 18px; background: var(--accent-crimson); color: #fff;
+            border: none; border-radius: 12px; font-size: 13px; font-weight: 900;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;
         }
-
-        .btn-prime:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-prime:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
+        .btn-prime:active { transform: scale(0.96); }
+        
         .btn-google {
-            width: 100%;
-            background-color: white;
-            color: black;
-            border: none;
-            border-radius: 8px;
-            padding: 14px;
-            font-size: 13px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            margin-top: 20px;
-        }
-
-        .btn-google:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Text Links */
-        .auth-footer-links {
+            width: 100%; padding: 15px; background: #fff; color: #000;
+            border: none; border-radius: 12px; font-size: 13px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer;
             margin-top: 25px;
-            text-align: center;
-            font-size: 13px;
         }
 
-        .auth-link {
-            color: var(--accent-crimson);
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
+        .switch-text { text-align: center; margin-top: 30px; font-size: 12px; color: var(--text-dim); }
+        .switch-link { color: var(--accent-crimson); font-weight: 800; cursor: pointer; text-transform: uppercase; margin-left: 5px; }
 
-        .auth-link:hover {
-            text-decoration: underline;
-        }
+        /* Shared Loader Mount */
+        #loader-mount { z-index: 9999; }
 
-        .forgot-pass-trigger {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-align: right;
-            display: block;
-            margin-top: -5px;
-            cursor: pointer;
-        }
-
-        .forgot-pass-trigger:hover {
-            color: var(--text-main);
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast Notification System (Internal) */
-        .toast {
-            position: fixed;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--surface-light);
-            border: 1px solid var(--accent-crimson);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 600;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* Responsive */
-        @media (max-width: 480px) {
-            .auth-card {
-                padding: 30px 20px;
-                border-radius: 0;
-                height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                border: none;
-            }
+        .error-toast {
+            position: fixed; top: 100px; left: 50%; transform: translateX(-50%);
+            background: rgba(211, 47, 47, 0.9); color: #fff; padding: 12px 25px;
+            border-radius: 30px; font-size: 12px; font-weight: 700; z-index: 10000;
+            display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="auth-watermark"></div>
-    <div id="toast-notify" class="toast"></div>
+    <div id="loader-mount"></div>
+    <div id="header-mount"></div>
+    <div id="error-toast" class="error-toast"></div>
 
-    <div class="auth-card">
-        <div class="auth-header">
-            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="auth-logo">
-            <h2 id="view-title">Command Center</h2>
-            <p id="view-desc">Authenticating operative credentials...</p>
-        </div>
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-head">
+                <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="auth-logo" alt="NE">
+                <h1 class="auth-title" id="view-title">Command Access</h1>
+                <p class="auth-subtitle" id="view-desc">Authenticating Operative Protocol</p>
+            </div>
 
-        <!-- [LOGIN VIEW] -->
-        <form id="login-form" class="auth-form active">
-            <div class="input-group">
-                <label>Email Address</label>
-                <div class="input-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    <input type="email" id="login-email" placeholder="name@domain.com" required>
+            <!-- LOGIN VIEW -->
+            <form id="login-form" class="auth-form active">
+                <div class="input-grp">
+                    <label>Secure Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="l-email" class="input-ctrl" placeholder="name@domain.com" required>
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
                 </div>
-            </div>
-            <div class="input-group">
-                <label>Security Password</label>
-                <div class="input-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                    <input type="password" id="login-pass" placeholder="••••••••" required>
-                    <svg class="password-toggle" onclick="togglePass('login-pass')" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                <div class="input-grp">
+                    <label>Operational Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="l-pass" class="input-ctrl" placeholder="••••••••" required>
+                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    </div>
                 </div>
-            </div>
-            <span class="forgot-pass-trigger" onclick="setView('forgot')">Forgot Credentials?</span>
-            
-            <button type="submit" class="btn-prime">
-                <span class="spinner" id="login-spinner"></span>
-                <span>Initialize Login</span>
-            </button>
-        </form>
+                <span class="forgot-trigger" onclick="switchView('forgot')">Forgot Credentials?</span>
+                <button type="submit" class="btn-prime">Initialize Login</button>
+            </form>
 
-        <!-- [REGISTER VIEW] -->
-        <form id="register-form" class="auth-form">
-            <div class="input-group">
-                <label>Operative Name</label>
-                <div class="input-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                    <input type="text" id="reg-name" placeholder="Full Name / IGN" required>
+            <!-- REGISTER VIEW -->
+            <form id="reg-form" class="auth-form">
+                <div class="input-grp">
+                    <label>Operative Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="r-name" class="input-ctrl" placeholder="Full Name / IGN" required>
+                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                    </div>
                 </div>
-            </div>
-            <div class="input-group">
-                <label>Email Hub</label>
-                <div class="input-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    <input type="email" id="reg-email" placeholder="operative@nesports.app" required>
+                <div class="input-grp">
+                    <label>Contact Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="r-email" class="input-ctrl" placeholder="operative@nesports.app" required>
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
                 </div>
-            </div>
-            <div class="input-group">
-                <label>Create Access Password</label>
-                <div class="input-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-                    <input type="password" id="reg-pass" placeholder="At least 8 characters" required minlength="8">
+                <div class="input-grp">
+                    <label>Create Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="r-pass" class="input-ctrl" placeholder="Minimum 8 characters" required minlength="8">
+                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    </div>
                 </div>
-            </div>
-            
-            <button type="submit" class="btn-prime">
-                <span class="spinner" id="reg-spinner"></span>
-                <span>Register operative</span>
-            </button>
-        </form>
+                <button type="submit" class="btn-prime">Initialize Recruitment</button>
+            </form>
 
-        <!-- [FORGOT PASSWORD VIEW] -->
-        <form id="forgot-form" class="auth-form">
-            <div class="input-group">
-                <label>Registered Email</label>
-                <div class="input-wrapper">
-                    <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    <input type="email" id="forgot-email" placeholder="Enter your email" required>
+            <!-- FORGOT VIEW -->
+            <form id="forgot-form" class="auth-form">
+                <div class="input-grp">
+                    <label>Registered Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="f-email" class="input-ctrl" placeholder="Enter your email" required>
+                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                    </div>
                 </div>
-            </div>
-            <button type="submit" class="btn-prime">
-                <span class="spinner" id="forgot-spinner"></span>
-                <span>Send Reset Link</span>
-            </button>
-        </form>
+                <button type="submit" class="btn-prime">Send Recovery Link</button>
+            </form>
 
-        <div id="google-trigger-box">
-            <div style="display: flex; align-items: center; margin: 20px 0; opacity: 0.3;">
-                <div style="flex:1; height:1px; background:white;"></div>
-                <div style="padding: 0 10px; font-size: 10px; font-weight: 800;">OR CONTINUE WITH</div>
-                <div style="flex:1; height:1px; background:white;"></div>
-            </div>
-            <button class="btn-google" id="google-auth-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            <button class="btn-google" id="google-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
                 Google Authentication
             </button>
-        </div>
 
-        <div class="auth-footer-links">
-            <span id="toggle-message">New operative? </span>
-            <span class="auth-link" id="view-toggle-btn" onclick="toggleView()">Initialize Registration</span>
+            <div class="switch-text" id="toggle-area">
+                New operative? <span class="switch-link" onclick="switchView('register')">Register Now</span>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <!-- [FIREBASE AUTH & LOGIC ENGINE] -->
+    <!-- [FIREBASE AUTH & COMPONENT LOADING] -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            createUserWithEmailAndPassword, 
-            GoogleAuthProvider, 
-            signInWithPopup,
-            sendPasswordResetEmail
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+            auth, db, onAuthStateChanged, signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, 
+            sendPasswordResetEmail, doc, getDoc, setDoc 
+        } from './firebase-config.js';
 
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
-            authDomain: "nesports7.firebaseapp.com",
-            projectId: "nesports7",
-            storageBucket: "nesports7.firebasestorage.app",
-            messagingSenderId: "414629589331",
-            appId: "1:414629589331:web:2a30069688008d17d371a6"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // UI Element Selectors
-        const viewTitle = document.getElementById('view-title');
-        const viewDesc = document.getElementById('view-desc');
-        const toggleMsg = document.getElementById('toggle-message');
-        const toggleBtn = document.getElementById('view-toggle-btn');
-        const forms = {
-            login: document.getElementById('login-form'),
-            register: document.getElementById('register-form'),
-            forgot: document.getElementById('forgot-form')
-        };
-        const googleBox = document.getElementById('google-trigger-box');
+        // 1. Component Loader
+        async function loadComponent(id, file) {
+            try {
+                const res = await fetch(file);
+                const html = await res.text();
+                document.getElementById(id).innerHTML = html;
+                // Execute internal script of loaded component
+                const scripts = document.getElementById(id).querySelectorAll('script');
+                scripts.forEach(s => {
+                    const ns = document.createElement('script');
+                    ns.type = 'module'; ns.textContent = s.textContent;
+                    document.body.appendChild(ns);
+                });
+            } catch (e) { console.error(`Fail: ${file}`); }
+        }
 
-        let currentActiveView = 'login';
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadComponent('loader-mount', '/loader.html');
+            await loadComponent('header-mount', '/header.html');
+            
+            // Check session
+            onAuthStateChanged(auth, (user) => {
+                if (user) window.location.replace("/home");
+            });
+        });
 
-        // Toast Helper
-        const showToast = (msg) => {
-            const toast = document.getElementById('toast-notify');
-            toast.innerText = msg;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 4000);
-        };
+        // 2. UI Switching
+        window.switchView = (view) => {
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            const title = document.getElementById('view-title');
+            const desc = document.getElementById('view-desc');
+            const toggle = document.getElementById('toggle-area');
 
-        // UI Navigation Logic
-        window.setView = (viewName) => {
-            Object.values(forms).forEach(f => f.classList.remove('active'));
-            forms[viewName].classList.add('active');
-            currentActiveView = viewName;
-
-            if(viewName === 'login') {
-                viewTitle.innerText = "Command Center";
-                viewDesc.innerText = "Authenticating operative credentials...";
-                toggleMsg.innerText = "New operative? ";
-                toggleBtn.innerText = "Initialize Registration";
-                googleBox.style.display = 'block';
-            } else if(viewName === 'register') {
-                viewTitle.innerText = "New Recruitment";
-                viewDesc.innerText = "Registering new operative profile...";
-                toggleMsg.innerText = "Existing operative? ";
-                toggleBtn.innerText = "Return to Login";
-                googleBox.style.display = 'block';
-            } else if(viewName === 'forgot') {
-                viewTitle.innerText = "Signal Recovery";
-                viewDesc.innerText = "Issuing password reset protocols...";
-                toggleMsg.innerText = "Protocol remembered? ";
-                toggleBtn.innerText = "Return to Login";
-                googleBox.style.display = 'none';
+            if(view === 'login') {
+                document.getElementById('login-form').classList.add('active');
+                title.innerText = "Command Access";
+                desc.innerText = "Authenticating Operative Protocol";
+                toggle.innerHTML = `New operative? <span class="switch-link" onclick="switchView('register')">Register Now</span>`;
+            } else if(view === 'register') {
+                document.getElementById('reg-form').classList.add('active');
+                title.innerText = "New Recruitment";
+                desc.innerText = "Initialize System Identity";
+                toggle.innerHTML = `Already registered? <span class="switch-link" onclick="switchView('login')">Sign In</span>`;
+            } else if(view === 'forgot') {
+                document.getElementById('forgot-form').classList.add('active');
+                title.innerText = "Signal Recovery";
+                desc.innerText = "Reset Secure Access Key";
+                toggle.innerHTML = `Protocol remembered? <span class="switch-link" onclick="switchView('login')">Return</span>`;
             }
         };
 
-        window.toggleView = () => {
-            if(currentActiveView === 'login') setView('register');
-            else setView('login');
+        const showError = (msg) => {
+            const toast = document.getElementById('error-toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 5000);
         };
 
-        window.togglePass = (id) => {
-            const input = document.getElementById(id);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        };
-
-        // Create User Profile in Firestore
-        const initializeUserProfile = async (user, customName) => {
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-
-            if (!userSnap.exists()) {
-                const refCode = "NES-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-                await setDoc(userRef, {
+        // 3. Logic: User Doc Creation
+        const initUserDoc = async (user, name) => {
+            const ref = doc(db, "users", user.uid);
+            const snap = await getDoc(ref);
+            if(!snap.exists()) {
+                await setDoc(ref, {
                     uid: user.uid,
-                    name: customName || user.displayName || "Unknown Operative",
+                    name: name || user.displayName || "Unknown Operative",
                     email: user.email,
                     wallet: 0,
                     xp: 0,
                     level: "Bronze",
                     isAmbassador: false,
-                    referralCode: refCode,
-                    profileTier: "Standard",
+                    referralCode: "NES-" + Math.random().toString(36).substr(2, 6).toUpperCase(),
                     createdAt: new Date().toISOString()
                 });
             }
         };
 
-        // Form Handlers
-        forms.login.onsubmit = async (e) => {
+        // 4. Form Handlers
+        document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            const spinner = document.getElementById('login-spinner');
-            
-            spinner.style.display = 'inline-block';
+            NE_Loader.show("Verifying Credentials...");
             try {
-                await signInWithEmailAndPassword(auth, email, pass);
+                await signInWithEmailAndPassword(auth, document.getElementById('l-email').value, document.getElementById('l-pass').value);
                 window.location.replace("/home");
             } catch (err) {
-                showToast("AUTH ERROR: " + err.message);
-                spinner.style.display = 'none';
+                showError("AUTH_ERROR: Invalid email or password.");
+                NE_Loader.hide();
             }
         };
 
-        forms.register.onsubmit = async (e) => {
+        document.getElementById('reg-form').onsubmit = async (e) => {
             e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            const spinner = document.getElementById('reg-spinner');
-
-            spinner.style.display = 'inline-block';
+            NE_Loader.show("Initializing Recruitment...");
+            const name = document.getElementById('r-name').value;
             try {
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await initializeUserProfile(res.user, name);
+                const res = await createUserWithEmailAndPassword(auth, document.getElementById('r-email').value, document.getElementById('r-pass').value);
+                await initUserDoc(res.user, name);
                 window.location.replace("/home");
             } catch (err) {
-                showToast("RECRUITMENT FAILED: " + err.message);
-                spinner.style.display = 'none';
+                showError("SEC_ERROR: " + err.message);
+                NE_Loader.hide();
             }
         };
 
-        forms.forgot.onsubmit = async (e) => {
+        document.getElementById('forgot-form').onsubmit = async (e) => {
             e.preventDefault();
-            const email = document.getElementById('forgot-email').value;
-            const spinner = document.getElementById('forgot-spinner');
-
-            spinner.style.display = 'inline-block';
+            NE_Loader.show("Dispatching Reset Key...");
             try {
-                await sendPasswordResetEmail(auth, email);
-                showToast("SUCCESS: Recovery link dispatched to email.");
-                setView('login');
-            } catch (err) {
-                showToast("PROTOCOL ERROR: " + err.message);
-            } finally {
-                spinner.style.display = 'none';
-            }
+                await sendPasswordResetEmail(auth, document.getElementById('f-email').value);
+                showError("SUCCESS: Recovery link sent to email.");
+                switchView('login');
+            } catch (err) { showError("ERROR: " + err.message); }
+            finally { NE_Loader.hide(); }
         };
 
-        document.getElementById('google-auth-btn').onclick = async () => {
+        document.getElementById('google-btn').onclick = async () => {
             try {
-                const result = await signInWithPopup(auth, provider);
-                await initializeUserProfile(result.user);
+                const res = await signInWithPopup(auth, provider);
+                await initUserDoc(res.user);
                 window.location.replace("/home");
-            } catch (err) {
-                showToast("GOOGLE AUTH ERROR: " + err.message);
-            }
+            } catch (err) { showError("GOOGLE_FAIL: Authentication aborted."); }
         };
-
     </script>
 </body>
 </html>

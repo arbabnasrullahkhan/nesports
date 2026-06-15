@@ -3,127 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Arena | NE SPORTS</title>
+    <title>The Arena | NE SPORTS Enterprise</title>
     
-    <!-- Dependencies: QR Code & Image Generation -->
+    <!-- Enterprise Identity -->
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
+    <!-- Graphics Engines -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
+        /* [NE SPORTS ARENA DESIGN SYSTEM] */
         :root {
             --bg-base: #050505;
-            --surface-matte: #0A0A0A;
-            --surface-elevated: #151515;
-            --accent-crimson: #D32F2F;
-            --accent-gold: #D4AF37;
-            --border-glass: rgba(255, 255, 255, 0.08);
+            --surface: #0E0E0E;
+            --surface-elevated: #161616;
+            --accent: #D32F2F;
+            --gold: #D4AF37;
+            --border: rgba(255, 255, 255, 0.08);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.5);
+            --text-dim: rgba(255, 255, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --success: #4CAF50;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* Shared Component Mounts */
+        /* Shared Mount Points */
         #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
         #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
 
-        /* [1. ARENA FILTERS] */
-        .arena-filters {
-            position: sticky; top: 70px; z-index: 1000;
-            background: rgba(5,5,5,0.8); backdrop-filter: blur(20px);
-            padding: 15px 20px; border-bottom: 1px solid var(--border-glass);
+        /* [1. STICKY FILTERS] */
+        .arena-nav {
+            position: sticky; top: 75px; z-index: 1000;
+            background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border); padding: 15px 20px;
         }
-        .filter-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px; }
+        .filter-row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
         .filter-row::-webkit-scrollbar { display: none; }
         .f-pill {
-            padding: 8px 18px; background: var(--surface-matte); border: 1px solid var(--border-glass);
-            border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+            padding: 10px 22px; background: var(--surface); border: 1px solid var(--border);
+            border-radius: 30px; font-size: 11px; font-weight: 800; text-transform: uppercase;
             color: var(--text-dim); white-space: nowrap; transition: 0.3s;
         }
-        .f-pill.active { background: var(--accent-crimson); color: #fff; border-color: var(--accent-crimson); }
+        .f-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-        /* [2. TOURNAMENT CARDS] */
-        .arena-grid { padding: 20px; display: flex; flex-direction: column; gap: 25px; padding-bottom: 120px; }
-        .match-card {
-            background: var(--surface-matte); border: 1px solid var(--border-glass);
+        /* [2. ARENA GRID & CARDS] */
+        .arena-grid { padding: 30px 20px 140px; display: flex; flex-direction: column; gap: 25px; }
+        
+        .m-card {
+            background: var(--surface); border: 1px solid var(--border);
             border-radius: 24px; overflow: hidden; position: relative;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); animation: cardSlide 0.6s ease-out;
         }
-        .m-banner { width: 100%; height: 160px; position: relative; }
+        @keyframes cardSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .m-banner { width: 100%; height: 180px; position: relative; }
         .m-banner img { width: 100%; height: 100%; object-fit: cover; }
-        .m-type-badge {
-            position: absolute; top: 15px; left: 15px;
-            background: rgba(0,0,0,0.8); padding: 5px 12px; border-radius: 8px;
-            font-size: 10px; font-weight: 900; color: var(--accent-crimson); border: 1px solid var(--border-glass);
-        }
-        .m-status {
-            position: absolute; top: 15px; right: 15px;
-            background: var(--accent-crimson); padding: 5px 12px; border-radius: 8px;
-            font-size: 10px; font-weight: 900; animation: pulse 2s infinite;
-        }
+        .m-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, var(--surface) 5%, transparent 60%); }
+        
+        .m-badge { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; color: var(--accent); border: 1px solid var(--border); }
+        .m-timer { position: absolute; top: 15px; right: 15px; background: var(--accent); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; letter-spacing: 1px; }
 
         .m-body { padding: 20px; }
-        .m-title { font-size: 18px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
+        .m-title { font-size: 20px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
 
-        .m-stats {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;
-        }
-        .stat-item { background: var(--surface-elevated); padding: 12px; border-radius: 12px; border: 1px solid var(--border-glass); }
-        .stat-lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .stat-val { font-size: 14px; font-weight: 800; }
+        .m-grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .m-stat-box { background: var(--surface-elevated); padding: 12px; border-radius: 14px; border: 1px solid var(--border); }
+        .m-stat-lbl { font-size: 9px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 5px; display: block; }
+        .m-stat-val { font-size: 15px; font-weight: 800; color: #fff; }
 
-        /* Dynamic Progress Bar */
-        .slot-wrap { margin-bottom: 20px; }
-        .slot-meta { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; font-weight: 700; }
-        .slot-bar { width: 100%; height: 6px; background: var(--surface-elevated); border-radius: 10px; overflow: hidden; }
-        .slot-fill { height: 100%; background: var(--accent-crimson); transition: 1s ease; }
+        .m-slot-wrap { margin-bottom: 20px; }
+        .m-slot-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+        .m-slot-bar { width: 100%; height: 6px; background: var(--surface-elevated); border-radius: 10px; overflow: hidden; }
+        .m-slot-fill { height: 100%; background: var(--accent); width: 0%; transition: 1.2s cubic-bezier(0.65, 0, 0.35, 1); }
 
-        /* Card Rules & Warning */
-        .m-warning {
-            font-size: 9px; color: var(--accent-crimson); font-weight: 700;
-            background: rgba(211, 47, 47, 0.05); padding: 10px; border-radius: 8px;
-            margin-bottom: 20px; border-left: 3px solid var(--accent-crimson);
+        .m-refund-notice {
+            background: rgba(211, 47, 47, 0.05); border-left: 3px solid var(--accent);
+            padding: 12px; border-radius: 8px; font-size: 9px; color: var(--accent);
+            font-weight: 800; text-transform: uppercase; margin-bottom: 20px; line-height: 1.4;
         }
 
-        .m-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass); padding-top: 20px; }
-        .entry-box { font-size: 11px; color: var(--text-dim); font-weight: 700; }
-        .entry-fee { font-size: 18px; color: #fff; font-weight: 900; display: block; }
-
-        .btn-join {
-            background: #fff; color: #000; border: none; padding: 12px 28px;
-            border-radius: 10px; font-size: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer;
-        }
+        .m-footer { display: flex; gap: 10px; align-items: center; border-top: 1px solid var(--border); padding-top: 20px; }
+        .btn-m { flex: 1; padding: 14px; border-radius: 12px; font-size: 12px; font-weight: 900; text-transform: uppercase; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-details { background: var(--surface-elevated); color: #fff; border: 1px solid var(--border); }
+        .btn-join { background: #fff; color: #000; }
+        .btn-join:active { transform: scale(0.96); }
 
         /* [3. REGISTRATION ENGINE OVERLAY] */
-        .engine-overlay {
+        #entry-engine {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-base); z-index: 6000; display: none;
-            flex-direction: column; overflow-y: auto; padding-bottom: 100px;
+            flex-direction: column; overflow-y: auto; padding-bottom: 120px;
         }
-        .engine-head { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); }
-        .engine-body { padding: 25px 20px; }
-        .step-container { display: none; }
-        .step-container.active { display: block; animation: slideIn 0.4s ease; }
+        .e-head { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-base); z-index: 10; }
+        .e-body { padding: 25px 20px; }
+        .e-step { display: none; animation: stepFade 0.4s ease; }
+        .e-step.active { display: block; }
+        @keyframes stepFade { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        /* Forms */
+        /* Form Controls */
         .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 10px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; }
-        .input-ctrl { width: 100%; padding: 15px; background: var(--surface-matte); border: 1px solid var(--border-glass); border-radius: 12px; color: #fff; outline: none; }
-        .input-ctrl:focus { border-color: var(--accent-crimson); }
+        .input-group label { display: block; font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; padding-left: 5px; }
+        .input-ctrl { width: 100%; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; color: #fff; outline: none; font-size: 14px; font-weight: 600; }
+        .input-ctrl:focus { border-color: var(--accent); background: #111; }
 
-        /* [4. TICKET PREVIEW (Hidden Render)] */
-        #ticket-render-box {
+        /* [4. TICKET RENDER PREVIEW] */
+        #ticket-canvas {
             position: absolute; left: -9999px; top: 0;
-            width: 350px; background: #000; padding: 25px; border: 2px solid #D32F2F; border-radius: 20px;
-            color: #fff; text-align: center;
+            width: 380px; background: #000; padding: 30px; border: 3px solid #D32F2F; border-radius: 25px; color: #fff;
         }
+        .tix-header { border-bottom: 1px dashed #333; padding-bottom: 20px; margin-bottom: 20px; text-align: center; }
         .tix-logo { width: 60px; margin-bottom: 10px; }
-        .tix-qr { width: 150px; height: 150px; background: #fff; margin: 20px auto; padding: 10px; }
+        .tix-qr-area { width: 180px; height: 180px; background: #fff; margin: 20px auto; padding: 10px; border-radius: 15px; }
+        .tix-data { font-family: monospace; font-size: 11px; line-height: 1.8; text-align: left; opacity: 0.9; }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .ticket-preview-display {
+            width: 100%; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Success & Share */
+        .success-box { text-align: center; padding: 40px 0; }
+        .success-icon { width: 64px; height: 64px; fill: var(--success); margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -131,179 +134,194 @@
     <div id="loader-mount"></div>
     <div id="header-mount"></div>
 
-    <!-- ARENA CONTENT -->
-    <main id="main-arena" style="opacity: 0; transition: 0.5s; padding-top: 80px;">
+    <main id="arena-main" style="opacity: 0; transition: 0.6s;">
         
-        <section class="arena-filters">
+        <!-- [1. ARENA NAVIGATION] -->
+        <nav class="arena-nav">
             <div class="filter-row">
-                <button class="f-pill active" onclick="filterGame('All', this)">All Games</button>
-                <button class="f-pill" onclick="filterGame('PUBG', this)">PUBG Mobile</button>
-                <button class="f-pill" onclick="filterGame('Free Fire', this)">Free Fire</button>
-                <button class="f-pill" onclick="filterGame('1v1', this)">1v1 Arena</button>
+                <button class="f-pill active" onclick="filterMatch('All', this)">All Deployments</button>
+                <button class="f-pill" onclick="filterMatch('PUBG', this)">PUBG Arena</button>
+                <button class="f-pill" onclick="filterMatch('FreeFire', this)">Free Fire Arena</button>
+                <button class="f-pill" onclick="filterMatch('Solo', this)">Solo 1v1</button>
+                <button class="f-pill" onclick="filterMatch('Squad', this)">Squad 4v4</button>
             </div>
-        </section>
+        </nav>
 
-        <div class="arena-grid" id="tournament-list">
-            <!-- Firestore Data -->
-            <p style="text-align: center; padding: 40px; color: var(--text-dim); font-size: 12px; letter-spacing: 2px;">SCANNING ACTIVE DEPLOYMENTS...</p>
+        <!-- [2. CARDS CONTAINER] -->
+        <div class="arena-grid" id="arena-list">
+            <!-- Firestore Sync -->
+            <p style="text-align: center; padding: 60px; color: var(--text-dim); font-size: 12px; letter-spacing: 2px;">SCANNING FOR LIVE SIGNALS...</p>
         </div>
 
         <div id="footer-mount"></div>
     </main>
 
-    <!-- [JOIN ENGINE MODAL] -->
-    <div class="engine-overlay" id="reg-engine">
-        <div class="engine-head">
-            <h2 style="font-size: 16px; font-weight: 900; text-transform: uppercase;">Secure Entry Protocol</h2>
-            <button onclick="closeEngine()" style="background: none; border: none; color: #fff; font-size: 24px;">&times;</button>
+    <!-- [3. ENTRY ENGINE OVERLAY] -->
+    <div id="entry-engine">
+        <div class="e-head">
+            <h2 style="font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;">Engagement Protocol</h2>
+            <button onclick="closeEngine()" style="background: none; border: none; color: #fff; font-size: 28px; cursor: pointer;">&times;</button>
         </div>
 
-        <div class="engine-body">
-            <!-- Step 1: Wallet & Verification -->
-            <div class="step-container active" id="step-1">
-                <h3 style="font-size: 22px; margin-bottom: 10px;">Verification Required</h3>
-                <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 25px;">Checking your vault balance and security clearance.</p>
+        <div class="e-body">
+            <!-- Step 1: Verification -->
+            <div class="e-step active" id="step-auth">
+                <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 10px;">AUTHORIZING VAULT</h3>
+                <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 25px;">Checking operative balance for deployment clearance.</p>
                 
-                <div class="stat-item" style="margin-bottom: 30px;">
-                    <span class="stat-lbl">Your Balance</span>
-                    <span class="stat-val" id="user-wallet-val">0 PKR</span>
+                <div class="m-stat-box" style="margin-bottom: 30px; text-align: center; border-color: var(--accent);">
+                    <span class="m-stat-lbl">Your Current Balance</span>
+                    <span class="m-stat-val" id="engine-wallet" style="font-size: 24px;">0 PKR</span>
                 </div>
 
-                <div class="m-warning" style="font-size: 11px;">
-                    PROTOCOL: If you fail to enter the match room within the allocated time, your entry fee will not be refunded. No exceptions.
+                <div class="m-refund-notice">
+                    SYSTEM MANDATE: MISSING MATCH ENTRY OR LATE JOINING WILL RESULT IN 0% REFUND. NO EXCEPTIONS.
                 </div>
 
-                <button class="btn-primary" id="btn-proceed-1" onclick="handleStep1()" style="width: 100%; background: var(--accent-crimson); color: #fff; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase;">Authorize & Continue</button>
+                <button class="btn-m btn-join" onclick="processStepAuth()" style="width: 100%; padding: 18px;">Verify & Continue</button>
             </div>
 
-            <!-- Step 2: Form & Payment Proof -->
-            <div class="step-container" id="step-2">
-                <h3 style="font-size: 20px; margin-bottom: 20px; text-transform: uppercase;">Operative Details</h3>
+            <!-- Step 2: Deployment Details -->
+            <div class="e-step" id="step-form">
+                <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 20px;">OPERATIVE IDENTITY</h3>
                 
                 <div class="input-group">
-                    <label>In-Game Name (IGN)</label>
-                    <input type="text" id="p-ign" class="input-ctrl" placeholder="Exactly as in game">
+                    <label>In-Game Name (Exact)</label>
+                    <input type="text" id="op-ign" class="input-ctrl" placeholder="e.g. NE_Slayer_01">
                 </div>
                 <div class="input-group">
                     <label>Character UID</label>
-                    <input type="number" id="p-uid" class="input-ctrl" placeholder="e.g. 5123456789">
+                    <input type="number" id="op-uid" class="input-ctrl" placeholder="e.g. 5123456789">
                 </div>
                 <div class="input-group">
-                    <label>WhatsApp Number</label>
-                    <input type="tel" id="p-wa" class="input-ctrl" placeholder="For match broadcasts">
+                    <label>WhatsApp Contact</label>
+                    <input type="tel" id="op-wa" class="input-ctrl" placeholder="For room broadcasts">
                 </div>
-                
-                <div id="payment-gate" style="display: none;">
-                    <h4 style="color: var(--accent-gold); margin-bottom: 15px; font-size: 12px;">INSUFFICIENT FUNDS: DEPOSIT TO ADMIN</h4>
-                    <div class="stat-item" style="border: 1px dashed var(--accent-gold); margin-bottom: 15px;">
-                        <span class="stat-lbl">EasyPaisa (Admin)</span>
-                        <span class="stat-val">0345-XXXXXXX</span>
+
+                <!-- Fallback Payment (if wallet low) -->
+                <div id="low-balance-gateway" style="display: none;">
+                    <div class="m-refund-notice" style="border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.05);">
+                        INSUFFICIENT VAULT FUNDS. TRANSFER TO ADMIN ACCOUNTS BELOW.
+                    </div>
+                    <div class="m-grid-stats" style="margin-bottom: 20px;">
+                        <div class="m-stat-box" style="border-style: dashed;"><span class="m-stat-lbl">EasyPaisa (Admin)</span><span class="m-stat-val" style="font-size: 11px;">0345-XXXXXXX</span></div>
+                        <div class="m-stat-box" style="border-style: dashed;"><span class="m-stat-lbl">JazzCash (Admin)</span><span class="m-stat-val" style="font-size: 11px;">0300-XXXXXXX</span></div>
                     </div>
                     <div class="input-group">
-                        <label>Upload Payment Proof (Screenshot)</label>
-                        <input type="file" id="p-proof" class="input-ctrl" accept="image/*">
+                        <label>Upload Payment Proof (TID/Screenshot)</label>
+                        <input type="file" id="op-proof" class="input-ctrl" accept="image/*">
                     </div>
                 </div>
 
-                <button class="btn-primary" onclick="confirmDeployment()" style="width: 100%; background: #fff; color: #000; padding: 18px; border: none; border-radius: 12px; font-weight: 900; text-transform: uppercase;">Initialize Deployment</button>
+                <button class="btn-m btn-join" onclick="deployOperative()" style="width: 100%; padding: 18px;">Confirm Deployment</button>
             </div>
 
-            <!-- Step 3: Success & Ticket -->
-            <div class="step-container" id="step-3" style="text-align: center;">
-                <div style="font-size: 50px; margin-bottom: 20px;">🎫</div>
-                <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 10px;">DEPLOYMENT SECURED</h3>
-                <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 30px;">Your digital tournament pass is being generated.</p>
-                
-                <div id="ticket-preview-box" style="margin-bottom: 30px;"></div>
+            <!-- Step 3: Ticket Generation -->
+            <div class="e-step" id="step-ticket" style="text-align: center;">
+                <div class="success-box">
+                    <svg class="success-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                    <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 10px;">DEPLOYMENT SECURED</h3>
+                    <p style="font-size: 12px; color: var(--text-dim); margin-bottom: 30px;">Digital Tournament Pass successfully encoded.</p>
+                    
+                    <div id="preview-mount"></div>
 
-                <button class="btn-primary" onclick="downloadTicket()" style="width: 100%; background: var(--accent-crimson); color: #fff; padding: 18px; border: none; border-radius: 12px; font-weight: 900;">DOWNLOAD TICKET</button>
+                    <button class="btn-m btn-join" onclick="saveTicketToGallery()" style="width: 100%; background: var(--accent); color: #fff;">Download Ticket</button>
+                    <button class="btn-m btn-details" onclick="location.reload()" style="width: 100%; margin-top: 15px;">Return to Arena</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- [HIDDEN TICKET RENDER ENGINE] -->
-    <div id="ticket-render-box">
-        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="tix-logo">
-        <h2 style="font-size: 18px; letter-spacing: 2px;">TOURNAMENT PASS</h2>
-        <div class="tix-qr" id="qrcode"></div>
-        <div id="tix-details" style="font-size: 11px; line-height: 1.6; text-align: left; opacity: 0.8;"></div>
-        <div style="margin-top: 20px; font-size: 8px; color: #D32F2F;">VERIFIED NE SPORTS ECOSYSTEM v7.7</div>
+    <!-- [4. HIDDEN TICKET ENGINE] -->
+    <div id="ticket-canvas">
+        <div class="tix-header">
+            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="tix-logo">
+            <h2 style="font-size: 18px; letter-spacing: 3px; font-weight: 900;">OPERATIVE PASS</h2>
+        </div>
+        <div class="tix-qr-area" id="tix-qr-box"></div>
+        <div class="tix-data" id="tix-data-box">
+            <!-- Dynamic Data -->
+        </div>
+        <div style="margin-top: 25px; text-align: center; font-size: 8px; letter-spacing: 2px; color: #D32F2F; font-weight: 800;">
+            VERIFIED NE SPORTS ECOSYSTEM v7.7.0
+        </div>
     </div>
 
     <div id="navigation-mount"></div>
 
-    <!-- [ARENA LOGIC ENGINE] -->
+    <!-- [ARENA CORE SCRIPT] -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, doc, getDoc, updateDoc, collection, query, where, onSnapshot, addDoc, increment } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, doc, getDoc, updateDoc, increment, collection, query, where, onSnapshot, addDoc } from './firebase-config.js';
 
-        let currentUser = null;
         let activeMatch = null;
+        let userData = null;
 
-        // 1. Component Loader
-        async function loadComponent(id, file) {
+        // 1. Module Mounter
+        async function mount(id, file) {
             const res = await fetch(file);
             document.getElementById(id).innerHTML = await res.text();
-            // Re-run scripts if any
             const scripts = document.getElementById(id).querySelectorAll('script');
             scripts.forEach(s => {
                 const ns = document.createElement('script');
-                ns.type = 'module';
-                ns.textContent = s.textContent;
+                ns.type = 'module'; ns.textContent = s.textContent;
                 document.body.appendChild(ns);
             });
         }
 
-        // 2. Initialize Arena
         window.addEventListener('DOMContentLoaded', async () => {
-            await loadComponent('loader-mount', '/loader.html');
-            await loadComponent('header-mount', '/header.html');
-            await loadComponent('navigation-mount', '/navigation.html');
-            await loadComponent('footer-mount', '/footer.html');
+            await mount('loader-mount', '/loader.html');
+            await mount('header-mount', '/header.html');
+            await mount('navigation-mount', '/navigation.html');
+            await mount('footer-mount', '/footer.html');
 
-            onAuthStateChanged(auth, (user) => {
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    currentUser = user;
-                    document.getElementById('main-arena').style.opacity = '1';
-                    loadTournaments('All');
+                    const snap = await getDoc(doc(db, "users", user.uid));
+                    userData = snap.data();
+                    document.getElementById('arena-main').style.opacity = '1';
+                    loadArena('All');
                 } else { window.location.replace('/auth'); }
             });
         });
 
-        // 3. Tournament Engine
-        function loadTournaments(filter) {
-            const list = document.getElementById('tournament-list');
-            let q = query(collection(db, "tournaments"), where("status", "in", ["open", "live"]));
+        // 2. Real-time Arena Sync
+        function loadArena(filter) {
+            const list = document.getElementById('arena-list');
+            const q = query(collection(db, "tournaments"), where("status", "in", ["open", "live"]));
             
-            onSnapshot(q, (snapshot) => {
+            onSnapshot(q, (snap) => {
                 list.innerHTML = "";
-                snapshot.forEach(docSnap => {
-                    const t = docSnap.data();
-                    if(filter !== 'All' && t.game !== filter) return;
+                snap.forEach(docSnap => {
+                    const m = docSnap.data();
+                    if(filter !== 'All' && m.game !== filter) return;
 
-                    const prize = t.prizePool || Math.floor((t.joined * t.entryFee) * 0.30);
-                    const fillPercent = (t.joined / t.totalSlots) * 100;
+                    // Dynamic Prize Logic (30% of total revenue)
+                    const currentRevenue = (m.joined || 0) * m.entryFee;
+                    const livePrize = m.prizePool || Math.floor(currentRevenue * 0.30);
+                    const progress = ((m.joined || 0) / m.totalSlots) * 100;
 
                     list.innerHTML += `
-                        <div class="match-card">
+                        <div class="m-card">
                             <div class="m-banner">
-                                <span class="m-type-badge">${t.mode}</span>
-                                ${t.status === 'live' ? '<span class="m-status">LIVE NOW</span>' : ''}
-                                <img src="${t.image}" alt="Banner">
+                                <span class="m-badge">${m.game} • ${m.mode}</span>
+                                <span class="m-timer">${m.time}</span>
+                                <img src="${m.image}" alt="Match">
+                                <div class="m-overlay"></div>
                             </div>
                             <div class="m-body">
-                                <h2 class="m-title">${t.title}</h2>
-                                <div class="m-stats">
-                                    <div class="stat-item"><span class="stat-lbl">Prize Pool</span><span class="stat-val" style="color:var(--accent-gold)">PKR ${prize}</span></div>
-                                    <div class="stat-item"><span class="stat-lbl">Deployment</span><span class="stat-val">${t.time}</span></div>
+                                <h3 class="m-title">${m.title}</h3>
+                                <div class="m-grid-stats">
+                                    <div class="m-stat-box"><span class="m-stat-lbl">Live Prize Pool</span><span class="m-stat-val" style="color:var(--gold)">PKR ${livePrize}</span></div>
+                                    <div class="m-stat-box"><span class="m-stat-lbl">Entry Protocol</span><span class="m-stat-val">PKR ${m.entryFee}</span></div>
                                 </div>
-                                <div class="slot-wrap">
-                                    <div class="slot-meta"><span>Operatives Joined</span><span>${t.joined}/${t.totalSlots}</span></div>
-                                    <div class="slot-bar"><div class="slot-fill" style="width:${fillPercent}%"></div></div>
+                                <div class="m-slot-wrap">
+                                    <div class="m-slot-meta"><span>Operatives Joined</span><span>${m.joined || 0}/${m.totalSlots}</span></div>
+                                    <div class="m-slot-bar"><div class="m-slot-fill" style="width:${progress}%"></div></div>
                                 </div>
-                                <div class="m-warning">⚠️ REFUND POLICY: Missing match room entry results in 0% refund.</div>
+                                <div class="m-refund-notice">MANDATORY: MISSING DEPLOYMENT TIME = 0% REFUND.</div>
                                 <div class="m-footer">
-                                    <div class="entry-box">Entry Fee<span class="entry-fee">${t.entryFee} PKR</span></div>
-                                    <button class="btn-join" onclick='openJoinEngine(${JSON.stringify({...t, id: docSnap.id})})'>JOIN MATCH</button>
+                                    <button class="btn-m btn-details" onclick="window.location.href='/match-details?id=${docSnap.id}'">Rules & Room</button>
+                                    <button class="btn-m btn-join" onclick='openEngine(${JSON.stringify({...m, id: docSnap.id, livePrize})})'>JOIN NOW</button>
                                 </div>
                             </div>
                         </div>
@@ -312,98 +330,108 @@
             });
         }
 
-        // 4. Join Engine Logic
-        window.openJoinEngine = async (match) => {
+        // 3. Join Engine Flow
+        window.openEngine = (match) => {
             activeMatch = match;
-            document.getElementById('reg-engine').style.display = 'flex';
-            
-            // Check Wallet
-            const uDoc = await getDoc(doc(db, "users", currentUser.uid));
-            const bal = uDoc.data().wallet || 0;
-            document.getElementById('user-wallet-val').innerText = `${bal} PKR`;
+            document.getElementById('entry-engine').style.display = 'flex';
+            document.getElementById('engine-wallet').innerText = `${userData.wallet || 0} PKR`;
+            switchStep('step-auth');
+        };
 
-            if(bal < match.entryFee) {
-                document.getElementById('payment-gate').style.display = 'block';
+        window.closeEngine = () => {
+            document.getElementById('entry-engine').style.display = 'none';
+        };
+
+        function switchStep(id) {
+            document.querySelectorAll('.e-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        window.processStepAuth = () => {
+            if((userData.wallet || 0) < activeMatch.entryFee) {
+                document.getElementById('low-balance-gateway').style.display = 'block';
             }
+            switchStep('step-form');
         };
 
-        window.handleStep1 = () => {
-            document.getElementById('step-1').classList.remove('active');
-            document.getElementById('step-2').classList.add('active');
-        };
+        window.deployOperative = async () => {
+            const ign = document.getElementById('op-ign').value.trim();
+            const uid = document.getElementById('op-uid').value.trim();
+            const wa = document.getElementById('op-wa').value.trim();
 
-        window.confirmDeployment = async () => {
-            const ign = document.getElementById('p-ign').value;
-            const uid = document.getElementById('p-uid').value;
-            const wa = document.getElementById('p-wa').value;
-
-            if(!ign || !uid || !wa) return alert("All operative details are mandatory.");
+            if(!ign || !uid || !wa) return alert("System Error: Identity fields cannot be empty.");
 
             NE_Loader.show("Securing Slot...");
 
             try {
-                // Deduct Wallet or Log Payment Proof
-                // For simplicity in this code, we deduct wallet
-                await updateDoc(doc(db, "users", currentUser.uid), {
-                    wallet: increment(-activeMatch.entryFee)
-                });
+                // Wallet Check
+                if((userData.wallet || 0) >= activeMatch.entryFee) {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        wallet: increment(-activeMatch.entryFee)
+                    });
+                }
 
-                // Update Match Joined count
+                // Increment Match Counter
                 await updateDoc(doc(db, "tournaments", activeMatch.id), {
                     joined: increment(1)
                 });
 
-                // Generate Ticket Data
+                // Unique Ticket ID
                 const ticketId = "TIX-" + Math.random().toString(36).substr(2, 9).toUpperCase();
-                await generateTicket(ticketId, ign, uid);
+                
+                // Add Ticket to DB
+                await addDoc(collection(db, "tickets"), {
+                    ticketId, uid: auth.currentUser.uid, matchId: activeMatch.id,
+                    ign, playerUid: uid, wa, timestamp: new Date().toISOString()
+                });
 
-                document.getElementById('step-2').classList.remove('active');
-                document.getElementById('step-3').classList.add('active');
-            } catch (e) {
-                alert("Critical System Error. Try again.");
-            } finally {
-                NE_Loader.hide();
-            }
+                await generateDigitalPass(ticketId, ign, uid);
+                switchStep('step-ticket');
+
+            } catch (e) { alert("Deployment Failed: Network Signal Lost."); }
+            finally { NE_Loader.hide(); }
         };
 
-        async function generateTicket(tixId, ign, uid) {
-            const details = document.getElementById('tix-details');
-            details.innerHTML = `
-                <b>TICKET ID:</b> ${tixId}<br>
-                <b>PLAYER:</b> ${ign}<br>
-                <b>UID:</b> ${uid}<br>
-                <b>MATCH:</b> ${activeMatch.title}<br>
-                <b>TIME:</b> ${activeMatch.time}
+        // 4. Ticket Engine (PNG Generation)
+        async function generateDigitalPass(tid, ign, pUid) {
+            const dataBox = document.getElementById('tix-data-box');
+            dataBox.innerHTML = `
+                <b>TICKET ID:</b> ${tid}<br>
+                <b>OPERATIVE:</b> ${ign}<br>
+                <b>GAME UID:</b> ${pUid}<br>
+                <b>ARENA:</b> ${activeMatch.title}<br>
+                <b>TIME:</b> ${activeMatch.time}<br>
+                <b>MODE:</b> ${activeMatch.mode}
             `;
 
-            // QR Generation
-            new QRCode(document.getElementById("qrcode"), {
-                text: JSON.stringify({ tixId, uid, matchId: activeMatch.id }),
-                width: 128,
-                height: 128,
-                colorDark : "#000000",
-                colorLight : "#ffffff"
+            // QR Encoding
+            const qrContainer = document.getElementById('tix-qr-box');
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: JSON.stringify({tid, uid: auth.currentUser.uid, matchId: activeMatch.id}),
+                width: 160, height: 160, colorDark: "#000000", colorLight: "#ffffff"
             });
 
-            // Convert div to Image using html2canvas
+            // Delay for QR to render then capture
             setTimeout(async () => {
-                const canvas = await html2canvas(document.getElementById('ticket-render-box'));
+                const canvas = await html2canvas(document.getElementById('ticket-canvas'), { backgroundColor: null, scale: 2 });
                 const imgData = canvas.toDataURL('image/png');
-                document.getElementById('ticket-preview-box').innerHTML = `<img src="${imgData}" style="width:100%; border-radius:15px; border:1px solid var(--accent-crimson);">`;
-                window.activeTicketData = imgData;
-            }, 1000);
+                document.getElementById('preview-mount').innerHTML = `<img src="${imgData}" class="ticket-preview-display">`;
+                window.finalTicketImg = imgData;
+            }, 800);
         }
 
-        window.downloadTicket = () => {
+        window.saveTicketToGallery = () => {
             const link = document.createElement('a');
             link.download = `NE-TICKET-${activeMatch.id}.png`;
-            link.href = window.activeTicketData;
+            link.href = window.finalTicketImg;
             link.click();
         };
 
-        window.closeEngine = () => {
-            document.getElementById('reg-engine').style.display = 'none';
-            location.reload();
+        window.filterMatch = (game, btn) => {
+            document.querySelectorAll('.f-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            loadArena(game);
         };
 
     </script>

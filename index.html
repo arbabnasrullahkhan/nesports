@@ -1,65 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Core Meta Tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NE SPORTS | Booting</title>
-    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050505">
+    
+    <!-- SEO & Identity -->
+    <title>NE SPORTS | The Ultimate Esports Ecosystem</title>
+    <meta name="description" content="Join NE SPORTS, the premium esports platform. Compete in daily tournaments, build your squad, and become an official brand ambassador.">
+    <meta name="keywords" content="Esports, PUBG Tournaments, Free Fire Matches, NE Sports, Gaming Platform, Pakistan Esports">
+    <meta name="author" content="NE SPORTS Enterprise">
+    
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="NE SPORTS | Premium Esports Arena">
+    <meta property="og:description" content="Compete, earn, and build your gaming identity with NE SPORTS.">
+    <meta property="og:image" content="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <meta property="og:url" content="https://nesports.vercel.app">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NE SPORTS | Elite Gaming">
+    <meta name="twitter:description" content="The ultimate competitive gaming platform.">
+    <meta name="twitter:image" content="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
     <style>
+        /* Premium Corporate Design System */
         :root {
-            --bg-base: #030303;
-            --bg-surface: #0A0A0A;
-            --text-main: #F3F3F3;
-            --text-muted: #666666;
-            --accent-red: #E50914; /* Cinematic Premium Red */
-            --accent-green: #2E7D32; /* Success Green */
+            --bg-base: #050505; /* Deep Matte Black */
+            --surface: #121212; /* Elevated Surface */
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-red: #D32F2F; /* Cinematic Crimson */
+            --border-subtle: rgba(255, 255, 255, 0.05);
         }
 
+        /* Reset & Base Setup */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
-            user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'San Francisco', 'Segoe UI', Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
             background-color: var(--bg-base);
-            background-image: radial-gradient(circle at 50% 50%, var(--bg-surface) 0%, var(--bg-base) 100%);
             height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-        }
-
-        /* Ambient Vignette Effect */
-        .vignette {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: inset 0 0 150px rgba(0,0,0,0.9);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .boot-container {
             position: relative;
-            z-index: 2;
+        }
+
+        /* Ambient Background Grid (Subtle Corporate Tech Feel) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        /* Main Content Wrapper */
+        .boot-sequence {
+            position: relative;
+            z-index: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: systemBoot 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: bootFadeIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
             opacity: 0;
-            transform: translateY(20px);
         }
 
+        /* Brand Identity */
         .brand-logo {
-            width: 110px;
+            width: 130px;
             height: auto;
-            margin-bottom: 25px;
-            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.6));
-            animation: subtleFloat 4s ease-in-out infinite;
+            margin-bottom: 24px;
+            filter: drop-shadow(0px 15px 30px rgba(0,0,0,0.9));
         }
 
         .brand-title {
@@ -68,153 +99,121 @@
             font-weight: 800;
             letter-spacing: 6px;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 40px;
         }
 
-        .brand-subtitle {
-            color: var(--text-muted);
-            font-size: 10px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        /* Precision Progress Bar */
-        .loader-wrapper {
-            margin-top: 50px;
-            width: 220px;
+        /* Hardware-style Progress Bar */
+        .system-loader {
+            width: 180px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .progress-track {
+        .loader-track {
             width: 100%;
-            height: 2px;
-            background-color: rgba(255, 255, 255, 0.05);
-            position: relative;
-            overflow: hidden;
+            height: 3px;
+            background-color: var(--surface);
             border-radius: 2px;
+            overflow: hidden;
+            position: relative;
         }
 
-        .progress-fill {
+        .loader-fill {
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             height: 100%;
             width: 0%;
             background-color: var(--accent-red);
-            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
-            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(211, 47, 47, 0.4);
+            animation: bootProgress 2.5s cubic-bezier(0.77, 0, 0.175, 1) forwards;
         }
 
-        .system-status {
-            margin-top: 15px;
+        /* System Logs Text */
+        .status-terminal {
+            margin-top: 16px;
             color: var(--text-muted);
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s ease;
+            letter-spacing: 2.5px;
+            font-family: 'Courier New', Courier, monospace; /* Terminal vibe */
         }
 
-        .version-tag {
+        /* Powered By Footer */
+        .footer-branding {
             position: absolute;
-            bottom: 20px;
-            color: rgba(255, 255, 255, 0.2);
+            bottom: 30px;
+            color: var(--text-muted);
             font-size: 10px;
-            letter-spacing: 1px;
-            font-family: monospace;
-            z-index: 2;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            z-index: 1;
+            opacity: 0.5;
         }
 
-        /* Animations */
-        @keyframes systemBoot {
-            to { opacity: 1; transform: translateY(0); }
+        /* Smooth Keyframes */
+        @keyframes bootFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes subtleFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        @keyframes bootProgress {
+            0% { width: 0%; }
+            30% { width: 40%; }
+            70% { width: 75%; }
+            100% { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="vignette"></div>
-
-    <div class="boot-container">
-        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="brand-logo">
+    <div class="boot-sequence">
+        <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS Logo" class="brand-logo">
         <h1 class="brand-title">NE SPORTS</h1>
-        <div class="brand-subtitle">Enterprise Esports Protocol</div>
         
-        <div class="loader-wrapper">
-            <div class="progress-track">
-                <div class="progress-fill" id="progress-bar"></div>
+        <div class="system-loader">
+            <div class="loader-track">
+                <div class="loader-fill"></div>
             </div>
-            <div class="system-status" id="status-text">INITIALIZING CORE...</div>
+            <div class="status-terminal" id="sys-status">SYS_BOOT: INITIALIZING...</div>
         </div>
     </div>
 
-    <div class="version-tag">v2.0.0 | SECURE BUILD</div>
+    <div class="footer-branding">ENTERPRISE ESPORTS ENGINE</div>
 
-    <!-- Core Engine Import & Routing Logic -->
+    <!-- Firebase Authentication & Routing Logic -->
     <script type="module">
         import { auth, onAuthStateChanged } from './firebase-config.js';
 
-        const statusText = document.getElementById('status-text');
-        const progressBar = document.getElementById('progress-bar');
-        
-        let authResolved = false;
-        let targetDestination = "auth.html"; // Default fallback
+        const statusText = document.getElementById('sys-status');
 
-        // 1. Listen to Firebase Auth State (Is user logged in?)
-        onAuthStateChanged(auth, (user) => {
-            authResolved = true; // Signal that Firebase has responded
-            if (user) {
-                targetDestination = "home.html"; // Daily regular user
-            } else {
-                targetDestination = "auth.html"; // New or logged out user
-            }
-        });
+        // Cinematic Terminal Text Updates
+        setTimeout(() => { statusText.innerText = "SYS_BOOT: SECURING CONNECTION..."; }, 800);
+        setTimeout(() => { statusText.innerText = "SYS_BOOT: AUTHENTICATING USER..."; }, 1600);
 
-        // 2. Cinematic Loading Sequence
+        // Core App Routing based on Auth State
         setTimeout(() => {
-            progressBar.style.width = "40%";
-            statusText.innerText = "ESTABLISHING SECURE CONNECTION...";
-        }, 600);
-
-        setTimeout(() => {
-            progressBar.style.width = "75%";
-            statusText.innerText = "VERIFYING PLAYER IDENTITY...";
-        }, 1400);
-
-        // 3. Final Execution & Routing
-        setTimeout(() => {
-            // Check every 100ms if Firebase has replied
-            const routeCheck = setInterval(() => {
-                if (authResolved) {
-                    clearInterval(routeCheck);
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    statusText.innerText = "SYS_BOOT: ACCESS GRANTED";
+                    statusText.style.color = "#4CAF50"; // Subtle success green
                     
-                    progressBar.style.width = "100%";
-                    
-                    if (targetDestination === "home.html") {
-                        statusText.innerText = "ACCESS GRANTED. ENTERING ARENA...";
-                        statusText.style.color = "var(--accent-green)";
-                        progressBar.style.backgroundColor = "var(--accent-green)";
-                        progressBar.style.boxShadow = "0 0 10px rgba(46, 125, 50, 0.5)";
-                    } else {
-                        statusText.innerText = "AUTHENTICATION REQUIRED. ROUTING...";
-                        statusText.style.color = "var(--accent-red)";
-                    }
-
-                    // Smooth transition to the next screen after reading the final text
+                    // Delay slightly for visual satisfaction before redirect
                     setTimeout(() => {
-                        window.location.replace(targetDestination);
-                    }, 800);
+                        // Using clean Vercel URL routing (no .html)
+                        window.location.replace("/home");
+                    }, 400);
+                } else {
+                    statusText.innerText = "SYS_BOOT: REDIRECTING TO PORTAL...";
+                    
+                    setTimeout(() => {
+                        // Using clean Vercel URL routing (no .html)
+                        window.location.replace("/auth");
+                    }, 400);
                 }
-            }, 100);
-        }, 2200); // Minimum wait time for the cinematic effect
-
+            });
+        }, 2500); // Waits for progress bar animation to complete
     </script>
 </body>
 </html>

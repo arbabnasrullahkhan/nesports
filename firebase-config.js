@@ -7,7 +7,7 @@ import {
     createUserWithEmailAndPassword, 
     signOut, 
     sendPasswordResetEmail,
-    GoogleAuthProvider,
+    GoogleAuthProvider, // Class ایکسپورٹ کریں
     signInWithPopup 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
@@ -42,10 +42,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const googleProvider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider(); // Instance بنائیں
 
 export { 
-    app, auth, db, googleProvider,
+    app, auth, db, googleProvider, GoogleAuthProvider,
     onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, signInWithPopup,
     doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, orderBy, limit, onSnapshot, addDoc, increment, arrayUnion 
 };

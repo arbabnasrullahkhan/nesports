@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    <title>NE SPORTS | Admin Command</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════
+           NE SPORTS ADMIN — DESIGN TOKENS
+        ═══════════════════════════════════════════ */
+        :root {
+            --bg:          #030303;
+            --surface:     #0A0A0A;
+            --surface-2:   #111111;
+            --surface-3:   #1A1A1A;
+            --accent:      #D32F2F;
+            --accent-dim:  rgba(211,47,47,0.12);
+            --gold:        #D4AF37;
+            --gold-dim:    rgba(212,175,55,0.1);
+            --green:       #2E7D32;
+            --green-dim:   rgba(46,125,50,0.12);
+            --border:      rgba(255,255,255,0.06);
+            --border-2:    rgba(255,255,255,0.1);
+            --text:        #FFFFFF;
+            --text-dim:    rgba(255,255,255,0.38);
+            --text-mid:    rgba(255,255,255,0.65);
+            --radius-sm:   10px;
+            --radius-md:   16px;
+            --radius-lg:   22px;
+            --sidebar-w:   240px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ═══════════════════════════════════════════
+           BOOT / LOGIN SCREEN
+        ═══════════════════════════════════════════ */
+        #boot-screen {
+            position: fixed; inset: 0; background: var(--bg);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; flex-direction: column; gap: 30px;
+        }
+        .boot-logo { width: 80px; height: 80px; border-radius: 50%; background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: var(--accent); border: 1px solid var(--accent-dim); }
+        .boot-spinner {
+            width: 200px; height: 2px; background: var(--surface-3); border-radius: 2px; overflow: hidden;
+        }
+        .boot-bar {
+            height: 100%; background: var(--accent); width: 0%; border-radius: 2px;
+            box-shadow: 0 0 12px var(--accent);
+            animation: bootFill 2.2s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        .boot-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+        @keyframes bootFill { 0%{width:0%} 30%{width:25%} 65%{width:72%} 100%{width:100%} }
+
+        /* ═══════════════════════════════════════════
+           MAIN LAYOUT
+        ═══════════════════════════════════════════ */
+        #app { display: none; height: 100vh; }
+
+        /* --- TOP BAR --- */
+        .topbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: rgba(3,3,3,0.92); backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 1000;
+        }
+        .topbar-left { display: flex; align-items: center; gap: 14px; }
+        .topbar-logo { font-size: 13px; font-weight: 900; letter-spacing: 2px; color: var(--text); }
+        .topbar-logo span { color: var(--accent); }
+        .topbar-badge { background: var(--accent-dim); border: 1px solid var(--accent); color: var(--accent); font-size: 8px; font-weight: 800; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase; }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .topbar-user { font-size: 11px; color: var(--text-dim); }
+        .btn-logout { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim); font-size: 10px; font-weight: 700; padding: 6px 14px; border-radius: 8px; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; transition: 0.2s; }
+        .btn-logout:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            position: fixed; top: 60px; left: 0; width: var(--sidebar-w);
+            height: calc(100vh - 60px); background: var(--surface);
+            border-right: 1px solid var(--border); padding: 20px 12px;
+            overflow-y: auto; z-index: 900; scrollbar-width: none;
+            transition: transform 0.3s ease;
+        }
+        .sidebar::-webkit-scrollbar { display: none; }
+        .sidebar-section { margin-bottom: 24px; }
+        .sidebar-label { font-size: 8px; font-weight: 800; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; padding: 0 10px; margin-bottom: 8px; }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 11px 14px; border-radius: var(--radius-sm);
+            cursor: pointer; transition: 0.2s; margin-bottom: 3px;
+            font-size: 12px; font-weight: 700; color: var(--text-dim);
+            letter-spacing: 0.3px; border: 1px solid transparent;
+        }
+        .nav-item:hover { background: var(--surface-2); color: var(--text); }
+        .nav-item.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(211,47,47,0.2); }
+        .nav-item .nav-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+        .nav-badge { margin-left: auto; background: var(--accent); color: #fff; font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 4px; min-width: 18px; text-align: center; }
+        .nav-badge.gold { background: var(--gold); color: #000; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-w); padding-top: 60px;
+            min-height: 100vh; transition: margin-left 0.3s;
+        }
+        .page { display: none; padding: 30px 24px; max-width: 1100px; animation: fadeUp 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        .page-header { margin-bottom: 28px; }
+        .page-title { font-size: 22px; font-weight: 900; letter-spacing: -0.3px; }
+        .page-subtitle { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+        /* ═══════════════════════════════════════════
+           CARDS & GRIDS
+        ═══════════════════════════════════════════ */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 28px; }
+        @media (min-width: 700px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+
+        .stat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 20px;
+        }
+        .stat-card label { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; display: block; margin-bottom: 8px; }
+        .stat-val { font-size: 22px; font-weight: 900; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+        .stat-card.gold .stat-val { color: var(--gold); }
+        .stat-card.green .stat-val { color: #4CAF50; }
+        .stat-card.white .stat-val { color: var(--text); }
+
+        /* ═══════════════════════════════════════════
+           CONTROL BOX
+        ═══════════════════════════════════════════ */
+        .box {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px;
+        }
+        .box-title {
+            font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 22px; display: flex; align-items: center; gap: 10px;
+        }
+        .box-title::before { content: ''; width: 3px; height: 14px; background: var(--accent); border-radius: 2px; }
+
+        /* ═══════════════════════════════════════════
+           FORM ELEMENTS
+        ═══════════════════════════════════════════ */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        @media (min-width: 600px) { .form-grid.cols-2 { grid-template-columns: 1fr 1fr; } }
+
+        .form-group { display: flex; flex-direction: column; gap: 7px; }
+        .form-group label { font-size: 9px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1.5px; }
+        .ctrl {
+            width: 100%; padding: 13px 15px; background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: var(--radius-sm);
+            color: var(--text); font-size: 13px; font-family: 'Inter', sans-serif;
+            outline: none; transition: border-color 0.2s;
+        }
+        .ctrl:focus { border-color: var(--accent); }
+        select.ctrl { cursor: pointer; }
+        textarea.ctrl { resize: vertical; min-height: 90px; }
+
+        /* ═══════════════════════════════════════════
+           BUTTONS
+        ═══════════════════════════════════════════ */
+        .btn {
+            padding: 13px 20px; border: none; border-radius: var(--radius-sm);
+            font-size: 11px; font-weight: 900; cursor: pointer; letter-spacing: 0.8px;
+            text-transform: uppercase; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-primary { background: var(--text); color: #000; }
+        .btn-primary:hover { background: #ddd; }
+        .btn-danger { background: var(--accent); color: #fff; }
+        .btn-danger:hover { background: #b71c1c; }
+        .btn-success { background: var(--green); color: #fff; }
+        .btn-success:hover { background: #1b5e20; }
+        .btn-ghost { background: var(--surface-2); color: var(--text-dim); border: 1px solid var(--border); }
+        .btn-ghost:hover { color: var(--text); border-color: var(--border-2); }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-sm { padding: 7px 12px; font-size: 9px; }
+        .btn-full { width: 100%; justify-content: center; }
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+
+        /* ═══════════════════════════════════════════
+           DATA ITEMS / LISTS
+        ═══════════════════════════════════════════ */
+        .data-item {
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 16px 18px;
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; margin-bottom: 10px; transition: border-color 0.2s;
+        }
+        .data-item:hover { border-color: var(--border-2); }
+        .d-info h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+        .d-info p { font-size: 10px; color: var(--text-dim); }
+        .d-info .mono { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-size: 9px; margin-top: 2px; }
+        .d-actions { display: flex; gap: 7px; flex-shrink: 0; }
+
+        /* ═══════════════════════════════════════════
+           STATUS BADGES
+        ═══════════════════════════════════════════ */
+        .badge {
+            padding: 3px 9px; border-radius: 5px; font-size: 9px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .badge-open    { background: var(--green-dim); color: #4CAF50; border: 1px solid rgba(76,175,80,0.2); }
+        .badge-live    { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(211,47,47,0.3); animation: pulseBadge 1.5s infinite; }
+        .badge-done    { background: var(--surface-3); color: var(--text-dim); border: 1px solid var(--border); }
+        .badge-pending { background: rgba(255,152,0,0.1); color: #FF9800; border: 1px solid rgba(255,152,0,0.2); }
+        .badge-vip     { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(212,175,55,0.3); }
+        @keyframes pulseBadge { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+        /* ═══════════════════════════════════════════
+           EMPTY STATES
+        ═══════════════════════════════════════════ */
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-dim); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* ═══════════════════════════════════════════
+           MODAL
+        ═══════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+            z-index: 8000; display: none; align-items: center;
+            justify-content: center; padding: 20px; backdrop-filter: blur(8px);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--surface); border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg); padding: 30px;
+            width: 100%; max-width: 440px; animation: fadeUp 0.3s ease;
+        }
+        .modal-title { font-size: 15px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+
+        /* ═══════════════════════════════════════════
+           TOAST NOTIFICATION
+        ═══════════════════════════════════════════ */
+        #toast {
+            position: fixed; bottom: 24px; right: 24px; z-index: 9998;
+            background: var(--surface-3); border: 1px solid var(--border-2);
+            border-radius: var(--radius-md); padding: 14px 20px;
+            font-size: 12px; font-weight: 700; color: var(--text);
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+            max-width: 300px; pointer-events: none;
+            display: flex; align-items: center; gap: 10px;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.success { border-left: 3px solid #4CAF50; }
+        #toast.error   { border-left: 3px solid var(--accent); }
+        #toast.info    { border-left: 3px solid var(--gold); }
+
+        /* ═══════════════════════════════════════════
+           HAMBURGER (MOBILE)
+        ═══════════════════════════════════════════ */
+        .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+        .hamburger div { width: 20px; height: 2px; background: var(--text); margin: 4px 0; border-radius: 2px; transition: 0.3s; }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 800; }
+
+        @media (max-width: 768px) {
+            .hamburger { display: block; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.open { display: block; }
+            .main-content { margin-left: 0; }
+            .page { padding: 20px 16px; }
+            .stats-grid { grid-template-columns: repeat(2,1fr); }
+        }
+
+        /* ═══════════════════════════════════════════
+           TOURNAMENT CARD
+        ═══════════════════════════════════════════ */
+        .t-card {
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); overflow: hidden; margin-bottom: 12px;
+        }
+        .t-card-img { width: 100%; height: 120px; object-fit: cover; background: var(--surface-3); display: block; }
+        .t-card-img-placeholder { width: 100%; height: 80px; background: var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .t-card-body { padding: 14px 16px; }
+        .t-card-title { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .t-card-meta { font-size: 10px; color: var(--text-dim); margin-bottom: 10px; }
+        .t-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        /* Scan line animation */
+        .scan-line {
+            position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            z-index: 10000; pointer-events: none; opacity: 0.4;
+            animation: scanX 4s linear infinite;
+        }
+        @keyframes scanX { 0%{top:-2px} 100%{top:100vh} }
+
+        /* Divider */
+        .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+        /* Two col layout for forms */
+        .two-col { display: grid; gap: 20px; }
+        @media (min-width: 800px) { .two-col { grid-template-columns: 1fr 1fr; } }
+
+        /* Scrollable user table */
+        .user-table { width: 100%; border-collapse: collapse; }
+        .user-table th, .user-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+        .user-table th { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+        .user-table td { font-size: 12px; }
+        .user-table tr:hover td { background: rgba(255,255,255,0.01); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-3); border: 1px solid var(--border); object-fit: cover; }
+        .user-meta-cell { display: flex; align-items: center; gap: 10px; }
+
+        /* Search input */
+        .search-wrap { position: relative; margin-bottom: 18px; }
+        .search-wrap input { padding-left: 38px; }
+        .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-dim); pointer-events: none; }
+
+        /* Winner card */
+        .winner-card {
+            background: var(--gold-dim); border: 1px solid rgba(212,175,55,0.3);
+            border-radius: var(--radius-md); padding: 16px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px;
+        }
+        .winner-card h4 { font-size: 12px; font-weight: 800; }
+        .winner-card p { font-size: 9px; color: var(--text-dim); margin-top: 3px; }
+        .winner-prize { font-size: 16px; font-weight: 900; color: var(--gold); font-family: 'JetBrains Mono', monospace; }
+
+        /* Roster slot */
+        .roster-slot { background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .slot-num { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); margin-right: 12px; }
+        .slot-ign { font-size: 12px; font-weight: 800; }
+        .slot-uid { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); margin-top: 2px; }
+
+        /* Real-time dot */
+        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4CAF50; display: inline-block; margin-right: 6px; animation: pulseBadge 1.5s infinite; }
+    </style>
+</head>
+<body>
+
+<div class="scan-line"></div>
+
+<!-- ════════════════════════════════
+     BOOT SCREEN
+════════════════════════════════ -->
+<div id="boot-screen">
+    <div class="boot-logo">NE</div>
+    <div>
+        <div class="boot-spinner"><div class="boot-bar"></div></div>
+    </div>
+    <div class="boot-label" id="boot-label">Initializing...</div>
+</div>
+
+<!-- ════════════════════════════════
+     TOAST
+════════════════════════════════ -->
+<div id="toast"></div>
+
+<!-- ════════════════════════════════
+     ROOM MODAL
+════════════════════════════════ -->
+<div class="modal-overlay" id="room-modal">
+    <div class="modal-box">
+        <div class="modal-title">🔐 Broadcast Room Credentials</div>
+        <div class="form-grid">
+            <div class="form-group"><label>Room ID</label><input type="text" id="rm-id" class="ctrl" placeholder="e.g. 7293048"></div>
+            <div class="form-group"><label>Password</label><input type="text" id="rm-pass" class="ctrl" placeholder="e.g. 9982"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" style="flex:1" onclick="closeModal('room-modal')">Cancel</button>
+            <button class="btn btn-primary" style="flex:2" onclick="confirmRoomRelease()">📡 Broadcast to All Players</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════
+     WALLET MODAL
+════════════════════════════════ -->
+<div class="modal-overlay" id="wallet-modal">
+    <div class="modal-box">
+        <div class="modal-title">💰 Adjust Vault Balance</div>
+        <p id="wallet-target-name" style="font-size:11px; color:var(--text-dim); margin-bottom:20px;"></p>
+        <div class="form-group">
+            <label>Amount (PKR) — Use negative to deduct</label>
+            <input type="number" id="wallet-amount" class="ctrl" placeholder="e.g. 500 or -500">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" style="flex:1" onclick="closeModal('wallet-modal')">Cancel</button>
+            <button class="btn btn-primary" style="flex:2" onclick="confirmWalletAdj()">Apply Changes</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════
+     APP
+════════════════════════════════ -->
+<div id="app">
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" onclick="toggleSidebar()" id="hamburger">
+                <div></div><div></div><div></div>
+            </button>
+            <div class="topbar-logo">NE <span>SPORTS</span></div>
+            <div class="topbar-badge">Admin</div>
+        </div>
+        <div class="topbar-right">
+            <span class="topbar-user"><span class="live-dot"></span>LIVE</span>
+            <button class="btn-logout" onclick="logoutAdmin()">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Overview</div>
+            <div class="nav-item active" onclick="showPage('dashboard', this)">
+                <span class="nav-icon">📊</span> Dashboard
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Match Operations</div>
+            <div class="nav-item" onclick="showPage('tournaments', this)">
+                <span class="nav-icon">🏆</span> Tournaments
+            </div>
+            <div class="nav-item" onclick="showPage('requests', this)">
+                <span class="nav-icon">📋</span> Entry Requests
+                <span class="nav-badge" id="req-badge">0</span>
+            </div>
+            <div class="nav-item" onclick="showPage('payouts', this)">
+                <span class="nav-icon">💸</span> Payouts
+                <span class="nav-badge gold" id="payout-badge">0</span>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Community</div>
+            <div class="nav-item" onclick="showPage('users', this)">
+                <span class="nav-icon">👥</span> Operatives
+            </div>
+            <div class="nav-item" onclick="showPage('news', this)">
+                <span class="nav-icon">📢</span> Directives
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">System</div>
+            <div class="nav-item" onclick="showPage('config', this)">
+                <span class="nav-icon">⚙️</span> Config
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- ══════════ DASHBOARD ══════════ -->
+        <div class="page active" id="page-dashboard">
+            <div class="page-header">
+                <div class="page-title">Operations Dashboard</div>
+                <div class="page-subtitle">Real-time platform telemetry</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <label>Platform Revenue (75%)</label>
+                    <div class="stat-val" id="dash-rev">PKR 0</div>
+                </div>
+                <div class="stat-card gold">
+                    <label>Prize Liability (25%)</label>
+                    <div class="stat-val" id="dash-prize">PKR 0</div>
+                </div>
+                <div class="stat-card green">
+                    <label>Total Operatives</label>
+                    <div class="stat-val" id="dash-users">0</div>
+                </div>
+                <div class="stat-card white">
+                    <label>Active Matches</label>
+                    <div class="stat-val" id="dash-matches">0</div>
+                </div>
+            </div>
+
+            <div class="two-col">
+                <div class="box">
+                    <div class="box-title">Quick Stats Override</div>
+                    <div class="form-group" style="margin-bottom:14px;">
+                        <label>Override: Total Prizes Distributed</label>
+                        <input type="number" id="cfg-prizes" class="ctrl" placeholder="e.g. 150000">
+                    </div>
+                    <div class="form-group" style="margin-bottom:18px;">
+                        <label>Override: Total Users Count</label>
+                        <input type="number" id="cfg-users-stat" class="ctrl" placeholder="e.g. 5200">
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="updateGlobalStats()">Sync Platform Stats</button>
+                </div>
+                <div class="box">
+                    <div class="box-title">Recent Activity</div>
+                    <div id="recent-activity">
+                        <div class="empty-state">No recent activity</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ TOURNAMENTS ══════════ -->
+        <div class="page" id="page-tournaments">
+            <div class="page-header">
+                <div class="page-title">Tournament Engine</div>
+                <div class="page-subtitle">Create and manage arena deployments</div>
+            </div>
+
+            <div class="two-col">
+                <!-- Create Form -->
+                <div class="box">
+                    <div class="box-title">Deploy New Arena</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Game</label>
+                            <select id="t-game" class="ctrl">
+                                <option value="PUBG">PUBG Mobile</option>
+                                <option value="FreeFire">Free Fire</option>
+                                <option value="COD">Call of Duty Mobile</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mode</label>
+                            <select id="t-mode" class="ctrl">
+                                <option value="Solo">Solo 1v1</option>
+                                <option value="Duo">Duo 2v2</option>
+                                <option value="Squad">Squad 4v4</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label>Match Title</label>
+                            <input type="text" id="t-title" class="ctrl" placeholder="e.g. Solo Sniper Elite">
+                        </div>
+                        <div class="form-group">
+                            <label>Entry Fee (PKR)</label>
+                            <input type="number" id="t-fee" class="ctrl" value="300">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Slots</label>
+                            <input type="number" id="t-slots" class="ctrl" value="100">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label>Match Time</label>
+                            <input type="text" id="t-time" class="ctrl" placeholder="e.g. 10:00 PM">
+                        </div>
+                        <div class="form-group" style="grid-column:1/-1">
+                            <label>Banner Image URL</label>
+                            <input type="text" id="t-img" class="ctrl" placeholder="https://...">
+                        </div>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-primary btn-full" onclick="createTournament()">🚀 Deploy Tournament</button>
+                    </div>
+                </div>
+
+                <!-- Active List -->
+                <div>
+                    <div class="box">
+                        <div class="box-title">Active Deployments</div>
+                        <div id="tournament-list">
+                            <div class="empty-state">Scanning match engine...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ ENTRY REQUESTS ══════════ -->
+        <div class="page" id="page-requests">
+            <div class="page-header">
+                <div class="page-title">Entry Verification Queue</div>
+                <div class="page-subtitle">Review and approve pending TID registrations</div>
+            </div>
+            <div class="box">
+                <div class="box-title">Pending Match Entries</div>
+                <div id="request-list">
+                    <div class="empty-state">Scanning payment queue...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ PAYOUTS ══════════ -->
+        <div class="page" id="page-payouts">
+            <div class="page-header">
+                <div class="page-title">Winner Payouts</div>
+                <div class="page-subtitle">Process cashout requests from verified winners</div>
+            </div>
+            <div class="box">
+                <div class="box-title">Pending Cashout Claims</div>
+                <div id="payout-list">
+                    <div class="empty-state">Scanning winner claims...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ USERS ══════════ -->
+        <div class="page" id="page-users">
+            <div class="page-header">
+                <div class="page-title">Operatives Database</div>
+                <div class="page-subtitle">Manage users, vaults, and roles</div>
+            </div>
+            <div class="box">
+                <div class="box-title">User Management</div>
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="ctrl" id="user-search" placeholder="Search by name or email..." oninput="filterUsers(this.value)">
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th>Operative</th>
+                                <th>Vault (PKR)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            <tr><td colspan="4" style="text-align:center; color:var(--text-dim); padding:30px; font-size:11px;">Syncing operative database...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ NEWS/DIRECTIVES ══════════ -->
+        <div class="page" id="page-news">
+            <div class="page-header">
+                <div class="page-title">System Directives</div>
+                <div class="page-subtitle">Broadcast announcements to all operatives</div>
+            </div>
+            <div class="two-col">
+                <div class="box">
+                    <div class="box-title">Create Directive</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="news-title" class="ctrl" placeholder="Announcement title">
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea id="news-body" class="ctrl" placeholder="Full message body..."></textarea>
+                        </div>
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn btn-primary btn-full" onclick="sendDirective()">📡 Dispatch Directive</button>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="box-title">Recent Broadcasts</div>
+                    <div id="news-list"><div class="empty-state">No directives yet</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ CONFIG ══════════ -->
+        <div class="page" id="page-config">
+            <div class="page-header">
+                <div class="page-title">System Configuration</div>
+                <div class="page-subtitle">Platform settings and payment credentials</div>
+            </div>
+            <div class="two-col">
+                <div>
+                    <div class="box">
+                        <div class="box-title">Global Links</div>
+                        <div class="form-group" style="margin-bottom:16px;">
+                            <label>WhatsApp Channel URL</label>
+                            <input type="text" id="cfg-wa" class="ctrl" placeholder="https://wa.me/...">
+                        </div>
+                        <button class="btn btn-primary btn-full" onclick="updateConfig('external_links', {whatsapp_channel: document.getElementById('cfg-wa').value})">Save Link</button>
+                    </div>
+                    <div class="box">
+                        <div class="box-title">Payment Credentials</div>
+                        <div class="form-group" style="margin-bottom:14px;">
+                            <label>EasyPaisa Details</label>
+                            <input type="text" id="cfg-ep" class="ctrl" placeholder="03XX-XXXXXXX / Name">
+                        </div>
+                        <div class="form-group" style="margin-bottom:18px;">
+                            <label>Binance / Crypto Address</label>
+                            <input type="text" id="cfg-bin" class="ctrl" placeholder="Binance UID or wallet address">
+                        </div>
+                        <button class="btn btn-primary btn-full" onclick="updateConfig('payment_details', {easypaisa: document.getElementById('cfg-ep').value, binance: document.getElementById('cfg-bin').value})">Save Credentials</button>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="box-title">Home Page Stats</div>
+                    <div id="config-stats-preview" style="font-size:11px; color:var(--text-dim);">Loading...</div>
+                    <div class="divider"></div>
+                    <p style="font-size:10px; color:var(--text-dim); line-height:1.7;">Use Dashboard → Quick Stats Override to update visible counters on the home page. Config changes here affect payment info shown to players during registration.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ════════════════════════════════
+     FIREBASE + APP SCRIPT
+════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+    getAuth, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+    getFirestore, doc, getDoc, setDoc, updateDoc, addDoc,
+    collection, query, where, orderBy, onSnapshot, increment, getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* ─── Firebase Config ─────────────────────────── */
+const app = initializeApp({
+    apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
+    authDomain: "nesports7.firebaseapp.com",
+    projectId: "nesports7",
+    storageBucket: "nesports7.firebasestorage.app",
+    messagingSenderId: "414629589331",
+    appId: "1:414629589331:web:2a30069688008d17d371a6"
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ─── Globals ─────────────────────────────────── */
+let _walletTargetId   = null;
+let _roomMatchId      = null;
+let _allUsers         = [];
+
+/* ─── Boot Sequence ───────────────────────────── */
+const bootMessages = [
+    "Initializing secure tunnel...",
+    "Verifying admin token...",
+    "Syncing Firebase cluster...",
+    "Access authorized."
+];
+let bIdx = 0;
+const bootTimer = setInterval(() => {
+    document.getElementById('boot-label').textContent = bootMessages[bIdx] || bootMessages[bootMessages.length-1];
+    bIdx++;
+    if (bIdx >= bootMessages.length) clearInterval(bootTimer);
+}, 500);
+
+/* ─── Auth Gate ───────────────────────────────── */
+onAuthStateChanged(auth, async (user) => {
+    if (!user) { redirect('/auth'); return; }
+    try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists() && (snap.data().isAdmin === true || snap.data().role === 'admin')) {
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                document.querySelector('.topbar-user').innerHTML = `<span class="live-dot"></span>${snap.data().name || user.email}`;
+                initAdminEngine();
+            }, 2400);
+        } else {
+            toast("UNAUTHORIZED: Redirecting.", 'error');
+            setTimeout(() => redirect('/home'), 1500);
+        }
+    } catch { redirect('/auth'); }
+});
+
+/* ─── Logout ──────────────────────────────────── */
+window.logoutAdmin = async () => {
+    await signOut(auth);
+    redirect('/auth');
+};
+
+/* ─── Page Navigation ─────────────────────────── */
+window.showPage = (id, el) => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    el.classList.add('active');
+    if (window.innerWidth <= 768) closeSidebar();
+};
+
+/* ─── Sidebar toggle ──────────────────────────── */
+window.toggleSidebar = () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('open');
+};
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+/* ─── Modal helpers ───────────────────────────── */
+window.closeModal = (id) => document.getElementById(id).classList.remove('open');
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+
+/* ─── Toast ───────────────────────────────────── */
+function toast(msg, type = 'info') {
+    const t = document.getElementById('toast');
+    const icons = { success: '✅', error: '❌', info: '⚡' };
+    t.textContent = (icons[type] || '') + ' ' + msg;
+    t.className = `show ${type}`;
+    setTimeout(() => t.className = '', 3000);
+}
+
+/* ─── Redirect ────────────────────────────────── */
+function redirect(path) { window.location.replace(path); }
+
+/* ─── Admin Engine Init ───────────────────────── */
+function initAdminEngine() {
+    syncTelemetry();
+    syncMatches();
+    syncRequests();
+    syncPayouts();
+    syncUsers();
+    syncNews();
+}
+
+/* ─── 1. Telemetry ───────────────────────────── */
+function syncTelemetry() {
+    onSnapshot(doc(db, "system_stats", "global"), (snap) => {
+        if (!snap.exists()) return;
+        const d = snap.data();
+        const rev = d.total_revenue || 0;
+        setText('dash-rev',   'PKR ' + Math.round(rev * 0.75).toLocaleString());
+        setText('dash-prize', 'PKR ' + Math.round(rev * 0.25).toLocaleString());
+        setText('dash-users', (d.total_users || 0).toLocaleString());
+
+        if (document.getElementById('cfg-prizes'))
+            document.getElementById('cfg-prizes').value = d.total_prizes || '';
+        if (document.getElementById('cfg-users-stat'))
+            document.getElementById('cfg-users-stat').value = d.total_users || '';
+
+        const preview = document.getElementById('config-stats-preview');
+        if (preview) preview.innerHTML =
+            `<p>Total Revenue: <b>PKR ${rev.toLocaleString()}</b></p>
+             <p>Total Users: <b>${d.total_users || 0}</b></p>
+             <p>Total Prizes: <b>PKR ${(d.total_prizes || 0).toLocaleString()}</b></p>`;
+    });
+}
+
+/* ─── 2. Matches ─────────────────────────────── */
+function syncMatches() {
+    const q = query(collection(db, "tournaments"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snap) => {
+        setText('dash-matches', snap.size);
+        const list = document.getElementById('tournament-list');
+        if (!list) return;
+
+        if (snap.empty) { list.innerHTML = '<div class="empty-state">No tournaments yet</div>'; return; }
+
+        list.innerHTML = '';
+        snap.forEach(docSnap => {
+            const m = docSnap.data();
+            const id = docSnap.id;
+            const statusClass = m.status === 'live' ? 'badge-live' : m.status === 'open' ? 'badge-open' : 'badge-done';
+
+            const card = document.createElement('div');
+            card.className = 'data-item';
+            card.innerHTML = `
+                <div class="d-info">
+                    <h4>${m.title}</h4>
+                    <p>${m.game} · ${m.mode || 'Solo'} · PKR ${m.entryFee}</p>
+                    <p>${m.joined || 0}/${m.totalSlots} slots · ${m.time || ''}</p>
+                    <span class="badge ${statusClass}" style="margin-top:5px;">${m.status}</span>
+                </div>
+                <div class="d-actions">
+                    <button class="btn btn-ghost btn-sm" onclick="openRoomControl('${id}')">🔐 Room</button>
+                    <button class="btn btn-danger btn-sm" onclick="cycleStatus('${id}', '${m.status}')">⟳ State</button>
+                </div>`;
+            list.appendChild(card);
+        });
+    });
+}
+
+/* ─── 3. Entry Requests ──────────────────────── */
+function syncRequests() {
+    const q = query(collection(db, "match_requests"), where("status", "==", "pending"));
+    onSnapshot(q, (snap) => {
+        const cnt = snap.size;
+        setText('req-badge', cnt);
+        document.getElementById('req-badge').style.display = cnt ? 'inline' : 'none';
+
+        const list = document.getElementById('request-list');
+        if (!list) return;
+        if (snap.empty) { list.innerHTML = '<div class="empty-state">No pending TIDs</div>'; return; }
+
+        list.innerHTML = '';
+        snap.forEach(docSnap => {
+            const r = docSnap.data();
+            const el = document.createElement('div');
+            el.className = 'data-item';
+            el.innerHTML = `
+                <div class="d-info">
+                    <h4>TID: ${r.payment?.tid || 'N/A'}</h4>
+                    <p>${r.gameDetails?.ign || '—'} · ${r.matchTitle || r.matchId}</p>
+                    <div class="mono">PKR ${r.payment?.amount || 0} · UID: ${r.userId}</div>
+                </div>
+                <div class="d-actions">
+                    <button class="btn btn-danger btn-sm" onclick="processRequest('${docSnap.id}', 'rejected')">✕ Deny</button>
+                    <button class="btn btn-success btn-sm" onclick="processRequest('${docSnap.id}', 'approved', '${r.matchId}', ${r.payment?.amount || 0})">✓ Verify</button>
+                </div>`;
+            list.appendChild(el);
+        });
+    });
+}
+
+/* ─── 4. Payouts ─────────────────────────────── */
+function syncPayouts() {
+    // Try both collection names for compatibility
+    const payoutCollections = ['cashouts', 'payouts'];
+    payoutCollections.forEach(colName => {
+        const q = query(collection(db, colName), where("status", "in", ["PENDING","Pending","pending"]));
+        onSnapshot(q, (snap) => {
+            if (snap.empty) return;
+            const cnt = snap.size;
+            const badge = document.getElementById('payout-badge');
+            badge.textContent = cnt;
+            badge.style.display = cnt ? 'inline' : 'none';
+
+            const list = document.getElementById('payout-list');
+            if (!list) return;
+            list.innerHTML = '';
+            snap.forEach(docSnap => {
+                const c = docSnap.data();
+                const el = document.createElement('div');
+                el.className = 'data-item';
+                el.innerHTML = `
+                    <div class="d-info">
+                        <h4>PKR ${c.amount || c.prize || 0}</h4>
+                        <p>${c.userName || c.accountTitle || '—'} via ${c.method || 'EasyPaisa'}</p>
+                        <div class="mono">${c.accountNumber || ''}</div>
+                    </div>
+                    <div class="d-actions">
+                        <button class="btn btn-danger btn-sm" onclick="processPayout('${docSnap.id}', '${colName}', 'REJECTED')">✕ Reject</button>
+                        <button class="btn btn-success btn-sm" onclick="processPayout('${docSnap.id}', '${colName}', 'COMPLETED')">✓ Paid</button>
+                    </div>`;
+                list.appendChild(el);
+            });
+        });
+    });
+}
+
+/* ─── 5. Users ───────────────────────────────── */
+function syncUsers() {
+    const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snap) => {
+        _allUsers = [];
+        snap.forEach(docSnap => {
+            _allUsers.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        renderUsers(_allUsers);
+    });
+}
+
+function renderUsers(users) {
+    const tbody = document.getElementById('user-table-body');
+    if (!tbody) return;
+    if (!users.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-dim); padding:30px; font-size:11px;">No operatives found</td></tr>';
+        return;
+    }
+    tbody.innerHTML = '';
+    users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>
+                <div class="user-meta-cell">
+                    <img class="user-avatar" src="${u.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(u.name || 'U') + '&background=1A1A1A&color=D32F2F'}" onerror="this.src='https://ui-avatars.com/api/?name=U&background=1A1A1A&color=D32F2F'">
+                    <div>
+                        <div style="font-weight:800; font-size:12px;">${u.name || '—'}</div>
+                        <div style="font-size:10px; color:var(--text-dim);">${u.email || ''}</div>
+                    </div>
+                </div>
+            </td>
+            <td style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:800;">${(u.wallet || 0).toLocaleString()}</td>
+            <td>
+                <span class="badge ${u.isAmbassador ? 'badge-vip' : 'badge-done'}">${u.isAmbassador ? 'Ambassador' : 'Standard'}</span>
+            </td>
+            <td>
+                <div class="d-actions">
+                    <button class="btn btn-ghost btn-sm" onclick="openWalletModal('${u.id}', '${(u.name||'').replace(/'/g,'')}')" title="Adjust Vault">💰</button>
+                    <button class="btn btn-sm ${u.isAmbassador ? 'btn-danger' : 'btn-gold'}" onclick="toggleAmbassador('${u.id}', ${!!u.isAmbassador})">${u.isAmbassador ? 'Demote' : 'Promote'}</button>
+                </div>
+            </td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+window.filterUsers = (val) => {
+    const filtered = _allUsers.filter(u =>
+        (u.name || '').toLowerCase().includes(val.toLowerCase()) ||
+        (u.email || '').toLowerCase().includes(val.toLowerCase())
+    );
+    renderUsers(filtered);
+};
+
+/* ─── 6. News ────────────────────────────────── */
+function syncNews() {
+    const q = query(collection(db, "news"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snap) => {
+        const list = document.getElementById('news-list');
+        if (!list) return;
+        if (snap.empty) { list.innerHTML = '<div class="empty-state">No directives sent yet</div>'; return; }
+        list.innerHTML = '';
+        snap.forEach(docSnap => {
+            const n = docSnap.data();
+            const el = document.createElement('div');
+            el.className = 'data-item';
+            el.style.flexDirection = 'column';
+            el.style.alignItems = 'flex-start';
+            el.innerHTML = `
+                <h4 style="font-size:12px; font-weight:800;">${n.title}</h4>
+                <p style="font-size:11px; color:var(--text-mid); margin-top:5px; line-height:1.6;">${n.description || n.body || ''}</p>
+                <span style="font-size:9px; color:var(--text-dim); margin-top:8px; font-family:'JetBrains Mono',monospace;">${new Date(n.timestamp).toLocaleString()}</span>`;
+            list.appendChild(el);
+        });
+    });
+}
+
+/* ═══════════════════════════════════════════════
+   ACTION HANDLERS
+═══════════════════════════════════════════════ */
+
+/* Create Tournament */
+window.createTournament = async () => {
+    const title = document.getElementById('t-title').value.trim();
+    const fee   = parseInt(document.getElementById('t-fee').value);
+    const slots = parseInt(document.getElementById('t-slots').value);
+    const time  = document.getElementById('t-time').value.trim();
+    const game  = document.getElementById('t-game').value;
+    const mode  = document.getElementById('t-mode').value;
+    const img   = document.getElementById('t-img').value.trim();
+
+    if (!title) { toast('Match title is required.', 'error'); return; }
+
+    try {
+        await addDoc(collection(db, "tournaments"), {
+            title, entryFee: fee, totalSlots: slots, joined: 0,
+            time, game, mode, image: img,
+            status: "open", roomStatus: "waiting",
+            timestamp: new Date().toISOString()
+        });
+        toast('Tournament deployed successfully!', 'success');
+        document.getElementById('t-title').value = '';
+        document.getElementById('t-img').value = '';
+    } catch (e) {
+        toast('Deploy failed: ' + e.message, 'error');
+    }
+};
+
+/* Cycle tournament status */
+window.cycleStatus = async (id, current) => {
+    const next = current === 'open' ? 'live' : current === 'live' ? 'finished' : 'open';
+    try {
+        await updateDoc(doc(db, "tournaments", id), { status: next });
+        toast(`Status → ${next.toUpperCase()}`, 'success');
+    } catch (e) { toast('Update failed.', 'error'); }
+};
+
+/* Room Modal */
+window.openRoomControl = (id) => {
+    _roomMatchId = id;
+    document.getElementById('rm-id').value   = '';
+    document.getElementById('rm-pass').value = '';
+    openModal('room-modal');
+};
+
+window.confirmRoomRelease = async () => {
+    const rid = document.getElementById('rm-id').value.trim();
+    const rps = document.getElementById('rm-pass').value.trim();
+    if (!rid || !rps) { toast('Both credentials are required.', 'error'); return; }
+    try {
+        await updateDoc(doc(db, "tournaments", _roomMatchId), {
+            roomId: rid, roomPass: rps, roomStatus: "ready"
+        });
+        toast('Room credentials broadcasted!', 'success');
+        closeModal('room-modal');
+    } catch (e) { toast('Broadcast failed.', 'error'); }
+};
+
+/* Process Entry Request */
+window.processRequest = async (id, status, mId, amount) => {
+    try {
+        await updateDoc(doc(db, "match_requests", id), { status });
+        if (status === 'approved' && mId) {
+            await updateDoc(doc(db, "tournaments", mId), { joined: increment(1) });
+            await updateDoc(doc(db, "system_stats", "global"), { total_revenue: increment(amount) });
+        }
+        toast(`Entry ${status.toUpperCase()}`, status === 'approved' ? 'success' : 'error');
+    } catch (e) { toast('Action failed.', 'error'); }
+};
+
+/* Process Payout */
+window.processPayout = async (id, col, status) => {
+    try {
+        await updateDoc(doc(db, col, id), { status });
+        toast(`Payout: ${status}`, status === 'COMPLETED' ? 'success' : 'error');
+    } catch (e) { toast('Failed.', 'error'); }
+};
+
+/* Wallet Modal */
+window.openWalletModal = (uid, name) => {
+    _walletTargetId = uid;
+    document.getElementById('wallet-target-name').textContent = 'Adjusting vault for: ' + name;
+    document.getElementById('wallet-amount').value = '';
+    openModal('wallet-modal');
+};
+
+window.confirmWalletAdj = async () => {
+    const amt = parseInt(document.getElementById('wallet-amount').value);
+    if (isNaN(amt)) { toast('Enter a valid amount.', 'error'); return; }
+    try {
+        await updateDoc(doc(db, "users", _walletTargetId), { wallet: increment(amt) });
+        toast('Vault balance updated!', 'success');
+        closeModal('wallet-modal');
+    } catch (e) { toast('Vault update failed.', 'error'); }
+};
+
+/* Toggle Ambassador */
+window.toggleAmbassador = async (uid, current) => {
+    try {
+        await updateDoc(doc(db, "users", uid), {
+            isAmbassador: !current,
+            profileTier: !current ? "Ambassador" : "Standard"
+        });
+        toast(`Role updated: ${!current ? 'Ambassador' : 'Standard'}`, 'success');
+    } catch (e) { toast('Role update failed.', 'error'); }
+};
+
+/* Global Stats Override */
+window.updateGlobalStats = async () => {
+    const prizes = parseInt(document.getElementById('cfg-prizes').value);
+    const users  = parseInt(document.getElementById('cfg-users-stat').value);
+    try {
+        await updateDoc(doc(db, "system_stats", "global"), {
+            ...(isNaN(prizes) ? {} : { total_prizes: prizes }),
+            ...(isNaN(users)  ? {} : { total_users:  users  })
+        });
+        toast('Platform stats synced!', 'success');
+    } catch (e) { toast('Sync failed.', 'error'); }
+};
+
+/* Update Config */
+window.updateConfig = async (docId, data) => {
+    try {
+        await updateDoc(doc(db, "system_config", docId), data);
+        toast('Configuration updated!', 'success');
+    } catch (e) {
+        // Try setDoc if doc doesn't exist
+        try {
+            await setDoc(doc(db, "system_config", docId), data, { merge: true });
+            toast('Configuration saved!', 'success');
+        } catch { toast('Config update failed.', 'error'); }
+    }
+};
+
+/* Send Directive */
+window.sendDirective = async () => {
+    const title = document.getElementById('news-title').value.trim();
+    const desc  = document.getElementById('news-body').value.trim();
+    if (!title || !desc) { toast('Title and message required.', 'error'); return; }
+    try {
+        await addDoc(collection(db, "news"), {
+            title, description: desc,
+            timestamp: new Date().toISOString()
+        });
+        toast('Directive dispatched!', 'success');
+        document.getElementById('news-title').value = '';
+        document.getElementById('news-body').value  = '';
+    } catch (e) { toast('Dispatch failed.', 'error'); }
+};
+
+/* ─── Utility ─────────────────────────────────── */
+function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+}
+</script>
+
+</body>
+</html>

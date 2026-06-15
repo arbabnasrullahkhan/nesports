@@ -8,280 +8,155 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Primary SEO -->
-    <title>NE SPORTS | The Ultimate Esports Business Ecosystem</title>
-    <meta name="description" content="NE SPORTS is a premium mobile-first esports ecosystem. Participate in PUBG, Free Fire, and high-stakes tournaments with a fully automated engine.">
-    <meta name="keywords" content="Esports, PUBG Pakistan, Free Fire Tournament, Gaming ID Marketplace, Ambassador Program, NE SPORTS, Esports Business">
+    <!-- Primary SEO Identity -->
+    <title>NE SPORTS | The Ultimate Esports Ecosystem</title>
+    <meta name="description" content="NE SPORTS is a premium mobile-first esports ecosystem. Experience high-stakes tournaments with a fully automated engine.">
+    <meta name="keywords" content="Esports, PUBG, Free Fire, Tournament Platform, Pakistan Esports, Gaming Business">
     
-    <!-- Open Graph / Social Sharing (Branded) -->
+    <!-- Open Graph (Social Sharing) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="NE SPORTS | Elite Gaming Identity">
-    <meta property="og:description" content="Enter the arena of high-end competitive gaming. Automated tournaments, real-time payouts, and professional gaming ID marketplace.">
+    <meta property="og:description" content="Enter the arena of high-end competitive gaming. Automated tournaments and secure payouts.">
     <meta property="og:image" content="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
     <meta property="og:url" content="https://nesports.vercel.app">
-    <meta property="og:site_name" content="NE SPORTS Enterprise">
-
-    <!-- Twitter Protocol -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="NE SPORTS | Enterprise Esports">
-    <meta name="twitter:image" content="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
         /* 
-           NE SPORTS GLOBAL DESIGN SYSTEM (VERSION 7.7)
-           Premium Matte Black / Crimson Red / Liquid Glass
+           NE SPORTS GLOBAL CORE CSS
+           Theme: Matte Black / Crimson Red / Liquid Glass
         */
         :root {
             --bg-base: #050505;
             --surface-matte: #0A0A0A;
-            --surface-glass: rgba(18, 18, 18, 0.8);
             --accent-crimson: #D32F2F;
-            --accent-glow: rgba(211, 47, 47, 0.3);
-            --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.6);
-            --text-dim: rgba(255, 255, 255, 0.3);
+            --accent-glow: rgba(211, 47, 47, 0.25);
+            --text-main: #FFFFFF;
+            --text-dim: rgba(255, 255, 255, 0.4);
             --border-glass: rgba(255, 255, 255, 0.08);
-            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+            --font-primary: 'Inter', -apple-system, system-ui, sans-serif;
         }
 
-        /* Reset & Global Base */
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-family: var(--font-main);
+            font-family: var(--font-primary);
         }
 
-        html, body {
-            width: 100%;
-            height: 100%;
+        body, html {
+            width: 100%; height: 100%;
             background-color: var(--bg-base);
-            color: var(--text-primary);
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Branded Watermark Background (Persistent) */
-        .global-watermark {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png') no-repeat center;
-            background-size: 80%;
-            opacity: 0.02;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Tech-Grid Background Layer */
-        .tech-grid {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* Tech-Grid Matte Background */
+        .boot-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
                 linear-gradient(var(--border-glass) 1px, transparent 1px),
                 linear-gradient(90deg, var(--border-glass) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.2;
-            z-index: 1;
+            background-size: 50px 50px;
+            opacity: 0.2; z-index: 1;
         }
 
-        /* Cinematic Boot Sequence Container */
-        .boot-container {
-            position: relative;
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
+        .boot-content {
+            position: relative; z-index: 10;
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            width: 100%; max-width: 400px;
+            animation: fadeInScale 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        /* Logo Pulse & Liquid Glass Effects */
-        .logo-wrapper {
-            position: relative;
-            width: 140px;
-            height: 140px;
-            margin-bottom: 40px;
+        /* Logo Pulse Engine */
+        .logo-box {
+            position: relative; width: 150px; height: 150px; margin-bottom: 30px;
         }
-
         .main-logo {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            z-index: 5;
-            position: relative;
-            animation: logoPulse 2.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(0,0,0,1));
+            width: 100%; height: 100%; object-fit: contain;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+            animation: logoBreath 3s ease-in-out infinite;
+            position: relative; z-index: 5;
         }
-
-        .liquid-glass-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+        .logo-glow {
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 180px;
-            height: 180px;
+            width: 180px; height: 180px;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            filter: blur(25px);
-            opacity: 0.6;
-            z-index: 1;
-            animation: glowBreath 4s ease-in-out infinite;
+            filter: blur(25px); opacity: 0.6; z-index: 1;
+            animation: glowCycle 4s infinite alternate;
         }
 
         /* Text Styling */
-        .brand-name {
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 0.8s ease forwards 0.5s;
+        .brand-title {
+            font-size: 24px; font-weight: 900; letter-spacing: 10px;
+            text-transform: uppercase; color: var(--text-main); margin-bottom: 5px;
+        }
+        .brand-subtitle {
+            font-size: 10px; font-weight: 700; color: var(--accent-crimson);
+            letter-spacing: 4px; text-transform: uppercase; margin-bottom: 50px;
         }
 
-        .version-tag {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--accent-crimson);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            opacity: 0;
-            animation: fadeIn 1s ease forwards 1s;
-        }
-
-        /* Hardware-style Progress Bar */
-        .loader-box {
-            width: 200px;
-            position: relative;
-        }
-
+        /* Hardware Loader */
+        .loader-wrap { width: 220px; position: relative; }
         .progress-track {
-            width: 100%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 15px;
+            width: 100%; height: 2px; background: rgba(255,255,255,0.05);
+            border-radius: 4px; overflow: hidden; margin-bottom: 15px;
         }
-
         .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, var(--accent-crimson), var(--accent-crimson));
+            width: 0%; height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-crimson));
             box-shadow: 0 0 10px var(--accent-crimson);
             animation: loadProgress 2.5s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
         }
 
-        .boot-logs {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 9px;
-            color: var(--text-dim);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            height: 12px;
+        .terminal-text {
+            font-family: 'Courier New', monospace; font-size: 9px;
+            color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase;
         }
 
-        /* Floating Corporate Branding */
-        .corporate-footer {
-            position: absolute;
-            bottom: 40px;
-            font-size: 9px;
-            color: var(--text-dim);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
+        /* Animations */
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.9) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        @keyframes logoBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes glowCycle { from { opacity: 0.3; width: 160px; } to { opacity: 0.7; width: 200px; } }
+        @keyframes loadProgress { 0% { width: 0%; } 40% { width: 45%; } 75% { width: 85%; } 100% { width: 100%; } }
 
-        /* Animations Library */
-        @keyframes logoPulse {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(0,0,0,1)); }
-            50% { transform: scale(1.08); filter: drop-shadow(0 0 35px var(--accent-glow)); }
+        /* Vignette depth */
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8) 100%);
+            z-index: 5; pointer-events: none;
         }
-
-        @keyframes glowBreath {
-            0%, 100% { opacity: 0.4; width: 180px; }
-            50% { opacity: 0.8; width: 220px; }
-        }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            20% { width: 10%; }
-            50% { width: 65%; }
-            80% { width: 90%; }
-            100% { width: 100%; }
-        }
-
-        /* Glass Overlay for depth */
-        .glass-vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
-            z-index: 5;
-            pointer-events: none;
-        }
-
     </style>
 </head>
 <body>
 
-    <div class="global-watermark"></div>
-    <div class="tech-grid"></div>
-    <div class="glass-vignette"></div>
+    <div class="boot-bg"></div>
+    <div class="vignette"></div>
 
-    <div class="boot-container">
-        <!-- Logo Engine -->
-        <div class="logo-wrapper">
-            <div class="liquid-glass-glow"></div>
-            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS Logo" class="main-logo">
+    <div class="boot-content">
+        <div class="logo-box">
+            <div class="logo-glow"></div>
+            <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" alt="NE SPORTS" class="main-logo">
         </div>
 
-        <!-- Branding Engine -->
-        <h1 class="brand-name">NE SPORTS</h1>
-        <div class="version-tag">Enterprise Engine v7.7</div>
+        <h1 class="brand-title">NE SPORTS</h1>
+        <div class="brand-subtitle">ENTERPRISE SYSTEM v7.7</div>
 
-        <!-- Loader Engine -->
-        <div class="loader-box">
+        <div class="loader-wrap">
             <div class="progress-track">
                 <div class="progress-fill"></div>
             </div>
-            <div class="boot-logs" id="boot-status">Initializing System...</div>
+            <div class="terminal-text" id="boot-status">Initializing Core...</div>
         </div>
     </div>
 
-    <div class="corporate-footer">Nexra Digital Infrastructure</div>
-
-    <!-- [FIREBASE CORE ENGINE] -->
+    <!-- [FIREBASE ENGINE MODULE] -->
     <script type="module">
-        // Firebase Modular SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -297,70 +172,50 @@
             measurementId: "G-ELZMHDM7NM"
         };
 
-        // Initialize Engine
+        // Initialize Core
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const statusLabel = document.getElementById('boot-status');
+        const statusEl = document.getElementById('boot-status');
 
-        // Cinematic Terminal Logic
-        const systemLogs = [
-            "Connecting to Cloud Gateway...",
-            "Authenticating Security Layers...",
-            "Syncing Firestore Real-time DB...",
-            "Verifying Deployment Tokens...",
-            "Establishing User Session...",
-            "Access Granted. Preparing Arena..."
+        // Cinematic Messaging Engine
+        const logs = [
+            "Establishing Link...",
+            "Encrypting Session...",
+            "Syncing Vault Data...",
+            "Access Granted. Entering Arena."
         ];
 
-        let logIndex = 0;
-        const logInterval = setInterval(() => {
-            if (logIndex < systemLogs.length) {
-                statusLabel.innerText = systemLogs[logIndex];
-                logIndex++;
-            } else {
-                clearInterval(logInterval);
-            }
-        }, 400);
+        let i = 0;
+        const logTimer = setInterval(() => {
+            if (i < logs.length) {
+                statusEl.innerText = logs[i];
+                i++;
+            } else { clearInterval(logTimer); }
+        }, 550);
 
-        // Security & Session Check
-        const runSessionVerification = () => {
-            setTimeout(() => {
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        try {
-                            // Check if user has full profile in Firestore
-                            const userRef = doc(db, "users", user.uid);
-                            const userSnap = await getDoc(userRef);
-
-                            if (userSnap.exists()) {
-                                statusLabel.innerText = "Welcome back, operative.";
-                                setTimeout(() => {
-                                    window.location.replace("/home");
-                                }, 600);
-                            } else {
-                                // User authenticated but no profile doc
-                                window.location.replace("/auth");
-                            }
-                        } catch (err) {
-                            console.error("Verification Error:", err);
+        // Session Redirection
+        setTimeout(() => {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    try {
+                        const userRef = doc(db, "users", user.uid);
+                        const userSnap = await getDoc(userRef);
+                        
+                        if (userSnap.exists()) {
+                            window.location.replace("/home"); // Vercel Clean URL
+                        } else {
                             window.location.replace("/auth");
                         }
-                    } else {
-                        // No session found
-                        statusLabel.innerText = "Redirecting to Access Portal...";
-                        setTimeout(() => {
-                            window.location.replace("/auth");
-                        }, 800);
+                    } catch (e) {
+                        window.location.replace("/auth");
                     }
-                });
-            }, 2600); // Sync with progress bar animation
-        };
-
-        // Boot
-        window.addEventListener('load', runSessionVerification);
-
+                } else {
+                    window.location.replace("/auth");
+                }
+            });
+        }, 2600); // Sync with CSS progress animation
     </script>
 </body>
 </html>

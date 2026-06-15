@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NE SPORTS | Command Dashboard</title>
     <meta name="theme-color" content="#050505">
+    <title>NE SPORTS | Master Dashboard</title>
     
-    <!-- Core Identity -->
+    <!-- Enterprise Identity -->
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
-        /* [NE SPORTS ENTERPRISE DESIGN SYSTEM - HOME] */
+        /* [NE SPORTS MASTER DESIGN SYSTEM - VERSION 7.7] */
         :root {
             --bg-base: #050505;
-            --surface-matte: #0A0A0A;
-            --surface-glass: rgba(18, 18, 18, 0.8);
+            --surface: #0F0F0F;
+            --surface-glass: rgba(20, 20, 20, 0.7);
             --accent-crimson: #D32F2F;
-            --accent-gold: #D4AF37;
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.4);
-            --border-subtle: rgba(255, 255, 255, 0.06);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --border-subtle: rgba(255, 255, 255, 0.08);
             --shadow-premium: 0 20px 40px rgba(0,0,0,0.6);
         }
 
@@ -33,367 +32,467 @@
             background-color: var(--bg-base);
             color: var(--text-main);
             overflow-x: hidden;
-            padding-top: 80px; /* Header Offset */
-            padding-bottom: 90px; /* Nav Offset */
+            line-height: 1.6;
         }
 
-        /* [SHARED COMPONENT MOUNT POINTS] */
-        #header-mount, #nav-mount, #loader-mount { width: 100%; }
+        /* Reusable Components Mount Points */
+        #header-mount { width: 100%; position: fixed; top: 0; z-index: 5000; }
+        #nav-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
+        
+        /* Persistent Branding Watermark */
+        .page-watermark {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80%; opacity: 0.015; pointer-events: none; z-index: -1;
+        }
 
-        /* [CINEMATIC HERO SLIDER] */
-        .hero-engine {
+        /* [1. CINEMATIC HERO SLIDER] */
+        .hero-slider {
             width: 100%;
-            height: 240px;
+            height: 420px;
             position: relative;
             overflow: hidden;
-            margin-bottom: 30px;
+            margin-top: 0;
         }
 
         .slider-track {
             display: flex;
             width: 200%; /* 2 Slides */
             height: 100%;
-            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
         .slide {
             width: 50%;
             height: 100%;
             position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 40px 25px 80px;
             background-size: cover;
             background-position: center;
-            display: flex;
-            align-items: center;
-            padding: 25px;
         }
 
-        .slide-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, rgba(0,0,0,0.9) 20%, transparent 100%);
-            z-index: 1;
-        }
-
-        .slide-watermark {
-            position: absolute;
-            right: 20px; bottom: 20px;
-            width: 80px; opacity: 0.15;
-            z-index: 2;
-        }
+        /* PUBG Slide */
+        .slide-pubg { background-image: linear-gradient(0deg, var(--bg-base) 10%, transparent 100%), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1400'); }
+        /* Free Fire Slide */
+        .slide-ff { background-image: linear-gradient(0deg, var(--bg-base) 10%, transparent 100%), url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=1400'); }
 
         .slide-content {
-            position: relative;
-            z-index: 5;
-            max-width: 260px;
+            position: relative; z-index: 10; width: 100%;
+            animation: slideContentUp 1s ease forwards;
         }
 
-        .slide-game-tag {
-            font-size: 9px; font-weight: 900; letter-spacing: 2px;
-            color: var(--accent-crimson); text-transform: uppercase;
-            margin-bottom: 8px; display: block;
-        }
+        @keyframes slideContentUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .slide-title { font-size: 24px; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 12px; }
+        .slide-label { font-size: 10px; font-weight: 800; letter-spacing: 3px; color: var(--accent-crimson); text-transform: uppercase; margin-bottom: 10px; display: block; }
+        .slide-title { font-size: 32px; font-weight: 900; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
         
         .slide-cta {
-            display: inline-block; padding: 12px 24px;
-            background-color: var(--text-main); color: var(--bg-base);
-            border-radius: 8px; font-size: 11px; font-weight: 800;
-            text-transform: uppercase; text-decoration: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--text-main); color: #000;
+            padding: 14px 28px; border-radius: 12px;
+            font-size: 13px; font-weight: 900; text-transform: uppercase;
+            text-decoration: none; transition: 0.3s;
         }
 
-        /* [ENTERPRISE STATS MODULE] */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; padding: 0 20px; margin-bottom: 30px;
+        .slide-cta svg { width: 18px; height: 18px; fill: #000; }
+
+        .slide-watermark {
+            position: absolute; top: 40px; right: 20px;
+            width: 100px; opacity: 0.2;
+        }
+
+        /* [2. STATISTICS HUB] */
+        .stats-engine {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px;
+            margin-top: -40px; position: relative; z-index: 20;
         }
 
         .stat-card {
-            background: var(--surface-matte); border: 1px solid var(--border-subtle);
-            padding: 15px 10px; border-radius: 14px; text-align: center;
+            background: var(--surface); border: 1px solid var(--border-subtle);
+            padding: 20px; border-radius: 20px; text-align: center;
+            box-shadow: var(--shadow-premium);
         }
 
-        .stat-value { font-size: 16px; font-weight: 800; color: var(--text-main); display: block; }
-        .stat-label { font-size: 8px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .stat-val { font-size: 18px; font-weight: 900; color: var(--text-main); display: block; margin-bottom: 4px; }
+        .stat-lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
 
-        /* [SECTION TITLES] */
+        /* [3. TOURNAMENT SECTIONS] */
         .section-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 20px 15px;
+            padding: 30px 20px 15px; display: flex; justify-content: space-between; align-items: center;
         }
 
-        .section-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-        .section-action { font-size: 10px; font-weight: 700; color: var(--accent-crimson); text-transform: uppercase; text-decoration: none; }
+        .section-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .section-action { font-size: 11px; font-weight: 700; color: var(--accent-crimson); text-decoration: none; text-transform: uppercase; }
 
-        /* [TOURNAMENT CARDS] */
-        .deployment-scroll {
-            display: flex; gap: 15px; overflow-x: auto; padding: 0 20px 30px;
-            scrollbar-width: none;
+        .tournament-scroll {
+            display: flex; gap: 15px; overflow-x: auto; padding: 0 20px 10px; scrollbar-width: none;
+        }
+        .tournament-scroll::-webkit-scrollbar { display: none; }
+
+        .t-card {
+            min-width: 260px; background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 20px; overflow: hidden; position: relative;
         }
 
-        .deployment-card {
-            min-width: 280px; background: var(--surface-matte);
-            border-radius: 18px; border: 1px solid var(--border-subtle);
-            overflow: hidden; position: relative;
-        }
-
-        .card-thumb { width: 100%; height: 140px; object-fit: cover; opacity: 0.7; }
+        .t-banner { width: 100%; height: 130px; object-fit: cover; opacity: 0.7; }
         
-        .card-live-pill {
-            position: absolute; top: 12px; right: 12px;
-            background: var(--accent-crimson); color: white;
-            font-size: 8px; font-weight: 900; padding: 4px 10px;
-            border-radius: 20px; animation: pulse 2s infinite;
+        .t-live-pill {
+            position: absolute; top: 12px; left: 12px;
+            background: var(--accent-crimson); color: #fff;
+            padding: 4px 10px; border-radius: 6px; font-size: 9px; font-weight: 900;
+            display: flex; align-items: center; gap: 5px; animation: pulse 1.5s infinite;
         }
-
-        .card-body { padding: 15px; }
-        .card-meta { display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; color: var(--text-dim); margin-bottom: 8px; }
-        .card-title { font-size: 16px; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; }
-        
-        .prize-box {
-            background: rgba(255,255,255,0.03); border-radius: 10px;
-            padding: 10px; display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .prize-amount { font-size: 14px; font-weight: 900; color: var(--accent-crimson); }
-        .btn-card-action {
-            background: var(--text-main); color: #000; font-size: 10px; font-weight: 800;
-            padding: 8px 16px; border-radius: 6px; text-decoration: none;
-        }
-
-        /* [ID MARKETPLACE PREVIEW] */
-        .marketplace-banner {
-            margin: 0 20px 30px; padding: 25px;
-            background: linear-gradient(135deg, #121212, #050505);
-            border: 1px dashed var(--accent-crimson); border-radius: 20px;
-            text-align: center;
-        }
-
-        .market-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; text-transform: uppercase; }
-        .market-desc { font-size: 11px; color: var(--text-dim); margin-bottom: 20px; }
-        
-        .btn-market {
-            background: var(--accent-crimson); color: white;
-            padding: 12px 30px; border-radius: 10px; font-size: 11px; font-weight: 800;
-            border: none; cursor: pointer; text-transform: uppercase;
-        }
-
-        /* [LEADERBOARD PREVIEW] */
-        .ranking-module { padding: 0 20px 30px; }
-        .rank-item {
-            display: flex; align-items: center; gap: 15px;
-            background: var(--surface-matte); border: 1px solid var(--border-subtle);
-            margin-bottom: 10px; padding: 12px 15px; border-radius: 14px;
-        }
-
-        .rank-id { font-size: 14px; font-weight: 900; color: var(--text-dim); width: 25px; }
-        .rank-avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--border-subtle); }
-        .rank-info { flex: 1; }
-        .rank-name { font-size: 13px; font-weight: 700; text-transform: uppercase; }
-        .rank-tag { font-size: 8px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
-        .tag-pubg { background: #E6B325; color: #000; }
-        .tag-ff { background: #3B82F6; color: #fff; }
-        .rank-xp { font-size: 12px; font-weight: 800; color: var(--accent-crimson); }
-
-        /* [SPONSOR GRID] */
-        .sponsor-sec { padding: 0 20px 40px; text-align: center; }
-        .sponsor-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 15px; margin-top: 15px; opacity: 0.4;
-        }
-        .sponsor-logo { width: 100%; filter: grayscale(1); }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .t-info { padding: 15px; }
+        .t-name { font-size: 14px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; }
+        
+        .t-meta-row { display: flex; justify-content: space-between; align-items: center; }
+        .t-prize { color: var(--accent-crimson); font-weight: 900; font-size: 15px; }
+        .t-slots { font-size: 11px; color: var(--text-muted); font-weight: 700; }
+
+        /* [4. MARKETPLACE SUBMISSION] */
+        .market-section { padding: 20px; }
+        .market-banner {
+            background: linear-gradient(135deg, #1A1A1A, #0A0A0A);
+            border: 1px solid var(--border-subtle); border-radius: 25px;
+            padding: 30px 25px; position: relative; overflow: hidden;
+        }
+
+        .market-banner h2 { font-size: 22px; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; }
+        .market-banner p { font-size: 12px; color: var(--text-muted); margin-bottom: 25px; }
+
+        .market-form { display: grid; gap: 12px; }
+        .market-input {
+            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+            padding: 14px; border-radius: 12px; color: white; font-size: 13px; outline: none;
+        }
+        .market-input:focus { border-color: var(--accent-crimson); }
+        
+        .btn-market {
+            background: var(--accent-crimson); color: white; border: none;
+            padding: 16px; border-radius: 12px; font-size: 12px; font-weight: 800;
+            text-transform: uppercase; cursor: pointer;
+        }
+
+        /* [5. LEADERBOARD PREVIEW] */
+        .ranks-box { padding: 20px; }
+        .rank-item {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle);
+            margin-bottom: 10px; padding: 12px 15px; border-radius: 15px;
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        .rank-pos { font-size: 14px; font-weight: 900; color: var(--accent-crimson); width: 25px; }
+        .rank-avatar { width: 35px; height: 35px; border-radius: 50%; background: var(--surface); }
+        .rank-name { flex: 1; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .game-tag { font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); }
+
+        /* [6. SPONSOR SHOWCASE] */
+        .sponsor-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 20px;
+        }
+        .sponsor-card {
+            background: var(--surface); height: 80px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--border-subtle);
+        }
+        .sponsor-logo { width: 50%; filter: grayscale(1) brightness(2); opacity: 0.4; }
+
+        /* Tutorial Section */
+        .tutorial-card {
+            margin: 0 20px 20px; border-radius: 20px; height: 180px;
+            background: #111; border: 1px solid var(--border-subtle);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px;
+        }
+        .play-icon { width: 50px; height: 50px; background: var(--accent-crimson); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .play-icon svg { width: 20px; height: 20px; fill: white; margin-left: 4px; }
+
+        /* Layout Padding for Nav */
+        .content-wrap { padding-bottom: 120px; }
 
     </style>
 </head>
 <body>
 
-    <!-- Shared Mount Points -->
+    <!-- Loaders & Global Components -->
     <div id="loader-mount"></div>
     <div id="header-mount"></div>
 
-    <!-- Cinematic Slider Engine -->
-    <section class="hero-engine">
-        <div class="slider-track" id="hero-slider">
-            <!-- Slide 1: PUBG -->
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000')">
-                <div class="slide-overlay"></div>
-                <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="slide-watermark">
-                <div class="slide-content">
-                    <span class="slide-game-tag">Tactical Deployment</span>
-                    <h2 class="slide-title">PUBG MOBILE ARENA</h2>
-                    <a href="/tournaments?game=PUBG" class="slide-cta">Enter PUBG Arena</a>
+    <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="page-watermark" alt="Watermark">
+
+    <div class="content-wrap">
+        
+        <!-- [1. AUTO-SLIDER HERO] -->
+        <section class="hero-slider">
+            <div class="slider-track" id="hero-track">
+                <!-- Slide 1: PUBG -->
+                <div class="slide slide-pubg">
+                    <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="slide-watermark">
+                    <div class="slide-content">
+                        <span class="slide-label">Active Deployment</span>
+                        <h1 class="slide-title">PUBG MOBILE<br>ARENA</h1>
+                        <a href="/arena" class="slide-cta">
+                            <span>Enter PUBG Arena</span>
+                            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <!-- Slide 2: Free Fire -->
+                <div class="slide slide-ff">
+                    <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="slide-watermark">
+                    <div class="slide-content">
+                        <span class="slide-label">Elite Mission</span>
+                        <h1 class="slide-title">FREE FIRE<br>SURVIVAL</h1>
+                        <a href="/arena" class="slide-cta">
+                            <span>Enter FF Arena</span>
+                            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <!-- Slide 2: Free Fire -->
-            <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1000')">
-                <div class="slide-overlay"></div>
-                <img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="slide-watermark">
-                <div class="slide-content">
-                    <span class="slide-game-tag">Survival Protocol</span>
-                    <h2 class="slide-title">FREE FIRE CLASH</h2>
-                    <a href="/tournaments?game=FreeFire" class="slide-cta">Enter Free Fire Arena</a>
-                </div>
+        </section>
+
+        <!-- [2. STATS ENGINE] -->
+        <section class="stats-engine">
+            <div class="stat-card">
+                <span class="stat-val" id="stat-prize">0 PKR</span>
+                <span class="stat-lbl">Prize Distributed</span>
             </div>
+            <div class="stat-card">
+                <span class="stat-val" id="stat-players">0</span>
+                <span class="stat-lbl">Active Operatives</span>
+            </div>
+            <div class="stat-card" style="grid-column: span 2;">
+                <span class="stat-val" style="color: #4CAF50;">99.4%</span>
+                <span class="stat-lbl">Platform Trust Score</span>
+            </div>
+        </section>
+
+        <!-- [3. LIVE TOURNAMENTS] -->
+        <div class="section-header">
+            <h3 class="section-title">Live Arena</h3>
+            <a href="/arena" class="section-action">View Arena</a>
         </div>
-    </section>
-
-    <!-- Statistics Engine -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <span class="stat-value" id="stat-players">---</span>
-            <span class="stat-label">Operatives</span>
+        <div class="tournament-scroll" id="live-matches-list">
+            <!-- Dynamic Injection -->
+            <p style="padding: 20px; color: var(--text-muted); font-size: 11px;">Scanning for live broadcasts...</p>
         </div>
-        <div class="stat-card">
-            <span class="stat-value">99.8%</span>
-            <span class="stat-label">Trust Score</span>
+
+        <!-- [4. FEATURED OPERATIONS] -->
+        <div class="section-header">
+            <h3 class="section-title">Featured Missions</h3>
         </div>
-        <div class="stat-card">
-            <span class="stat-value" id="stat-prize">---</span>
-            <span class="stat-label">Bounty Paid</span>
+        <div class="tournament-scroll" id="featured-list">
+            <!-- Dynamic Injection -->
         </div>
-    </div>
 
-    <!-- Featured Deployments -->
-    <div class="section-header">
-        <h3 class="section-title">Live Deployments</h3>
-        <a href="/tournaments" class="section-action">View All</a>
-    </div>
-    <div class="deployment-scroll" id="live-deployments">
-        <!-- Live Cards via JS -->
-        <p style="padding: 20px; font-size: 10px; color: var(--text-dim);">SCANNING SATELLITE DATA...</p>
-    </div>
+        <!-- [5. JOIN GUIDE & TUTORIAL] -->
+        <div class="section-header">
+            <h3 class="section-title">Command Training</h3>
+        </div>
+        <div class="tutorial-card">
+            <div class="play-icon">
+                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span style="font-size: 12px; font-weight: 800; letter-spacing: 1px;">WATCH JOINING PROTOCOL</span>
+        </div>
 
-    <!-- Marketplace Bridge -->
-    <div class="marketplace-banner">
-        <h2 class="market-title">ID Marketplace</h2>
-        <p class="market-desc">Liquidate your elite gaming assets or acquire high-tier IDs. Direct admin escrow protection.</p>
-        <button class="btn-market" onclick="window.location.href='/marketplace'">List Your ID for Sale</button>
-    </div>
+        <!-- [6. ID MARKETPLACE] -->
+        <section class="market-section">
+            <div class="market-banner">
+                <h2>ID Marketplace</h2>
+                <p>Submit your veteran gaming account for evaluation and sale.</p>
+                
+                <form class="market-form" id="marketplace-form">
+                    <input type="text" id="m-game" class="market-input" placeholder="Game Name (PUBG/FF)" required>
+                    <input type="text" id="m-uid" class="market-input" placeholder="Account UID" required>
+                    <input type="text" id="m-price" class="market-input" placeholder="Desired Price (PKR)" required>
+                    <input type="text" id="m-wa" class="market-input" placeholder="WhatsApp Number" required>
+                    <input type="text" id="m-ss" class="market-input" placeholder="Screenshot URL (G-Drive/Direct)" required>
+                    <button type="submit" class="btn-market" id="btn-market-sub">Submit to Queue</button>
+                </form>
+            </div>
+        </section>
 
-    <!-- Top Ranking Preview -->
-    <div class="section-header">
-        <h3 class="section-title">Elite Operatives</h3>
-        <a href="/leaderboard" class="section-action">Full Ranks</a>
-    </div>
-    <div class="ranking-module" id="leaderboard-preview">
-        <!-- Top 5 Preview -->
-    </div>
+        <!-- [7. LEADERBOARD PREVIEW] -->
+        <div class="section-header">
+            <h3 class="section-title">Global Ranks</h3>
+            <a href="/leaderboard" class="section-action">Full Ranks</a>
+        </div>
+        <div class="ranks-box" id="leaderboard-preview">
+            <!-- Dynamic Ranks 1-10 -->
+        </div>
 
-    <!-- Partner Showcase -->
-    <div class="sponsor-sec">
-        <span class="stat-label">Authorized Partnership Network</span>
+        <!-- [8. SPONSORS] -->
+        <div class="section-header">
+            <h3 class="section-title">Partners & Sponsors</h3>
+        </div>
         <div class="sponsor-grid">
-            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
-            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
-            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
-            <img src="https://via.placeholder.com/60x30/111/444?text=SPONSOR" class="sponsor-logo">
+            <div class="sponsor-card"><img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="sponsor-logo"></div>
+            <div class="sponsor-card"><img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="sponsor-logo"></div>
+            <div class="sponsor-card"><img src="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png" class="sponsor-logo"></div>
         </div>
+
+        <!-- [9. TEAM CONTACT] -->
+        <div class="section-header" style="text-align: center; display: block;">
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 20px;">Clan registration or Tournament hosting?</p>
+            <a href="https://wa.me/92xxxxxxxxxx" class="slide-cta" style="width: 100%; justify-content: center; background: #25D366; color: white;">
+                <span style="color:white;">Contact Command Center</span>
+            </a>
+        </div>
+
     </div>
 
+    <!-- Mounting points for Nav & Footer -->
     <div id="footer-mount"></div>
     <div id="nav-mount"></div>
 
-    <!-- [CORE LOGIC ENGINE] -->
+    <!-- [FIREBASE & CORE DASHBOARD LOGIC] -->
     <script type="module">
-        import { db, collection, query, where, limit, getDocs, onSnapshot, doc } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, doc, getDoc, collection, query, where, limit, getDocs, onSnapshot, addDoc, orderBy } from './firebase-config.js';
 
-        // 1. Load Shared Components
-        const loadComponent = async (id, file) => {
+        // 1. Component Injection Engine
+        const injectComponent = async (id, file) => {
             try {
-                const res = await fetch(file);
-                const html = await res.text();
+                const response = await fetch(file);
+                const html = await response.text();
                 document.getElementById(id).innerHTML = html;
-            } catch (e) { console.error(`Error loading ${file}`); }
+                
+                // Re-execute scripts in the injected component
+                const scripts = document.getElementById(id).getElementsByTagName('script');
+                for (let n = 0; script = scripts[n]; n++) {
+                    const newScript = document.createElement('script');
+                    newScript.type = 'module';
+                    newScript.textContent = script.textContent;
+                    script.parentNode.replaceChild(newScript, script);
+                }
+            } catch (e) { console.error("Injection failed:", file); }
         };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadComponent('loader-mount', 'loader.html');
-            loadComponent('header-mount', 'header.html');
-            loadComponent('footer-mount', 'footer.html');
-            loadComponent('nav-mount', 'navigation.html');
+        // 2. Initialize Core Modules
+        window.addEventListener('load', () => {
+            injectComponent('loader-mount', 'loader.html');
+            injectComponent('header-mount', 'header.html');
+            injectComponent('nav-mount', 'navigation.html');
+            injectComponent('footer-mount', 'footer.html');
+            
+            // Start Hero Slider
+            initHeroSlider();
+            
+            // Sync Dashboard Data
+            syncStats();
+            syncLiveMatches();
+            syncFeaturedMatches();
+            syncLeaderboard();
         });
 
-        // 2. Cinematic Slider Logic
-        let currentSlide = 0;
-        const sliderTrack = document.getElementById('hero-slider');
-        setInterval(() => {
-            currentSlide = currentSlide === 0 ? 1 : 0;
-            sliderTrack.style.transform = `translateX(-${currentSlide * 50}%)`;
-        }, 3000);
+        // 3. Hero Slider Logic (3s Interval)
+        const initHeroSlider = () => {
+            const track = document.getElementById('hero-track');
+            let currentSlide = 0;
+            setInterval(() => {
+                currentSlide = (currentSlide === 0) ? 1 : 0;
+                track.style.transform = `translateX(-${currentSlide * 50}%)`;
+            }, 4500);
+        };
 
-        // 3. Real-time Platform Statistics
-        onSnapshot(doc(db, "system_config", "stats"), (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                document.getElementById('stat-players').innerText = (data.total_users || 0).toLocaleString();
-                document.getElementById('stat-prize').innerText = (data.total_prize || 0).toLocaleString() + " PKR";
-            }
-        });
-
-        // 4. Fetch Live Matches
-        const fetchLiveMatches = async () => {
-            const q = query(collection(db, "tournaments"), where("status", "in", ["live", "open"]), limit(5));
-            const snap = await getDocs(q);
-            const container = document.getElementById('live-deployments');
-            container.innerHTML = "";
-
-            if(snap.empty) {
-                container.innerHTML = `<div style="font-size:11px; color:var(--text-dim);">No active deployments at this time.</div>`;
-            }
-
-            snap.forEach(docSnap => {
-                const t = docSnap.data();
-                const totalPool = (t.joined || 0) * t.entryFee;
-                const winnerPrize = Math.floor(totalPool * 0.35); // 35% prize pool auto-calc
-
-                container.innerHTML += `
-                    <div class="deployment-card">
-                        <img src="${t.image}" class="card-thumb">
-                        ${t.status === 'live' ? '<span class="card-live-pill">LIVE ARENA</span>' : ''}
-                        <div class="card-body">
-                            <div class="card-meta">
-                                <span>${t.game} • ${t.type}</span>
-                                <span style="color:var(--text-main);">${t.joined || 0}/${t.totalSlots} SLOTS</span>
-                            </div>
-                            <h4 class="card-title">${t.title}</h4>
-                            <div class="prize-box">
-                                <span class="prize-amount">PKR ${winnerPrize || t.prizePool}</span>
-                                <a href="/tournaments" class="btn-card-action">JOIN MATCH</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
+        // 4. Statistics Sync
+        const syncStats = () => {
+            onSnapshot(doc(db, "system_config", "global_stats"), (snap) => {
+                if(snap.exists()){
+                    const d = snap.data();
+                    document.getElementById('stat-prize').innerText = `${d.total_prize || 0} PKR`;
+                    document.getElementById('stat-players').innerText = d.total_players || 0;
+                }
             });
         };
 
-        // 5. Leaderboard Preview
-        const fetchRanks = async () => {
-            const q = query(collection(db, "users"), limit(5)); // Order by XP in production
-            const snap = await getDocs(q);
-            const container = document.getElementById('leaderboard-preview');
-            container.innerHTML = "";
-
-            let count = 1;
-            snap.forEach(docSnap => {
-                const u = docSnap.data();
-                container.innerHTML += `
-                    <div class="rank-item">
-                        <span class="rank-id">0${count++}</span>
-                        <img src="${u.avatar}" class="rank-avatar">
-                        <div class="rank-info">
-                            <span class="rank-name">${u.name} <span class="rank-tag ${u.primaryGame === 'PUBG' ? 'tag-pubg' : 'tag-ff'}">${u.primaryGame || 'PRO'}</span></span>
-                        </div>
-                        <span class="rank-xp">${u.xp || 0} XP</span>
-                    </div>
-                `;
+        // 5. Live & Featured Match Fetching
+        const syncLiveMatches = () => {
+            const q = query(collection(db, "tournaments"), where("status", "==", "live"), limit(5));
+            onSnapshot(q, (snap) => {
+                const container = document.getElementById('live-matches-list');
+                container.innerHTML = "";
+                if(snap.empty) { container.innerHTML = `<p style="padding:20px; color:var(--text-muted); font-size:11px;">NO LIVE BROADCASTS ACTIVE.</p>`; return; }
+                snap.forEach(docSnap => {
+                    const m = docSnap.data();
+                    container.innerHTML += renderMatchCard(m, true);
+                });
             });
         };
 
-        fetchLiveMatches();
-        fetchRanks();
+        const syncFeaturedMatches = () => {
+            const q = query(collection(db, "tournaments"), where("isFeatured", "==", true), limit(5));
+            onSnapshot(q, (snap) => {
+                const container = document.getElementById('featured-list');
+                container.innerHTML = "";
+                snap.forEach(docSnap => {
+                    const m = docSnap.data();
+                    container.innerHTML += renderMatchCard(m, false);
+                });
+            });
+        };
+
+        const renderMatchCard = (m, isLive) => `
+            <div class="t-card" onclick="window.location.href='/arena'">
+                ${isLive ? '<div class="t-live-pill"><div style="width:5px;height:5px;background:#fff;border-radius:50%"></div> LIVE</div>' : ''}
+                <img src="${m.image}" class="t-banner">
+                <div class="t-info">
+                    <h4 class="t-name">${m.title}</h4>
+                    <div class="t-meta-row">
+                        <span class="t-prize">PKR ${m.prize}</span>
+                        <span class="t-slots">${m.joined || 0}/${m.totalSlots} UNITS</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 6. Marketplace Submission Logic
+        document.getElementById('marketplace-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-market-sub');
+            btn.innerText = "PROCESSING...";
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "marketplace_queue"), {
+                    game: document.getElementById('m-game').value,
+                    uid: document.getElementById('m-uid').value,
+                    price: document.getElementById('m-price').value,
+                    whatsapp: document.getElementById('m-wa').value,
+                    screenshot: document.getElementById('m-ss').value,
+                    status: "pending",
+                    timestamp: new Date().toISOString()
+                });
+                alert("Account submitted for review. Admin will contact you on WhatsApp.");
+                e.target.reset();
+            } catch (err) { alert("Submission error. Check link."); }
+            finally { btn.innerText = "Submit to Queue"; btn.disabled = false; }
+        };
+
+        // 7. Leaderboard Preview
+        const syncLeaderboard = () => {
+            const q = query(collection(db, "users"), orderBy("xp", "desc"), limit(10));
+            onSnapshot(q, (snap) => {
+                const container = document.getElementById('leaderboard-preview');
+                container.innerHTML = "";
+                let i = 1;
+                snap.forEach(docSnap => {
+                    const p = docSnap.data();
+                    container.innerHTML += `
+                        <div class="rank-item">
+                            <span class="rank-pos">#${i++}</span>
+                            <img src="${p.avatar}" class="rank-avatar">
+                            <span class="rank-name">${p.name}</span>
+                            <span class="game-tag">${p.primary_game || 'PUBG'}</span>
+                        </div>
+                    `;
+                });
+            });
+        };
 
     </script>
 </body>

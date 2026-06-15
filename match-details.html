@@ -2,238 +2,140 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NE SPORTS | Room Details</title>
-    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NE SPORTS | War Room</title>
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
     <style>
         :root {
-            --bg: #0A0A0A;
-            --cyan: #00D4FF;
-            --purple: #7B61FF;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-base: #050505;
+            --surface: #121212;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-red: #D32F2F;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --success: #2E7D32;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
 
-        body {
-            background-color: var(--bg);
-            color: white;
-            padding-bottom: 40px;
-            background: radial-gradient(circle at bottom left, rgba(123, 97, 255, 0.1), transparent);
-        }
+        body { background-color: var(--bg-base); color: var(--text-main); padding-bottom: 40px; }
 
-        /* Hero Header */
-        .match-hero {
-            width: 100%;
-            height: 250px;
-            position: relative;
-            overflow: hidden;
-        }
-        .match-hero img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
-        .back-btn {
-            position: absolute; top: 20px; left: 20px;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border); padding: 10px; border-radius: 50%;
-            cursor: pointer; z-index: 10;
-        }
+        /* Match Banner */
+        .match-hero { width: 100%; height: 220px; position: relative; overflow: hidden; border-bottom: 1px solid var(--border-subtle); }
+        .match-hero img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .back-btn { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 50%; border: 1px solid var(--border-subtle); cursor: pointer; }
+        .back-btn svg { width: 20px; height: 20px; fill: white; }
 
-        /* Room Info Card */
-        .details-container {
-            padding: 20px;
-            margin-top: -50px;
-            position: relative;
-            z-index: 5;
-        }
+        /* Content */
+        .room-container { padding: 25px 20px; }
+        .match-header { margin-bottom: 30px; text-align: center; }
+        .match-title { font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .match-id-badge { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; margin-top: 5px; }
 
-        .room-card {
-            background: rgba(15, 15, 15, 0.9);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 30px 20px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        /* Room Access Panel */
+        .access-panel {
+            background: var(--surface); border: 1px solid var(--border-subtle);
+            border-radius: 20px; padding: 30px 20px; text-align: center;
+            margin-bottom: 30px;
         }
+        .countdown-timer { font-size: 32px; font-weight: 900; color: var(--accent-red); font-family: monospace; margin-bottom: 10px; }
+        .status-msg { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        .timer-box {
-            margin-bottom: 25px;
-        }
-        #countdown {
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--cyan);
-            letter-spacing: 2px;
-            text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-        }
-        .timer-label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-top: 5px; }
+        .creds-grid { display: none; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+        .cred-box { background: var(--bg-base); padding: 15px; border-radius: 12px; border: 1px solid var(--border-subtle); }
+        .cred-label { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
+        .cred-value { font-size: 18px; font-weight: 800; font-family: monospace; color: var(--accent-red); }
 
-        /* Credentials Section */
-        .creds-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .cred-item {
-            background: var(--glass);
-            padding: 15px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-        }
-        .cred-item span { display: block; font-size: 10px; opacity: 0.5; margin-bottom: 5px; }
-        .cred-item b { font-size: 16px; color: #fff; font-family: monospace; }
+        /* Rules */
+        .rules-box { margin-top: 30px; }
+        .rules-title { font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 15px; border-left: 3px solid var(--accent-red); padding-left: 10px; }
+        .rule-item { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.6; display: flex; gap: 10px; }
+        .rule-item::before { content: "•"; color: var(--accent-red); font-weight: bold; }
 
-        .locked-msg {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 20px;
-            font-size: 13px;
-            color: #FFD700;
-            border: 1px dashed #FFD700;
-        }
-
-        /* Rules Section */
-        .rules-section { margin-top: 30px; }
-        .rules-section h3 { font-size: 18px; margin-bottom: 15px; border-left: 4px solid var(--purple); padding-left: 10px; }
-        .rule-item {
-            background: var(--glass);
-            padding: 12px 15px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            font-size: 13px;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        /* Support Button */
         .support-btn {
-            width: 100%;
-            padding: 15px;
-            background: #25D366;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-weight: 700;
-            margin-top: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-decoration: none;
+            width: 100%; padding: 15px; background: #25D366; color: white;
+            border: none; border-radius: 12px; font-size: 14px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
     <div class="match-hero">
-        <div class="back-btn" onclick="history.back()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </div>
-        <img id="m-banner" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1000" alt="Game">
+        <button class="back-btn" onclick="history.back()">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <img id="m-image" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1000" alt="Match">
     </div>
 
-    <div class="details-container">
-        <div class="room-card">
-            <h2 id="m-title" style="margin-bottom: 10px;">Loading Match...</h2>
-            
-            <div class="timer-box">
-                <div id="countdown">00:00:00</div>
-                <div class="timer-label">Time Remaining Until Match Starts</div>
-            </div>
+    <div class="room-container">
+        <div class="match-header">
+            <h1 class="match-title" id="m-title">LOADING WAR ROOM...</h1>
+            <div class="match-id-badge" id="m-id-display">DEPLOYMENT ID: -------</div>
+        </div>
 
-            <div id="room-credentials">
-                <!-- If Room is not ready -->
-                <div class="locked-msg">
-                    🔒 Room ID & Password will be visible 15 minutes before the match start time.
-                </div>
-            </div>
+        <div class="access-panel">
+            <div id="m-timer" class="countdown-timer">00:00:00</div>
+            <div id="m-status-msg" class="status-msg">Awaiting System Broadcast</div>
 
-            <div class="creds-grid" id="creds-view" style="display: none;">
-                <div class="cred-item">
-                    <span>ROOM ID</span>
-                    <b id="room-id">-------</b>
+            <div class="creds-grid" id="m-creds">
+                <div class="cred-box">
+                    <span class="cred-label">Room ID</span>
+                    <span class="cred-value" id="room-id">-------</span>
                 </div>
-                <div class="cred-item">
-                    <span>PASSWORD</span>
-                    <b id="room-pass">-------</b>
+                <div class="cred-box">
+                    <span class="cred-label">Password</span>
+                    <span class="cred-value" id="room-pass">-------</span>
                 </div>
             </div>
         </div>
 
-        <div class="rules-section">
-            <h3>Match Rules</h3>
-            <div class="rule-item"><span>🚀</span> No Emulators allowed.</div>
-            <div class="rule-item"><span>🚀</span> Team teaming is strictly prohibited.</div>
-            <div class="rule-item"><span>🚀</span> Room ID/Pass sharing is not allowed.</div>
-            <div class="rule-item"><span>🚀</span> Take a screenshot of your win.</div>
+        <div class="rules-box">
+            <div class="rules-title">Engagemant Protocols</div>
+            <div class="rule-item">Credentials will unlock 15 minutes before deployment starts.</div>
+            <div class="rule-item">Team Teaming is strictly monitored and results in a permanent ban.</div>
+            <div class="rule-item">Take a final screenshot of your victory for prize verification.</div>
         </div>
 
-        <a href="https://wa.me/yournumber" class="support-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.937 3.659 1.432 5.631 1.433h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Contact Support
+        <a href="https://wa.me/92xxxxxxxxxx" class="support-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.025 3.14l-.841 3.085 3.167-.831c.829.453 1.554.686 2.417.687h.001c3.181 0 5.767-2.587 5.768-5.766 0-3.18-2.586-5.766-5.769-5.766zm3.43 8.351c-.139.393-.721.721-1.002.766-.282.045-.561.066-.861-.027-.3-.092-.683-.243-1.155-.448-1.99-.861-3.266-2.883-3.366-3.016-.099-.133-.815-1.084-.815-2.07 0-.986.513-1.472.695-1.671.183-.199.399-.249.531-.249.133 0 .266.001.382.006.12.005.281-.045.441.341.163.393.565 1.378.614 1.478.049.099.083.216.017.348-.066.133-.1.216-.199.332-.099.117-.208.261-.298.35-.099.099-.202.208-.087.406.116.199.516.852 1.109 1.38.765.682 1.408.894 1.607.994.199.099.316.083.432-.05.116-.133.498-.581.631-.78.133-.199.266-.166.449-.1.182.066 1.162.548 1.362.648.199.099.332.149.382.232.05.083.05.481-.089.874z"/></svg>
+            Contact Command Center
         </a>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { db, doc, onSnapshot } from './firebase-config.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
-            authDomain: "nesports7.firebaseapp.com",
-            projectId: "nesports7",
-            storageBucket: "nesports7.firebasestorage.app",
-            messagingSenderId: "414629589331",
-            appId: "1:414629589331:web:2a30069688008d17d371a6"
-        };
+        // Get Match ID from URL
+        const params = new URLSearchParams(window.location.search);
+        const matchId = params.get('id') || "DEMO-MATCH";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Get Match ID from URL (e.g., match-details.html?id=MATCH_ID)
-        const urlParams = new URLSearchParams(window.location.search);
-        const matchId = urlParams.get('id') || "demo_match";
-
-        // Listen for Real-time Match Updates
-        onSnapshot(doc(db, "tournaments", matchId), (doc) => {
-            if (doc.exists()) {
-                const m = doc.data();
+        onSnapshot(doc(db, "tournaments", matchId), (docSnap) => {
+            if (docSnap.exists()) {
+                const m = docSnap.data();
                 document.getElementById('m-title').innerText = m.title;
-                document.getElementById('m-banner').src = m.image || document.getElementById('m-banner').src;
+                document.getElementById('m-id-display').innerText = "DEPLOYMENT ID: " + matchId;
+                if(m.image) document.getElementById('m-image').src = m.image;
 
-                // Show/Hide Credentials
+                // Room Credentials Reveal Logic
                 if (m.roomStatus === "ready") {
-                    document.getElementById('room-credentials').style.display = "none";
-                    document.getElementById('creds-view').style.display = "grid";
+                    document.getElementById('m-creds').style.display = "grid";
+                    document.getElementById('m-status-msg').innerText = "OPERATIVE ACCESS GRANTED";
+                    document.getElementById('m-status-msg').style.color = "var(--success)";
                     document.getElementById('room-id').innerText = m.roomId;
                     document.getElementById('room-pass').innerText = m.roomPass;
                 }
 
-                // Start Countdown
-                startTimer(m.startTime); // Expecting startTime in format "2024-06-20T20:00:00"
+                // Simple Countdown Logic (Simplified)
+                startTimer(m.time); 
             }
         });
 
-        function startTimer(startTime) {
-            const countDownDate = new Date(startTime).getTime();
-
-            const x = setInterval(function() {
-                const now = new Date().getTime();
-                const distance = countDownDate - now;
-
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("countdown").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-
-                if (distance < 0) {
-                    clearInterval(x);
-                    document.getElementById("countdown").innerHTML = "MATCH STARTED";
-                }
-            }, 1000);
+        function startTimer(timeStr) {
+            // Your logic for countdown based on match time string
+            document.getElementById('m-timer').innerText = timeStr;
         }
     </script>
 </body>

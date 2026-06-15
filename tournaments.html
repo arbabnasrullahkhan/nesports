@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NE SPORTS | Arena Matches</title>
+    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --cyan: #00D4FF;
+            --purple: #7B61FF;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'SF Pro Display', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            padding-bottom: 100px;
+            background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent);
+        }
+
+        /* Category Tabs */
+        .category-scroll {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 100;
+        }
+        .cat-btn {
+            padding: 10px 20px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .cat-btn.active {
+            background: var(--cyan);
+            color: black;
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Tournament Cards */
+        .arena-container { padding: 10px 20px; }
+        
+        .match-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .match-banner {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+        .match-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--cyan);
+            text-transform: uppercase;
+        }
+
+        .match-info { padding: 20px; }
+        .match-title { font-size: 18px; font-weight: 800; margin-bottom: 5px; }
+        .match-tags { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tag { font-size: 11px; color: rgba(255,255,255,0.5); display: flex; align-items: center; gap: 4px; }
+
+        .match-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+        .stat-box { text-align: center; }
+        .stat-box span { display: block; font-size: 10px; opacity: 0.5; text-transform: uppercase; }
+        .stat-box b { font-size: 14px; color: var(--cyan); }
+
+        /* Slots Bar */
+        .slot-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 8px; }
+        .slot-bar-bg { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+        .slot-bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); transition: 1s; }
+
+        .join-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .entry-fee { font-size: 18px; font-weight: 800; }
+        .entry-fee span { font-size: 12px; opacity: 0.5; font-weight: 400; }
+        
+        .join-match-btn {
+            padding: 12px 30px;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .join-match-btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        /* Bottom Nav */
+        .nav-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; height: 70px; background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(25px); border-radius: 25px; border: 1px solid var(--glass-border);
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+        }
+        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; }
+        .nav-item.active { color: var(--cyan); }
+        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
+    </style>
+</head>
+<body>
+
+    <!-- Game Filter -->
+    <div class="category-scroll">
+        <div class="cat-btn active" onclick="filterMatches('All', this)">All Games</div>
+        <div class="cat-btn" onclick="filterMatches('PUBG', this)">PUBG Mobile</div>
+        <div class="cat-btn" onclick="filterMatches('FreeFire', this)">Free Fire</div>
+        <div class="cat-btn" onclick="filterMatches('Ludo', this)">Ludo Star</div>
+    </div>
+
+    <!-- Arena -->
+    <div class="arena-container" id="arena-list">
+        <!-- Skeleton Loading -->
+        <p style="text-align: center; opacity: 0.5; margin-top: 50px;">Scanning for active matches...</p>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="nav-bar">
+        <a href="home.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>HOME
+        </a>
+        <a href="tournaments.html" class="nav-item active">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>MATCHES
+        </a>
+        <a href="wallet.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89-2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>WALLET
+        </a>
+        <a href="profile.html" class="nav-item">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>PROFILE
+        </a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
+            authDomain: "nesports7.firebaseapp.com",
+            projectId: "nesports7",
+            storageBucket: "nesports7.firebasestorage.app",
+            messagingSenderId: "414629589331",
+            appId: "1:414629589331:web:2a30069688008d17d371a6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                loadMatches("All");
+            } else {
+                window.location.href = "auth.html";
+            }
+        });
+
+        window.filterMatches = (game, btn) => {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadMatches(game);
+        };
+
+        async function loadMatches(filter) {
+            const arena = document.getElementById('arena-list');
+            arena.innerHTML = "<p style='text-align:center; opacity:0.5;'>Loading matches...</p>";
+
+            let q = query(collection(db, "tournaments"), where("status", "==", "open"));
+            if (filter !== "All") {
+                q = query(collection(db, "tournaments"), where("game", "==", filter), where("status", "==", "open"));
+            }
+
+            const snap = await getDocs(q);
+            arena.innerHTML = "";
+
+            if (snap.empty) {
+                arena.innerHTML = "<p style='text-align:center; opacity:0.5; margin-top:50px;'>No active tournaments for this game.</p>";
+                return;
+            }
+
+            snap.forEach(doc => {
+                const m = doc.data();
+                const progress = (m.joined / m.totalSlots) * 100;
+                
+                arena.innerHTML += `
+                    <div class="match-card">
+                        <img src="${m.image || 'https://via.placeholder.com/400x150'}" class="match-banner">
+                        <div class="match-status">● ${m.status}</div>
+                        <div class="match-info">
+                            <h2 class="match-title">${m.title}</h2>
+                            <div class="match-tags">
+                                <span class="tag">📅 ${m.date}</span>
+                                <span class="tag">⏰ ${m.time}</span>
+                                <span class="tag">🗺️ ${m.map}</span>
+                            </div>
+                            <div class="match-stats">
+                                <div class="stat-box"><span>Prize</span><b>${m.prize}</b></div>
+                                <div class="stat-box"><span>Type</span><b>${m.type}</b></div>
+                                <div class="stat-box"><span>Version</span><b>${m.version || 'Tpp'}</b></div>
+                            </div>
+                            <div class="slot-area">
+                                <div class="slot-header">
+                                    <span>Slots Filled</span>
+                                    <span>${m.joined}/${m.totalSlots}</span>
+                                </div>
+                                <div class="slot-bar-bg">
+                                    <div class="slot-bar-fill" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+                            <div class="join-area">
+                                <div class="entry-fee"><span>Entry:</span> ${m.entryFee} PKR</div>
+                                <button class="join-match-btn" onclick="joinArena('${doc.id}', ${m.entryFee})">JOIN NOW</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.joinArena = async (matchId, fee) => {
+            const userRef = doc(db, "users", currentUser.uid);
+            const userSnap = await getDoc(userRef);
+            
+            if (!userSnap.exists()) return;
+            const userData = userSnap.data();
+
+            if (userData.wallet < fee) {
+                alert("Insufficient Balance! Please deposit first.");
+                window.location.href = "wallet.html";
+                return;
+            }
+
+            if (confirm(`Do you want to join this match for ${fee} PKR?`)) {
+                try {
+                    // Update Wallet
+                    await updateDoc(userRef, {
+                        wallet: increment(-fee)
+                    });
+
+                    // Update Match Slots
+                    const matchRef = doc(db, "tournaments", matchId);
+                    await updateDoc(matchRef, {
+                        joined: increment(1)
+                    });
+
+                    alert("Successfully Joined! Room details will be shared on match time.");
+                    location.reload();
+                } catch (e) {
+                    alert("Error joining match. Please try again.");
+                }
+            }
+        };
+    </script>
+</body>
+</html>

@@ -2,312 +2,268 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NE SPORTS | Home Arena</title>
-    <link rel="icon" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NE SPORTS | Dashboard</title>
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
+
     <style>
+        /* Enterprise Design System */
         :root {
-            --bg: #0A0A0A;
-            --cyan: #00D4FF;
-            --purple: #7B61FF;
-            --glass: rgba(255, 255, 255, 0.04);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --font-main: 'SF Pro Display', -apple-system, sans-serif;
+            --bg-base: #050505;
+            --surface: #121212;
+            --surface-elevated: #1E1E1E;
+            --text-main: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --accent-red: #D32F2F;
+            --accent-red-hover: #B71C1C;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(18, 18, 18, 0.85);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg);
-            color: white;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            padding-bottom: 90px; /* Space for Bottom Nav */
             overflow-x: hidden;
-            padding-bottom: 100px; /* Space for Bottom Nav */
         }
 
         /* Dynamic Island Header */
-        .header-island {
+        .dynamic-island {
             position: fixed;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            height: 60px;
-            background: rgba(15, 15, 15, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
+            top: 15px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 500px; height: 60px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
             border-radius: 40px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 15px 0 10px; z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .user-pill { display: flex; align-items: center; gap: 10px; }
-        .user-pill img { width: 35px; height: 35px; border-radius: 50%; border: 1.5px solid var(--cyan); }
+        @keyframes slideDown { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+        .user-snippet { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--surface-elevated); }
         .user-info { display: flex; flex-direction: column; }
-        .user-name { font-size: 13px; font-weight: 600; }
-        .user-level { font-size: 10px; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; }
+        .user-name { font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
+        .user-level { font-size: 10px; color: var(--accent-red); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
         .wallet-pill {
-            background: var(--glass);
-            padding: 8px 15px;
+            background: var(--surface-elevated);
+            padding: 8px 14px;
             border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid var(--glass-border);
+            display: flex; align-items: center; gap: 6px;
+            border: 1px solid var(--border-subtle);
         }
-        .wallet-pill span { font-size: 14px; font-weight: 700; color: #fff; }
+        .wallet-pill svg { width: 14px; height: 14px; fill: var(--text-muted); }
+        .wallet-pill span { font-size: 13px; font-weight: 700; }
 
-        /* Hero Banner */
-        .hero-section {
-            margin-top: 100px;
-            padding: 0 20px;
-        }
+        /* Cinematic Hero Banner */
+        .hero-section { margin-top: 95px; padding: 0 20px; }
         .hero-card {
-            width: 100%;
-            height: 180px;
-            background: linear-gradient(45deg, #7B61FF, #00D4FF);
-            border-radius: 25px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            padding: 25px;
-        }
-        .hero-card::after {
-            content: '';
-            position: absolute;
-            right: -20px;
-            bottom: -20px;
-            width: 150px;
-            height: 150px;
-            background: url('https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png') no-repeat center;
-            background-size: contain;
-            opacity: 0.2;
-            filter: grayscale(1);
-        }
-        .hero-content h1 { font-size: 22px; font-weight: 800; margin-bottom: 5px; }
-        .hero-content p { font-size: 13px; opacity: 0.9; }
-
-        /* Tournament Section */
-        .section-title {
-            padding: 25px 20px 15px;
-            font-size: 18px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .section-title span { color: var(--cyan); font-size: 12px; }
-
-        .tournament-grid {
-            padding: 0 20px;
-            display: grid;
-            gap: 15px;
-        }
-
-        .t-card {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
+            width: 100%; height: 200px;
+            background: linear-gradient(to right, rgba(5,5,5,0.9), rgba(5,5,5,0.2)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1000') center/cover;
             border-radius: 20px;
-            padding: 15px;
-            display: flex;
-            gap: 15px;
-            position: relative;
+            border: 1px solid var(--border-subtle);
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 25px; position: relative; overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+        }
+        .live-badge {
+            position: absolute; top: 20px; right: 20px;
+            background: rgba(211, 47, 47, 0.2); border: 1px solid var(--accent-red);
+            color: var(--accent-red); font-size: 10px; font-weight: 800;
+            padding: 4px 10px; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .live-dot { width: 6px; height: 6px; background: var(--accent-red); border-radius: 50%; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); } 70% { box-shadow: 0 0 0 6px rgba(211, 47, 47, 0); } 100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); } }
+        
+        .hero-card h1 { font-size: 24px; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .hero-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; max-width: 200px; }
+        .hero-btn {
+            background: var(--text-main); color: var(--bg-base);
+            padding: 10px 20px; border-radius: 10px; font-size: 12px; font-weight: 800;
+            border: none; width: max-content; cursor: pointer; text-transform: uppercase;
+        }
+
+        /* Section Titles */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 30px 20px 15px;
+        }
+        .section-title { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .section-link { font-size: 11px; color: var(--accent-red); font-weight: 600; cursor: pointer; text-decoration: none; text-transform: uppercase; }
+
+        /* Tournament Cards Grid */
+        .arena-grid { padding: 0 20px; display: grid; gap: 15px; }
+        .arena-card {
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px; padding: 15px;
+            display: flex; gap: 15px; align-items: center;
             transition: 0.3s;
         }
-        .t-card:active { transform: scale(0.97); }
-        .t-poster {
-            width: 80px;
-            height: 80px;
-            border-radius: 15px;
-            object-fit: cover;
-        }
-        .t-details { flex: 1; }
-        .t-details h3 { font-size: 16px; margin-bottom: 5px; }
-        .t-meta { display: flex; gap: 10px; font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+        .arena-card:active { transform: scale(0.98); background: var(--surface-elevated); }
+        .arena-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; background: var(--surface-elevated); }
+        .arena-info { flex: 1; }
+        .arena-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+        .arena-meta { display: flex; gap: 10px; font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+        .arena-meta div { display: flex; align-items: center; gap: 4px; }
+        .arena-meta svg { width: 12px; height: 12px; fill: var(--text-muted); }
         
-        .t-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .prize-tag { color: #FFD700; font-weight: 700; font-size: 14px; }
-        .join-btn {
-            background: white;
-            color: black;
-            padding: 6px 18px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-            border: none;
+        .arena-bottom { display: flex; justify-content: space-between; align-items: center; }
+        .arena-prize { font-size: 14px; font-weight: 800; color: var(--text-main); }
+        .arena-join {
+            background: rgba(255,255,255,0.05); color: var(--text-main);
+            padding: 6px 16px; border-radius: 8px; font-size: 11px; font-weight: 700;
+            border: 1px solid var(--border-subtle); cursor: pointer; text-transform: uppercase;
         }
 
-        /* Bottom Navigation */
-        .nav-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            height: 70px;
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-radius: 25px;
-            border: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 1000;
+        /* Bottom App Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
         }
-        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 10px; transition: 0.3s; }
-        .nav-item.active { color: var(--cyan); }
-        .nav-item svg { width: 24px; height: 24px; margin-bottom: 4px; display: block; margin-left: auto; margin-right: auto; }
-        .nav-item.active svg { fill: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            text-decoration: none; color: var(--text-muted); transition: 0.3s;
+        }
+        .nav-item svg { width: 22px; height: 22px; fill: var(--text-muted); transition: 0.3s; }
+        .nav-item span { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Active State */
+        .nav-item.active { color: var(--accent-red); }
+        .nav-item.active svg { fill: var(--accent-red); filter: drop-shadow(0 2px 8px rgba(211,47,47,0.4)); }
 
     </style>
 </head>
 <body>
 
-    <!-- Dynamic Island -->
-    <div class="header-island">
-        <div class="user-pill" onclick="window.location.href='profile.html'">
-            <img id="user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Guest" alt="User">
+    <!-- Dynamic Island Header -->
+    <header class="dynamic-island" onclick="window.location.href='/profile'">
+        <div class="user-snippet">
+            <img id="user-avatar" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="User" class="user-avatar">
             <div class="user-info">
                 <span class="user-name" id="user-name">Loading...</span>
-                <span class="user-level" id="user-level">BRONZE</span>
+                <span class="user-level" id="user-level">SYSTEM BOOT</span>
             </div>
         </div>
         <div class="wallet-pill">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00D4FF" stroke-width="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>
-            <span id="user-balance">0</span>
+            <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            <span id="user-wallet">0</span>
         </div>
-    </div>
+    </header>
 
-    <!-- Hero -->
+    <!-- Cinematic Hero -->
     <div class="hero-section">
         <div class="hero-card">
-            <div class="hero-content">
-                <h1>PUBG MOBILE</h1>
-                <p>Mega Tournament • 10,000 PKR Prize</p>
-                <p style="margin-top: 10px; font-weight: 700;">LIVE NOW</p>
+            <div class="live-badge"><div class="live-dot"></div> LIVE EVENT</div>
+            <h1>PUBG MOBILE</h1>
+            <p>Premium Solo Showdown. Enter the arena and claim the bounty.</p>
+            <button class="hero-btn" onclick="window.location.href='/tournaments'">ENTER ARENA</button>
+        </div>
+    </div>
+
+    <!-- Active Tournaments -->
+    <div class="section-header">
+        <div class="section-title">Active Deployments</div>
+        <a href="/tournaments" class="section-link">View All</a>
+    </div>
+
+    <div class="arena-grid" id="arena-list">
+        <!-- Skeleton Loader -->
+        <div class="arena-card" style="opacity: 0.5;">
+            <div class="arena-thumb"></div>
+            <div class="arena-info">
+                <div style="height: 14px; width: 60%; background: var(--surface-elevated); margin-bottom: 8px; border-radius: 4px;"></div>
+                <div style="height: 10px; width: 40%; background: var(--surface-elevated); border-radius: 4px;"></div>
             </div>
         </div>
     </div>
 
-    <!-- Tournaments -->
-    <div class="section-title">
-        Active Tournaments
-        <span>View All</span>
-    </div>
-
-    <div class="tournament-grid" id="tournament-list">
-        <!-- Skeleton / Placeholder -->
-        <div class="t-card">
-            <div style="width: 80px; height: 80px; background: var(--glass); border-radius: 15px;"></div>
-            <div class="t-details">
-                <div style="width: 60%; height: 15px; background: var(--glass); margin-bottom: 10px;"></div>
-                <div style="width: 40%; height: 10px; background: var(--glass);"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Nav -->
-    <nav class="nav-bar">
-        <a href="home.html" class="nav-item active">
+    <!-- iOS Native Style Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="/home" class="nav-item active">
             <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            HOME
+            <span>Home</span>
         </a>
-        <a href="tournaments.html" class="nav-item">
+        <a href="/tournaments" class="nav-item">
             <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg>
-            MATCHES
+            <span>Arena</span>
         </a>
-        <a href="wallet.html" class="nav-item">
+        <a href="/wallet" class="nav-item">
             <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            WALLET
+            <span>Vault</span>
         </a>
-        <a href="profile.html" class="nav-item">
+        <a href="/profile" class="nav-item">
             <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            PROFILE
+            <span>Profile</span>
         </a>
     </nav>
 
+    <!-- Core App Logic -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { auth, db, onAuthStateChanged, doc, getDoc, collection, query, where, limit, getDocs } from './firebase-config.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD3DCiKSeFMpUAmz_iiuhnH-N3SgV-pIXU",
-            authDomain: "nesports7.firebaseapp.com",
-            projectId: "nesports7",
-            storageBucket: "nesports7.firebasestorage.app",
-            messagingSenderId: "414629589331",
-            appId: "1:414629589331:web:2a30069688008d17d371a6",
-            measurementId: "G-ELZMHDM7NM"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
+        // 1. Authenticate and Load User Data
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const data = userDoc.data();
                     document.getElementById('user-name').innerText = data.name;
-                    document.getElementById('user-balance').innerText = data.wallet + " PKR";
-                    document.getElementById('user-level').innerText = data.level;
+                    document.getElementById('user-wallet').innerText = data.wallet;
+                    document.getElementById('user-level').innerText = data.level + " TIER";
                     document.getElementById('user-avatar').src = data.avatar;
                 }
-                loadTournaments();
+                loadDeployments(); // Load matches
             } else {
-                window.location.href = "auth.html";
+                window.location.replace("/auth");
             }
         });
 
-        async function loadTournaments() {
-            const tList = document.getElementById('tournament-list');
-            const q = query(collection(db, "tournaments"), where("status", "==", "open"));
-            const querySnapshot = await getDocs(q);
-            
-            tList.innerHTML = ""; // Clear loader
+        // 2. Fetch Live Tournaments (Max 3 for Dashboard)
+        async function loadDeployments() {
+            const listEl = document.getElementById('arena-list');
+            const q = query(collection(db, "tournaments"), where("status", "==", "open"), limit(3));
+            const snap = await getDocs(q);
 
-            if (querySnapshot.empty) {
-                tList.innerHTML = "<p style='text-align:center; opacity:0.5;'>No active tournaments found.</p>";
+            listEl.innerHTML = "";
+
+            if (snap.empty) {
+                listEl.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:12px;">NO ACTIVE DEPLOYMENTS.</div>`;
+                return;
             }
 
-            querySnapshot.forEach((doc) => {
+            snap.forEach(doc => {
                 const t = doc.data();
-                tList.innerHTML += `
-                    <div class="t-card">
-                        <img src="${t.image || 'https://via.placeholder.com/80'}" class="t-poster">
-                        <div class="t-details">
-                            <h3>${t.title}</h3>
-                            <div class="t-meta">
-                                <span>🎮 ${t.game}</span>
-                                <span>👥 ${t.slotsRemaining}/${t.totalSlots}</span>
+                listEl.innerHTML += `
+                    <div class="arena-card">
+                        <img src="${t.image || 'https://via.placeholder.com/70x70/1E1E1E/FFFFFF?text=MATCH'}" class="arena-thumb">
+                        <div class="arena-info">
+                            <h3 class="arena-title">${t.title}</h3>
+                            <div class="arena-meta">
+                                <div><svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg> ${t.game}</div>
+                                <div><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> ${t.joined || 0}/${t.totalSlots}</div>
                             </div>
-                            <div class="t-footer">
-                                <span class="prize-tag">PKR ${t.prize}</span>
-                                <button class="join-btn" onclick="joinMatch('${doc.id}', ${t.entryFee})">JOIN</button>
+                            <div class="arena-bottom">
+                                <span class="arena-prize">PKR ${t.prize}</span>
+                                <button class="arena-join" onclick="window.location.href='/tournaments'">DETAILS</button>
                             </div>
                         </div>
                     </div>
                 `;
             });
         }
-
-        window.joinMatch = (id, fee) => {
-            // Logic for joining will go here
-            alert("Joining Tournament: " + id + " | Fee: " + fee);
-        };
     </script>
 </body>
 </html>

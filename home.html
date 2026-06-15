@@ -1,416 +1,369 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- [NE SPORTS ENTERPRISE CORE META] -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard | NE SPORTS Enterprise</title>
     <meta name="theme-color" content="#050505">
-    
-    <!-- Vercel Clean URL support -->
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
     <style>
-        /* [NE SPORTS HOME SPECIFIC STYLING] */
+        /* [NE SPORTS HOME DESIGN SYSTEM] */
         :root {
             --bg-base: #050505;
-            --surface-matte: #0A0A0A;
+            --surface: #0E0E0E;
+            --surface-elevated: #161616;
             --accent-crimson: #D32F2F;
             --border-glass: rgba(255, 255, 255, 0.08);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.5);
+            --text-muted: rgba(255, 255, 255, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-base); color: var(--text-main); font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        /* Shared Component Mounts */
+        /* Component Mount Points */
         #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
         #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
 
         /* [1. HERO SLIDER ENGINE] */
-        .hero-container {
-            width: 100%;
-            height: 420px;
-            position: relative;
-            overflow: hidden;
-            margin-top: 0; /* Header overlaps via blur */
+        .hero-slider-wrap {
+            width: 100%; height: 420px; position: relative; overflow: hidden;
+            background: #000;
         }
-
         .slider-track {
-            display: flex;
-            width: 200%; /* 2 Banners */
-            height: 100%;
-            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            display: flex; width: 200%; height: 100%;
+            transition: transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
         }
-
-        .slide {
-            width: 50%;
-            height: 100%;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: flex-end;
-            padding: 40px 20px 100px;
+        .hero-slide {
+            width: 50%; height: 100%; position: relative;
+            background-size: cover; background-position: center;
+            display: flex; align-items: flex-end; padding: 40px 20px 100px;
         }
-
-        .slide::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(0deg, var(--bg-base) 10%, transparent 70%);
-            z-index: 1;
+        /* Banner Overlay & Watermark */
+        .hero-slide::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(0deg, var(--bg-base) 10%, transparent 80%), rgba(0,0,0,0.4);
         }
-
-        .slide-content {
-            position: relative;
-            z-index: 2;
-            max-width: 320px;
+        .hero-slide::after {
+            content: ""; position: absolute; top: 20px; right: 20px; width: 60px; height: 60px;
+            background: url('https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png') no-repeat center/contain;
+            opacity: 0.15; z-index: 2;
         }
-
-        .slide-tag {
-            font-size: 10px; font-weight: 800; color: var(--accent-crimson);
-            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+        .slide-content { position: relative; z-index: 5; max-width: 300px; animation: slideUp 0.8s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .game-tag { font-size: 10px; font-weight: 900; color: var(--accent-crimson); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .slide-title { font-size: 32px; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 15px; }
+        .hero-cta {
+            background: #fff; color: #000; border: none; padding: 12px 24px;
+            border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
-
-        .slide-title { font-size: 32px; font-weight: 900; text-transform: uppercase; line-height: 1; margin-bottom: 15px; }
-
-        .slide-btn {
-            background: var(--text-main); color: #000;
-            border: none; padding: 12px 24px; border-radius: 8px;
-            font-size: 12px; font-weight: 800; text-transform: uppercase;
-            cursor: pointer; display: flex; align-items: center; gap: 10px;
-        }
-
-        .slide-btn svg { width: 16px; height: 16px; fill: #000; }
 
         /* [2. PLATFORM STATISTICS] */
         .stats-ribbon {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border-glass);
-            margin: -40px 20px 30px;
-            position: relative;
-            z-index: 5;
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border-glass);
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            margin: -40px 20px 30px; position: relative; z-index: 10;
+            background: var(--surface); border: 1px solid var(--border-glass);
+            border-radius: 16px; overflow: hidden;
         }
+        .stat-box { padding: 20px 10px; text-align: center; border-right: 1px solid var(--border-glass); }
+        .stat-box:last-child { border-right: none; }
+        .stat-val { font-size: 16px; font-weight: 900; color: #fff; display: block; margin-bottom: 4px; }
+        .stat-lbl { font-size: 8px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
 
-        .stat-item {
-            background: var(--surface-matte);
-            padding: 20px 10px;
-            text-align: center;
-        }
-
-        .stat-val { font-size: 16px; font-weight: 900; color: var(--text-main); margin-bottom: 4px; }
-        .stat-lbl { font-size: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* [3. GLOBAL SECTION STYLING] */
-        .section-wrap { padding: 0 20px 40px; }
-        .section-head {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 20px;
-        }
-        .section-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .section-more { font-size: 11px; color: var(--accent-crimson); font-weight: 700; text-decoration: none; }
+        /* [3. SECTION GLOBAL STYLING] */
+        .section-wrapper { padding: 0 20px 40px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .sec-title { font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid var(--accent-crimson); padding-left: 10px; }
+        .sec-link { font-size: 11px; color: var(--accent-crimson); font-weight: 700; text-decoration: none; text-transform: uppercase; }
 
         /* [4. TOURNAMENT CARDS] */
-        .tourney-grid { display: flex; flex-direction: column; gap: 15px; }
+        .match-list { display: flex; flex-direction: column; gap: 15px; }
         .t-card {
-            background: var(--surface-matte);
-            border: 1px solid var(--border-glass);
-            border-radius: 16px;
-            padding: 15px;
-            display: flex;
-            gap: 15px;
-            position: relative;
+            background: var(--surface); border: 1px solid var(--border-glass);
+            border-radius: 16px; padding: 15px; display: flex; gap: 15px; align-items: center;
+            transition: 0.3s;
         }
-        .t-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; }
+        .t-card:active { transform: scale(0.97); }
+        .t-thumb { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
         .t-info { flex: 1; }
-        .t-name { font-size: 14px; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; }
-        .t-meta { display: flex; gap: 10px; font-size: 10px; color: var(--text-dim); margin-bottom: 12px; }
-        .t-meta span { display: flex; align-items: center; gap: 4px; }
-        .t-meta svg { width: 12px; height: 12px; fill: var(--text-dim); }
-        .t-prize { font-size: 14px; font-weight: 900; color: var(--accent-crimson); }
+        .t-title { font-size: 14px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+        .t-meta { font-size: 10px; color: var(--text-muted); font-weight: 600; display: flex; gap: 10px; }
+        .t-prize { font-size: 14px; font-weight: 900; color: var(--accent-crimson); margin-top: 8px; display: block; }
 
         /* [5. LEADERBOARD PREVIEW] */
-        .rank-list { background: var(--surface-matte); border-radius: 16px; border: 1px solid var(--border-glass); overflow: hidden; }
-        .rank-row {
-            display: flex; align-items: center; padding: 12px 15px;
-            border-bottom: 1px solid var(--border-glass);
+        .rank-box { background: var(--surface); border: 1px solid var(--border-glass); border-radius: 20px; overflow: hidden; }
+        .rank-item {
+            display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid var(--border-glass);
         }
-        .rank-row:last-child { border-bottom: none; }
-        .r-num { width: 25px; font-size: 12px; font-weight: 900; color: var(--text-dim); }
-        .r-avatar { width: 32px; height: 32px; border-radius: 50%; margin: 0 12px; }
-        .r-name { flex: 1; font-size: 12px; font-weight: 700; }
-        .r-tag { font-size: 8px; font-weight: 800; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; }
+        .rank-item:last-child { border-bottom: none; }
+        .r-num { width: 25px; font-size: 12px; font-weight: 900; color: var(--text-muted); }
+        .r-avatar { width: 32px; height: 32px; border-radius: 50%; margin: 0 12px; background: #222; }
+        .r-name { flex: 1; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+        .r-tag { font-size: 8px; font-weight: 900; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
         .tag-pubg { background: rgba(255, 193, 7, 0.1); color: #FFC107; border: 1px solid #FFC107; }
         .tag-ff { background: rgba(33, 150, 243, 0.1); color: #2196F3; border: 1px solid #2196F3; }
 
-        /* [6. SPONSOR/AMBASSADOR SCROLL] */
-        .horizontal-scroll {
-            display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px;
-            scrollbar-width: none;
-        }
-        .horizontal-scroll::-webkit-scrollbar { display: none; }
-        
+        /* [6. SPONSOR SHOWCASE] */
+        .sponsor-scroll { display: flex; gap: 15px; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px; }
+        .sponsor-scroll::-webkit-scrollbar { display: none; }
         .sponsor-card {
-            min-width: 140px; height: 80px;
-            background: var(--surface-matte); border: 1px solid var(--border-glass);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            min-width: 140px; height: 80px; background: var(--surface); border: 1px solid var(--border-glass);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 15px;
         }
-        .sponsor-logo { max-width: 80%; max-height: 60%; filter: grayscale(1) brightness(2); }
+        .sponsor-logo { max-width: 100%; max-height: 100%; filter: grayscale(1) brightness(1.5); opacity: 0.6; }
 
-        .amb-card {
-            min-width: 100px; text-align: center;
+        /* [7. VIDEO TUTORIAL] */
+        .video-box {
+            width: 100%; aspect-ratio: 16/9; background: #111; border-radius: 20px;
+            overflow: hidden; border: 1px solid var(--border-glass); position: relative;
         }
-        .amb-img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--accent-crimson); margin-bottom: 10px; padding: 3px; }
-        .amb-name { font-size: 10px; font-weight: 800; text-transform: uppercase; }
-
-        /* [7. MARKETPLACE PREVIEW] */
-        .market-banner {
-            background: linear-gradient(135deg, #1e1e1e, #050505);
-            border-radius: 16px; border: 1px dashed var(--accent-crimson);
-            padding: 25px; text-align: center;
+        .video-play-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 50px; height: 50px; background: var(--accent-crimson); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
-        .market-banner h3 { font-size: 18px; margin-bottom: 10px; }
-        .market-banner p { font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
 
     </style>
 </head>
 <body>
 
-    <!-- SHARED MODULE MOUNTS -->
+    <!-- [MOUNT POINTS] -->
     <div id="loader-mount"></div>
     <div id="header-mount"></div>
 
-    <!-- MAIN DASHBOARD CONTENT -->
-    <main id="main-content" style="opacity: 0; transition: opacity 0.5s;">
+    <!-- [MAIN CONTENT] -->
+    <main id="main-dashboard" style="opacity: 0; transition: opacity 0.5s; padding-top: 0;">
         
-        <!-- [1. HERO SLIDER] -->
-        <section class="hero-container">
-            <div class="slider-track" id="hero-slider">
+        <!-- [1. HERO AUTO-SLIDER] -->
+        <section class="hero-slider-wrap">
+            <div class="slider-track" id="main-slider">
                 <!-- PUBG SLIDE -->
-                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200');">
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=1200');">
                     <div class="slide-content">
-                        <div class="slide-tag">Active Deployment</div>
+                        <span class="game-tag">Active Deployment</span>
                         <h2 class="slide-title">PUBG Mobile Arena</h2>
-                        <button class="slide-btn" onclick="window.location.href='/arena?game=pubg'">
+                        <button class="hero-cta" onclick="window.location.href='/arena?game=pubg'">
                             <span>Enter Arena</span>
-                            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                         </button>
                     </div>
                 </div>
                 <!-- FREE FIRE SLIDE -->
-                <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&q=80&w=1200');">
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&q=80&w=1200');">
                     <div class="slide-content">
-                        <div class="slide-tag">Elite Matches</div>
+                        <span class="game-tag">Elite Warfare</span>
                         <h2 class="slide-title">Free Fire Evolution</h2>
-                        <button class="slide-btn" onclick="window.location.href='/arena?game=freefire'">
+                        <button class="hero-cta" onclick="window.location.href='/arena?game=freefire'">
                             <span>Enter Arena</span>
-                            <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                         </button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- [2. STATS RIBBON] -->
+        <!-- [2. PLATFORM STATS] -->
         <section class="stats-ribbon">
-            <div class="stat-item">
-                <div class="stat-val" id="stat-prizes">---</div>
-                <div class="stat-lbl">Prizes Distributed</div>
+            <div class="stat-box">
+                <span class="stat-val" id="stat-prize">150K+</span>
+                <span class="stat-lbl">Prizes Distributed</span>
             </div>
-            <div class="stat-item" style="border-left: 1px solid var(--border-glass); border-right: 1px solid var(--border-glass);">
-                <div class="stat-val" id="stat-trust">99.8%</div>
-                <div class="stat-lbl">Trust Score</div>
+            <div class="stat-box">
+                <span class="stat-val" id="stat-trust">99.8%</span>
+                <span class="stat-lbl">Trust Score</span>
             </div>
-            <div class="stat-item">
-                <div class="stat-val" id="stat-operatives">---</div>
-                <div class="stat-lbl">Active Operatives</div>
+            <div class="stat-box">
+                <span class="stat-val" id="stat-players">12K+</span>
+                <span class="stat-lbl">Total Operatives</span>
             </div>
         </section>
 
         <!-- [3. FEATURED TOURNAMENTS] -->
-        <section class="section-wrap">
-            <div class="section-head">
-                <h2 class="section-title">Featured Arena</h2>
-                <a href="/arena" class="section-more">View Arena</a>
+        <section class="section-wrapper">
+            <div class="section-header">
+                <h2 class="sec-title">Featured Arena</h2>
+                <a href="/arena" class="sec-link">All Matches</a>
             </div>
-            <div class="tourney-grid" id="featured-list">
-                <!-- Firestore Featured Data -->
+            <div class="match-list" id="featured-matches">
+                <!-- Real-time Firestore Data -->
+                <div class="t-card" style="opacity: 0.3;">
+                    <div style="width:70px; height:70px; background:#222; border-radius:12px;"></div>
+                    <div class="t-info"><div style="height:14px; width:60%; background:#222; margin-bottom:8px;"></div><div style="height:10px; width:40%; background:#222;"></div></div>
+                </div>
             </div>
         </section>
 
-        <!-- [4. LEADERBOARD PREVIEW] -->
-        <section class="section-wrap">
-            <div class="section-head">
-                <h2 class="section-title">Mixed Ranks</h2>
-                <a href="/leaderboard" class="section-more">Full Rankings</a>
+        <!-- [4. TOP RANKINGS PREVIEW] -->
+        <section class="section-wrapper">
+            <div class="section-header">
+                <h2 class="sec-title">Global Rankings</h2>
+                <a href="/leaderboard" class="sec-link">Hall of Fame</a>
             </div>
-            <div class="rank-list" id="home-leaderboard">
+            <div class="rank-box" id="mixed-leaderboard">
                 <!-- Top 10 Dynamic Rows -->
             </div>
         </section>
 
         <!-- [5. SPONSOR SHOWCASE] -->
-        <section class="section-wrap">
-            <div class="section-head">
-                <h2 class="section-title">Strategic Partners</h2>
+        <section class="section-wrapper">
+            <div class="section-header">
+                <h2 class="sec-title">Strategic Partners</h2>
             </div>
-            <div class="horizontal-scroll" id="sponsor-list">
-                <!-- Dynamic Sponsors -->
-            </div>
-        </section>
-
-        <!-- [6. MARKETPLACE CTA] -->
-        <section class="section-wrap">
-            <div class="market-banner">
-                <h3>ID Marketplace</h3>
-                <p>Buy or sell verified gaming IDs. High-value accounts available now.</p>
-                <button class="slide-btn" style="margin: 0 auto;" onclick="window.location.href='/marketplace'">
-                    Explore Marketplace
-                </button>
+            <div class="sponsor-scroll" id="sponsor-list">
+                <!-- Sponsor Cards -->
             </div>
         </section>
 
-        <!-- [7. ELITE AMBASSADORS] -->
-        <section class="section-wrap" style="padding-bottom: 120px;">
-            <div class="section-head">
-                <h2 class="section-title">Elite Ambassadors</h2>
+        <!-- [6. JOIN GUIDE / TUTORIAL] -->
+        <section class="section-wrapper">
+            <div class="section-header">
+                <h2 class="sec-title">Operational Guide</h2>
             </div>
-            <div class="horizontal-scroll" id="ambassador-list">
-                <!-- Dynamic Ambassadors -->
+            <div class="video-box" onclick="window.location.href='/tutorial'">
+                <div class="video-play-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover; opacity:0.4;">
             </div>
         </section>
 
+        <!-- [FOOTER MOUNT] -->
         <div id="footer-mount"></div>
+
     </main>
 
+    <!-- [NAVIGATION MOUNT] -->
     <div id="navigation-mount"></div>
 
-    <!-- [CORE LOGIC ENGINE] -->
+    <!-- [CORE DASHBOARD SCRIPT] -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, doc, getDoc, collection, query, where, orderBy, limit, getDocs } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, collection, query, where, orderBy, limit, onSnapshot, getDoc, doc } from './firebase-config.js';
 
-        // 1. Component Loader Engine
+        // 1. Dynamic Component Injection Engine
         async function loadComponent(id, file) {
             try {
                 const res = await fetch(file);
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
                 const html = await res.text();
                 document.getElementById(id).innerHTML = html;
-                
-                // If the loaded file contains <script type="module">, we need to handle it
+
+                // Re-initialize scripts in the injected component
                 const scripts = document.getElementById(id).querySelectorAll('script');
                 scripts.forEach(oldScript => {
                     const newScript = document.createElement('script');
-                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                    newScript.type = 'module';
+                    newScript.textContent = oldScript.textContent;
+                    document.body.appendChild(newScript);
                 });
-            } catch (err) { console.error(`Component Load Fail: ${file}`, err); }
+            } catch (err) { console.error(`Failed to load ${file}:`, err); }
         }
 
-        // Initialize Global Modules
-        const initializeApp = async () => {
+        // 2. Initialize Dashboard
+        const initializeDashboard = async () => {
+            // Sequential Loading
             await loadComponent('loader-mount', '/loader.html');
             await loadComponent('header-mount', '/header.html');
             await loadComponent('navigation-mount', '/navigation.html');
             await loadComponent('footer-mount', '/footer.html');
 
-            // Auth Check
+            // Session Verification
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    document.getElementById('main-content').style.opacity = '1';
-                    loadDashboardData();
+                    document.getElementById('main-dashboard').style.opacity = '1';
                     startHeroSlider();
+                    syncHomeData();
                 } else {
-                    window.location.replace('/auth');
+                    window.location.replace("/auth");
                 }
             });
         };
 
-        // 2. Dashboard Data Engine
-        async function loadDashboardData() {
-            // Load Stats
-            const statsSnap = await getDoc(doc(db, "system_stats", "global"));
-            if(statsSnap.exists()) {
-                const s = statsSnap.data();
-                document.getElementById('stat-prizes').innerText = `PKR ${s.total_prizes || '150K+'}`;
-                document.getElementById('stat-operatives').innerText = `${s.total_users || '1200+'}`;
-            }
-
-            // Load Featured Tournaments
-            const tQ = query(collection(db, "tournaments"), where("isFeatured", "==", true), limit(3));
-            const tSnap = await getDocs(tQ);
-            const featuredList = document.getElementById('featured-list');
-            featuredList.innerHTML = "";
-            tSnap.forEach(docSnap => {
-                const t = docSnap.data();
-                featuredList.innerHTML += `
-                    <div class="t-card" onclick="window.location.href='/arena?id=${docSnap.id}'">
-                        <img src="${t.image}" class="t-img">
-                        <div class="t-info">
-                            <h3 class="t-name">${t.title}</h3>
-                            <div class="t-meta">
-                                <span><svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm11 0h-8v-2h8v2zm0-4h-8V7h8v2z"/></svg> ${t.game}</span>
-                                <span><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> ${t.joined}/${t.totalSlots}</span>
-                            </div>
-                            <div class="t-prize">PKR ${t.prizePool}</div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Load Leaderboard Preview
-            const lQ = query(collection(db, "users"), orderBy("xp", "desc"), limit(5));
-            const lSnap = await getDocs(lQ);
-            const leaderEl = document.getElementById('home-leaderboard');
-            leaderEl.innerHTML = "";
-            let rank = 1;
-            lSnap.forEach(docSnap => {
-                const u = docSnap.data();
-                const tagClass = u.favGame === 'PUBG' ? 'tag-pubg' : 'tag-ff';
-                leaderEl.innerHTML += `
-                    <div class="rank-row">
-                        <span class="r-num">#${rank++}</span>
-                        <img src="${u.avatar}" class="r-avatar">
-                        <span class="r-name">${u.name}</span>
-                        <span class="r-tag ${tagClass}">${u.favGame || 'PRO'}</span>
-                    </div>
-                `;
-            });
-
-            // Load Ambassadors
-            const ambQ = query(collection(db, "users"), where("isAmbassador", "==", true), limit(6));
-            const ambSnap = await getDocs(ambQ);
-            const ambList = document.getElementById('ambassador-list');
-            ambList.innerHTML = "";
-            ambSnap.forEach(docSnap => {
-                const a = docSnap.data();
-                ambList.innerHTML += `
-                    <div class="amb-card">
-                        <img src="${a.avatar}" class="amb-img">
-                        <div class="amb-name">${a.name}</div>
-                    </div>
-                `;
-            });
-        }
-
-        // 3. Hero Slider Logic
+        // 3. Hero Slider Logic (3s Interval)
         function startHeroSlider() {
-            const track = document.getElementById('hero-slider');
-            let slideIndex = 0;
+            const track = document.getElementById('main-slider');
+            let index = 0;
             setInterval(() => {
-                slideIndex = (slideIndex === 0) ? 1 : 0;
-                track.style.transform = `translateX(-${slideIndex * 50}%)`;
+                index = (index === 0) ? 1 : 0;
+                track.style.transform = `translateX(-${index * 50}%)`;
             }, 3000);
         }
 
-        // Boot Application
-        window.addEventListener('DOMContentLoaded', initializeApp);
+        // 4. Real-time Firestore Sync Engine
+        async function syncHomeData() {
+            // A. Global Stats
+            onSnapshot(doc(db, "system_config", "stats"), (docSnap) => {
+                if(docSnap.exists()){
+                    const s = docSnap.data();
+                    document.getElementById('stat-prize').innerText = `${s.total_prizes || '150K+'}`;
+                    document.getElementById('stat-players').innerText = `${s.total_players || '12K+'}`;
+                }
+            });
+
+            // B. Featured Tournaments
+            const qFeatured = query(collection(db, "tournaments"), where("isFeatured", "==", true), limit(3));
+            onSnapshot(qFeatured, (snapshot) => {
+                const container = document.getElementById('featured-matches');
+                container.innerHTML = "";
+                snapshot.forEach(docSnap => {
+                    const t = docSnap.data();
+                    container.innerHTML += `
+                        <div class="t-card" onclick="window.location.href='/arena?id=${docSnap.id}'">
+                            <img src="${t.image}" class="t-thumb">
+                            <div class="t-info">
+                                <h3 class="t-title">${t.title}</h3>
+                                <div class="t-meta">
+                                    <span>🎮 ${t.game}</span>
+                                    <span>👥 ${t.joined}/${t.totalSlots}</span>
+                                </div>
+                                <span class="t-prize">PKR ${t.prizePool}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            // C. Mixed Leaderboard (Top 10)
+            const qRank = query(collection(db, "users"), orderBy("xp", "desc"), limit(10));
+            onSnapshot(qRank, (snapshot) => {
+                const container = document.getElementById('mixed-leaderboard');
+                container.innerHTML = "";
+                let rank = 1;
+                snapshot.forEach(docSnap => {
+                    const u = docSnap.data();
+                    const tagClass = u.favGame === 'PUBG' ? 'tag-pubg' : 'tag-ff';
+                    container.innerHTML += `
+                        <div class="rank-item">
+                            <span class="r-num">#${rank++}</span>
+                            <img src="${u.avatar}" class="r-avatar">
+                            <span class="r-name">${u.name}</span>
+                            <span class="r-tag ${tagClass}">${u.favGame || 'PRO'}</span>
+                        </div>
+                    `;
+                });
+            });
+
+            // D. Sponsors
+            const qSponsors = query(collection(db, "sponsors"), limit(6));
+            onSnapshot(qSponsors, (snapshot) => {
+                const container = document.getElementById('sponsor-list');
+                container.innerHTML = "";
+                snapshot.forEach(docSnap => {
+                    const s = docSnap.data();
+                    container.innerHTML += `
+                        <div class="sponsor-card">
+                            <img src="${s.logo}" class="sponsor-logo" alt="Sponsor">
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // Run Engine
+        window.addEventListener('DOMContentLoaded', initializeDashboard);
 
     </script>
 </body>

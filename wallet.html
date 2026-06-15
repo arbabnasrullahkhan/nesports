@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>The Vault | NE SPORTS Enterprise</title>
+    <title>ID Marketplace | NE SPORTS Enterprise</title>
     <meta name="theme-color" content="#050505">
     <link rel="icon" type="image/png" href="https://uploads.onecompiler.io/42yatf6fu/1781497050019/nesports.png">
 
@@ -13,11 +13,9 @@
             --surface-matte: #0A0A0A;
             --surface-elevated: #151515;
             --accent-crimson: #D32F2F;
-            --accent-gold: #D4AF37;
             --border-glass: rgba(255, 255, 255, 0.08);
             --text-main: #FFFFFF;
-            --text-dim: rgba(255, 255, 255, 0.5);
-            --success: #2E7D32;
+            --text-dim: rgba(255, 255, 255, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -27,90 +25,80 @@
         #header-mount { width: 100%; height: 80px; position: fixed; top: 0; z-index: 5000; }
         #navigation-mount { width: 100%; position: fixed; bottom: 0; z-index: 4000; }
 
-        /* [1. VAULT MASTER BALANCE] */
-        .vault-hero {
-            padding: 120px 20px 40px;
-            background: radial-gradient(circle at top, rgba(212, 175, 55, 0.08) 0%, var(--bg-base) 100%);
+        /* [1. MARKETPLACE HERO] */
+        .market-hero {
+            padding: 120px 20px 30px;
+            background: linear-gradient(180deg, rgba(211, 47, 47, 0.05) 0%, var(--bg-base) 100%);
             text-align: center;
-            border-bottom: 1px solid var(--border-glass);
         }
+        .market-hero h1 { font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .market-hero p { font-size: 12px; color: var(--text-dim); margin-top: 8px; }
 
-        .vault-icon-wrap {
-            width: 60px; height: 60px; background: rgba(212, 175, 55, 0.1);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 20px; border: 1px solid var(--accent-gold);
+        /* [2. ACTION BAR] */
+        .market-actions { padding: 20px; display: flex; gap: 10px; }
+        .btn-action {
+            flex: 1; padding: 14px; border-radius: 12px; font-size: 11px; font-weight: 800;
+            text-transform: uppercase; cursor: pointer; border: 1px solid var(--border-glass);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .vault-icon-wrap svg { width: 30px; height: 30px; fill: var(--accent-gold); }
+        .btn-sell { background: var(--text-main); color: #000; }
+        .btn-filter { background: var(--surface-matte); color: var(--text-main); }
+        .btn-action svg { width: 16px; height: 16px; fill: currentColor; }
 
-        .balance-label { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
-        .balance-amount { font-size: 48px; font-weight: 900; letter-spacing: -1.5px; display: flex; justify-content: center; align-items: baseline; gap: 8px; }
-        .currency-tag { font-size: 16px; color: var(--accent-gold); font-weight: 700; }
-
-        /* [2. CASHOUT ACTION CENTER] */
-        .cashout-gate { padding: 30px 20px; }
+        /* [3. ID LISTING GRID] */
+        .id-grid { padding: 0 20px 120px; display: grid; grid-template-columns: 1fr; gap: 20px; }
         
-        .action-card {
+        .id-card {
             background: var(--surface-matte); border: 1px solid var(--border-glass);
-            border-radius: 20px; padding: 25px;
+            border-radius: 20px; overflow: hidden; position: relative;
             box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            margin-bottom: 30px;
+        }
+        .id-thumb { width: 100%; height: 180px; position: relative; background: var(--surface-elevated); }
+        .id-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .id-price-tag {
+            position: absolute; bottom: 15px; left: 15px;
+            background: var(--accent-crimson); color: #fff; padding: 6px 14px;
+            border-radius: 8px; font-size: 14px; font-weight: 900;
+        }
+        .id-game-badge {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+            padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 800;
         }
 
-        .card-head { margin-bottom: 25px; }
-        .card-title { font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .card-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+        .id-body { padding: 20px; }
+        .id-title { font-size: 16px; font-weight: 800; text-transform: uppercase; margin-bottom: 10px; }
+        .id-stats { display: flex; gap: 15px; margin-bottom: 20px; }
+        .id-stat-pill { font-size: 10px; font-weight: 700; color: var(--text-dim); background: var(--surface-elevated); padding: 4px 10px; border-radius: 6px; }
 
-        /* Input System */
+        .seller-info {
+            display: flex; align-items: center; justify-content: space-between;
+            border-top: 1px solid var(--border-glass); padding-top: 15px;
+        }
+        .seller-profile { display: flex; align-items: center; gap: 8px; }
+        .seller-avatar { width: 24px; height: 24px; border-radius: 50%; }
+        .seller-name { font-size: 11px; font-weight: 700; color: var(--text-main); }
+        
+        .btn-contact {
+            background: #25D366; color: #fff; border: none; padding: 8px 16px;
+            border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+            cursor: pointer; text-decoration: none; display: flex; align-items: center; gap: 6px;
+        }
+
+        /* [4. SELL MODAL OVERLAY] */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-base); z-index: 6000; display: none;
+            flex-direction: column; overflow-y: auto; padding-bottom: 100px;
+        }
+        .modal-head { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); }
+        .modal-body { padding: 25px 20px; }
+        
         .input-grp { margin-bottom: 20px; }
-        .input-grp label { display: block; font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; padding-left: 5px; }
-        .input-ctrl {
-            width: 100%; background: var(--surface-elevated); border: 1px solid var(--border-glass);
-            padding: 15px; border-radius: 12px; color: #fff; font-size: 14px; outline: none; transition: 0.3s;
-        }
-        .input-ctrl:focus { border-color: var(--accent-gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
-
-        .btn-claim {
-            width: 100%; padding: 18px; background: var(--text-main); color: #000;
-            border: none; border-radius: 12px; font-size: 13px; font-weight: 900;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-claim:active { transform: scale(0.97); }
-        .btn-claim svg { width: 18px; height: 18px; fill: #000; }
-
-        /* [3. TRANSACTION LEDGER] */
-        .ledger-section { padding: 0 20px 120px; }
-        .ledger-title { font-size: 12px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .ledger-title::after { content: ""; flex: 1; height: 1px; background: var(--border-glass); }
-
-        .txn-item {
-            background: var(--surface-matte); border: 1px solid var(--border-glass);
-            padding: 18px; border-radius: 16px; display: flex; align-items: center; gap: 15px;
-            margin-bottom: 12px; transition: 0.3s;
-        }
-        .txn-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--surface-elevated); display: flex; align-items: center; justify-content: center; }
-        .txn-icon svg { width: 20px; height: 20px; fill: var(--text-dim); }
-        
-        .txn-details { flex: 1; }
-        .txn-name { font-size: 13px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .txn-meta { font-size: 9px; color: var(--text-dim); font-weight: 600; text-transform: uppercase; }
-        
-        .txn-amount { text-align: right; }
-        .amt-val { font-size: 14px; font-weight: 900; color: var(--accent-gold); display: block; }
-        .amt-status { font-size: 8px; font-weight: 800; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; margin-top: 5px; display: inline-block; }
-        
-        .status-pending { background: rgba(212, 175, 55, 0.1); color: var(--accent-gold); border: 1px solid rgba(212, 175, 55, 0.2); }
-        .status-approved { background: rgba(46, 125, 50, 0.1); color: #4CAF50; border: 1px solid rgba(46, 125, 50, 0.2); }
-        .status-denied { background: rgba(211, 47, 47, 0.1); color: var(--accent-crimson); border: 1px solid rgba(211, 47, 47, 0.2); }
-
-        /* [4. POLICY NOTICE] */
-        .vault-notice {
-            background: rgba(211, 47, 47, 0.05); border: 1px dashed var(--accent-crimson);
-            padding: 15px; border-radius: 12px; margin-top: 25px;
-        }
-        .vault-notice p { font-size: 10px; color: var(--accent-crimson); line-height: 1.6; font-weight: 700; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        .input-grp label { display: block; font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; }
+        .input-ctrl { width: 100%; padding: 15px; background: var(--surface-matte); border: 1px solid var(--border-glass); border-radius: 12px; color: #fff; font-size: 14px; outline: none; }
+        .input-ctrl:focus { border-color: var(--accent-crimson); }
     </style>
 </head>
 <body>
@@ -118,91 +106,84 @@
     <div id="loader-mount"></div>
     <div id="header-mount"></div>
 
-    <main id="main-vault" style="opacity: 0; transition: 0.6s;">
+    <main id="main-marketplace" style="opacity: 0; transition: 0.6s;">
         
-        <!-- [VAULT HEADER] -->
-        <section class="vault-hero">
-            <div class="vault-icon-wrap">
-                <svg viewBox="0 0 24 24"><path d="M18 10V7c0-3.31-2.69-6-6-6S6 3.69 6 7v3H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2h-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V7c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-            </div>
-            <div class="balance-label">Withdrawable Earnings</div>
-            <div class="balance-amount">
-                <span class="currency-tag">PKR</span>
-                <span id="vault-balance">0.00</span>
-            </div>
+        <section class="market-hero">
+            <h1>ID Marketplace</h1>
+            <p>Trade high-tier PUBG & Free Fire operatives identities.</p>
         </section>
 
-        <!-- [CASHOUT FORM] -->
-        <section class="cashout-gate">
-            <div class="action-card">
-                <div class="card-head">
-                    <h2 class="card-title">Ticket Payout Protocol</h2>
-                    <p class="card-desc">Scan your winning match ticket or enter the Ticket ID to initialize the secure payout transfer.</p>
-                </div>
-
-                <div class="input-grp">
-                    <label>Match Ticket ID</label>
-                    <input type="text" id="claim-ticket-id" class="input-ctrl" placeholder="e.g. TIX-1029-XXXX">
-                </div>
-
-                <div class="input-grp">
-                    <label>Transfer Destination</label>
-                    <select id="claim-method" class="input-ctrl" style="background-color: var(--surface-elevated);">
-                        <option value="EasyPaisa">EasyPaisa</option>
-                        <option value="JazzCash">JazzCash</option>
-                        <option value="Binance (USDT)">Binance (USDT - TRC20)</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                    </select>
-                </div>
-
-                <div class="input-grp">
-                    <label>Account Title (Full Name)</label>
-                    <input type="text" id="claim-title" class="input-ctrl" placeholder="Exactly as on account">
-                </div>
-
-                <div class="input-grp">
-                    <label>Account / Wallet Number</label>
-                    <input type="text" id="claim-account" class="input-ctrl" placeholder="03XXXXXXXXX or Address">
-                </div>
-
-                <div class="input-grp">
-                    <label>Victory Evidence (Screenshot)</label>
-                    <input type="file" id="claim-screenshot" class="input-ctrl" accept="image/*">
-                </div>
-
-                <button class="btn-claim" onclick="initiateCashout()">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-                    Submit Payout Request
-                </button>
-
-                <div class="vault-notice">
-                    <p>PROTOCOL ALERT: Cashout requests must be filed within 60 minutes of match completion. Expired tickets are automatically voided.</p>
-                </div>
-            </div>
+        <section class="market-actions">
+            <button class="btn-action btn-sell" onclick="openSellModal()">
+                <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg> List my ID
+            </button>
+            <button class="btn-action btn-filter">
+                <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg> Filter
+            </button>
         </section>
 
-        <!-- [TRANSACTION HISTORY] -->
-        <section class="ledger-section">
-            <h3 class="ledger-title">Payout Ledger</h3>
-            <div id="ledger-container">
-                <!-- Dynamic Rows -->
-                <p style="text-align: center; color: var(--text-dim); font-size: 11px; padding: 20px;">SYNCING SECURE VAULT DATA...</p>
-            </div>
-        </section>
+        <div class="id-grid" id="listing-container">
+            <!-- Firestore Listings -->
+            <p style="text-align: center; color: var(--text-dim); font-size: 11px; padding: 40px;">SCANNING AVAILABLE IDENTITIES...</p>
+        </div>
 
         <div id="footer-mount"></div>
     </main>
 
+    <!-- [SELL FORM MODAL] -->
+    <div class="modal-overlay" id="sell-modal">
+        <div class="modal-head">
+            <h2 style="font-size: 16px; font-weight: 900; text-transform: uppercase;">Identity Listing Protocol</h2>
+            <button onclick="closeSellModal()" style="background: none; border: none; color: #fff; font-size: 24px;">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="input-grp">
+                <label>Game Title</label>
+                <select id="m-game" class="input-ctrl" style="background-color: var(--surface-elevated);">
+                    <option value="PUBG Mobile">PUBG Mobile</option>
+                    <option value="Free Fire">Free Fire</option>
+                </select>
+            </div>
+            <div class="input-grp">
+                <label>Listing Title</label>
+                <input type="text" id="m-title" class="input-ctrl" placeholder="e.g. S12 Conqueror ID (Rare Skins)">
+            </div>
+            <div class="input-grp">
+                <label>Asking Price (PKR)</label>
+                <input type="number" id="m-price" class="input-ctrl" placeholder="e.g. 15000">
+            </div>
+            <div class="input-grp">
+                <label>WhatsApp Contact</label>
+                <input type="tel" id="m-whatsapp" class="input-ctrl" placeholder="e.g. 0345XXXXXXX">
+            </div>
+            <div class="input-grp">
+                <label>Primary Screenshot (URL)</label>
+                <input type="text" id="m-image" class="input-ctrl" placeholder="Link to profile screenshot">
+            </div>
+            <div class="input-grp">
+                <label>Key Stats / Details</label>
+                <textarea id="m-desc" class="input-ctrl" style="height: 100px;" placeholder="Describe account level, rare items, K/D etc."></textarea>
+            </div>
+
+            <button class="btn-sell btn-action" style="width: 100%; padding: 18px;" onclick="submitListing()">
+                Submit for System Review
+            </button>
+            <p style="font-size: 10px; color: var(--accent-crimson); margin-top: 15px; text-align: center; font-weight: 700;">
+                NOTICE: All listings are reviewed by Admin before appearing in the marketplace.
+            </p>
+        </div>
+    </div>
+
     <div id="navigation-mount"></div>
 
-    <!-- [VAULT ENGINE LOGIC] -->
     <script type="module">
-        import { auth, db, onAuthStateChanged, doc, getDoc, collection, query, where, orderBy, getDocs, addDoc } from './firebase-config.js';
+        import { auth, db, onAuthStateChanged, collection, query, where, getDocs, addDoc, orderBy, onSnapshot } from './firebase-config.js';
 
         let currentUser = null;
 
-        // 1. Component Mounting
-        async function loadComponent(id, file) {
+        // 1. Component Loading
+        async function mount(id, file) {
             const res = await fetch(file);
             document.getElementById(id).innerHTML = await res.text();
             const scripts = document.getElementById(id).querySelectorAll('script');
@@ -214,97 +195,95 @@
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
-            await loadComponent('loader-mount', '/loader.html');
-            await loadComponent('header-mount', '/header.html');
-            await loadComponent('navigation-mount', '/navigation.html');
-            await loadComponent('footer-mount', '/footer.html');
+            await mount('loader-mount', '/loader.html');
+            await mount('header-mount', '/header.html');
+            await mount('navigation-mount', '/navigation.html');
+            await mount('footer-mount', '/footer.html');
 
             onAuthStateChanged(auth, (user) => {
                 if (user) {
                     currentUser = user;
-                    document.getElementById('main-vault').style.opacity = '1';
-                    loadVaultData();
+                    document.getElementById('main-marketplace').style.opacity = '1';
+                    loadListings();
                 } else { window.location.replace('/auth'); }
             });
         });
 
-        // 2. Fetch Balance & Ledger
-        async function loadVaultData() {
-            // Get Balance
-            const userSnap = await getDoc(doc(db, "users", currentUser.uid));
-            if(userSnap.exists()) {
-                const bal = userSnap.data().wallet || 0;
-                document.getElementById('vault-balance').innerText = bal.toLocaleString();
-            }
+        // 2. Fetch Verified Listings
+        function loadListings() {
+            const container = document.getElementById('listing-container');
+            const q = query(collection(db, "marketplace"), where("status", "==", "live"), orderBy("timestamp", "desc"));
+            
+            onSnapshot(q, (snap) => {
+                container.innerHTML = "";
+                if(snap.empty) {
+                    container.innerHTML = `<p style="text-align:center; padding:40px; color:var(--text-dim); font-size:11px;">NO VERIFIED IDENTITIES CURRENTLY FOR SALE</p>`;
+                    return;
+                }
 
-            // Get Payout History
-            const ledger = document.getElementById('ledger-container');
-            const q = query(collection(db, "payouts"), where("userId", "==", currentUser.uid), orderBy("timestamp", "desc"));
-            const snap = await getDocs(q);
-
-            ledger.innerHTML = "";
-
-            if(snap.empty) {
-                ledger.innerHTML = `<p style="text-align:center; font-size:11px; color:var(--text-dim); padding:20px;">NO RECORDED PAYOUTS</p>`;
-                return;
-            }
-
-            snap.forEach(docSnap => {
-                const p = docSnap.data();
-                const date = new Date(p.timestamp).toLocaleDateString();
-                
-                ledger.innerHTML += `
-                    <div class="txn-item">
-                        <div class="txn-icon">
-                            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                snap.forEach(docSnap => {
+                    const id = docSnap.data();
+                    container.innerHTML += `
+                        <div class="id-card">
+                            <div class="id-thumb">
+                                <img src="${id.image}" alt="Account Image">
+                                <span class="id-price-tag">PKR ${id.price}</span>
+                                <span class="id-game-badge">${id.game}</span>
+                            </div>
+                            <div class="id-body">
+                                <h3 class="id-title">${id.title}</h3>
+                                <div class="id-stats">
+                                    <span class="id-stat-pill">Level ${id.level || '--'}</span>
+                                    <span class="id-stat-pill">${id.kd || '--'} K/D</span>
+                                </div>
+                                <div class="seller-info">
+                                    <div class="seller-profile">
+                                        <img src="${id.sellerAvatar}" class="seller-avatar">
+                                        <span class="seller-name">${id.sellerName}</span>
+                                    </div>
+                                    <a href="https://wa.me/${id.whatsapp}" target="_blank" class="btn-contact">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.025 3.14l-.841 3.085 3.167-.831c.829.453 1.554.686 2.417.687h.001c3.181 0 5.767-2.587 5.768-5.766 0-3.18-2.586-5.766-5.769-5.766zm3.43 8.351c-.139.393-.721.721-1.002.766-.282.045-.561.066-.861-.027-.3-.092-.683-.243-1.155-.448-1.99-.861-3.266-2.883-3.366-3.016-.099-.133-.815-1.084-.815-2.07 0-.986.513-1.472.695-1.671.183-.199.399-.249.531-.249.133 0 .266.001.382.006.12.005.281-.045.441.341.163.393.565 1.378.614 1.478.049.099.083.216.017.348-.066.133-.1.216-.199.332-.099.117-.208.261-.298.35-.099.099-.202.208-.087.406.116.199.516.852 1.109 1.38.765.682 1.408.894 1.607.994.199.099.316.083.432-.05.116-.133.498-.581.631-.78.133-.199.266-.166.449-.1.182.066 1.162.548 1.362.648.199.099.332.149.382.232.05.083.05.481-.089.874z"/></svg>
+                                        Buy Now
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="txn-details">
-                            <span class="txn-name">${p.method} Payout</span>
-                            <span class="txn-meta">${date} • ID: ${docSnap.id.substring(0,8).toUpperCase()}</span>
-                        </div>
-                        <div class="txn-amount">
-                            <span class="amt-val">PKR ${p.amount}</span>
-                            <span class="amt-status status-${p.status.toLowerCase()}">${p.status}</span>
-                        </div>
-                    </div>
-                `;
+                    `;
+                });
             });
         }
 
-        // 3. Initiate Cashout Logic
-        window.initiateCashout = async () => {
-            const ticketId = document.getElementById('claim-ticket-id').value.trim();
-            const method = document.getElementById('claim-method').value;
-            const title = document.getElementById('claim-title').value.trim();
-            const account = document.getElementById('claim-account').value.trim();
-            const screenshot = document.getElementById('claim-screenshot').value;
+        // 3. Modal Controls
+        window.openSellModal = () => document.getElementById('sell-modal').style.display = 'flex';
+        window.closeSellModal = () => document.getElementById('sell-modal').style.display = 'none';
 
-            if(!ticketId || !title || !account || !screenshot) {
-                return alert("Command Failure: All payout verification fields are mandatory.");
-            }
+        // 4. Submit to Review Queue
+        window.submitListing = async () => {
+            const game = document.getElementById('m-game').value;
+            const title = document.getElementById('m-title').value.trim();
+            const price = document.getElementById('m-price').value;
+            const whatsapp = document.getElementById('m-whatsapp').value.trim();
+            const image = document.getElementById('m-image').value.trim();
+            const desc = document.getElementById('m-desc').value.trim();
 
-            NE_Loader.show("Verifying Ticket ID...");
+            if(!title || !price || !whatsapp || !image) return alert("System Protocol Failure: Required fields are empty.");
+
+            NE_Loader.show("Initiating Review Protocol...");
 
             try {
-                // Submit to Firestore payout queue
-                await addDoc(collection(db, "payouts"), {
-                    userId: currentUser.uid,
-                    ticketId: ticketId,
-                    method: method,
-                    accountTitle: title,
-                    accountNumber: account,
-                    amount: "Processing", // Amount calculated by admin based on dynamic prize logic
-                    status: "Pending",
+                await addDoc(collection(db, "marketplace_pending"), {
+                    sellerId: currentUser.uid,
+                    sellerName: auth.currentUser.displayName || "Unknown Operative",
+                    game, title, price, whatsapp, image, desc,
+                    status: "under_review",
                     timestamp: new Date().toISOString()
                 });
 
-                alert("Protocol Success: Payout request submitted to Command Center. Verification takes 12-24 hours.");
-                location.reload();
+                alert("Success: Your ID has been submitted for review. It will appear once verified by Admin.");
+                closeSellModal();
             } catch (e) {
-                alert("Security Error: Failed to dispatch request.");
-            } finally {
-                NE_Loader.hide();
-            }
+                alert("Critical Failure: Submission timed out.");
+            } finally { NE_Loader.hide(); }
         };
 
     </script>
